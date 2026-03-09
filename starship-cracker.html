@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STARSHIP CIPHER — CRACK THE CODE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+  :root {
+    --hull: #0a0e1a;
+    --deck: #0d1424;
+    --wall: #121c35;
+    --panel: #0f1a2e;
+    --accent: #00ffe7;
+    --red: #ff3b3b;
+    --yellow: #ffe14d;
+    --green: #39ff7a;
+    --blue: #4da6ff;
+    --purple: #c77dff;
+    --text: #cde8ff;
+    --dim: #3a5a7a;
+    --grid: rgba(0,255,231,0.04);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--hull);
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { position:fixed; inset:0; display:none; }
+  .screen.active { display:flex; }
+
+  /* ===== INTRO SCREEN ===== */
+  #intro {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #060d1f 0%, #000 100%);
+  }
+  .stars-bg {
+    position:absolute; inset:0; overflow:hidden;
+  }
+  .star {
+    position:absolute;
+    border-radius:50%;
+    background:#fff;
+    animation: twinkle var(--d,3s) infinite alternate;
+  }
+  @keyframes twinkle { from{opacity:0.1} to{opacity:0.9} }
+
+  .intro-logo {
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(2rem,6vw,4rem);
+    font-weight:900;
+    letter-spacing:0.2em;
+    color:var(--accent);
+    text-shadow: 0 0 30px var(--accent), 0 0 60px rgba(0,255,231,0.3);
+    text-align:center;
+    z-index:1;
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+  @keyframes pulse-glow {
+    from { text-shadow: 0 0 20px var(--accent), 0 0 40px rgba(0,255,231,0.3); }
+    to   { text-shadow: 0 0 40px var(--accent), 0 0 80px rgba(0,255,231,0.5), 0 0 120px rgba(0,255,231,0.2); }
+  }
+  .intro-sub {
+    margin-top:1rem; font-size:1rem; color:var(--dim);
+    letter-spacing:0.3em; z-index:1;
+  }
+  .intro-btn {
+    margin-top:3rem; z-index:1;
+    padding:1rem 3rem;
+    background:transparent;
+    border:2px solid var(--accent);
+    color:var(--accent);
+    font-family:'Orbitron',sans-serif;
+    font-size:1rem;
+    letter-spacing:0.2em;
+    cursor:pointer;
+    transition: all 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .intro-btn:hover {
+    background: var(--accent);
+    color: var(--hull);
+    box-shadow: 0 0 30px var(--accent);
+  }
+
+  /* ===== GAME SCREEN ===== */
+  #game {
+    flex-direction: column;
+    background: var(--hull);
+  }
+
+  /* HUD */
+  .hud {
+    height:48px;
+    background: var(--panel);
+    border-bottom:1px solid rgba(0,255,231,0.15);
+    display:flex;
+    align-items:center;
+    padding:0 1.5rem;
+    gap:2rem;
+    flex-shrink:0;
+    position:relative;
+    z-index:10;
+  }
+  .hud-title {
+    font-family:'Orbitron',sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color:var(--accent);
+  }
+  .hud-sep { color:var(--dim); }
+  .hud-room {
+    font-size:0.75rem;
+    color:var(--yellow);
+    letter-spacing:0.1em;
+  }
+  .hud-spacer { flex:1; }
+  .hud-task {
+    font-size:0.7rem;
+    color:var(--dim);
+  }
+  .task-bar {
+    width:120px; height:6px;
+    background: rgba(255,255,255,0.1);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .task-fill {
+    height:100%;
+    background: linear-gradient(90deg, var(--green), var(--accent));
+    border-radius:3px;
+    transition: width 0.5s ease;
+  }
+
+  /* SHIP MAP */
+  .ship-map {
+    position:absolute;
+    bottom:10px; right:10px;
+    width:180px; height:100px;
+    background:rgba(0,0,0,0.6);
+    border:1px solid rgba(0,255,231,0.2);
+    border-radius:4px;
+    z-index:20;
+    overflow:hidden;
+  }
+  .map-room {
+    position:absolute;
+    border:1px solid rgba(0,255,231,0.3);
+    border-radius:2px;
+    font-size:6px;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(0,255,231,0.5);
+    letter-spacing:0.05em;
+    background:rgba(0,255,231,0.04);
+    transition:background 0.3s;
+  }
+  .map-room.current { background:rgba(0,255,231,0.15); border-color:var(--accent); }
+  .map-player-dot {
+    position:absolute;
+    width:5px; height:5px;
+    background:var(--red);
+    border-radius:50%;
+    transition: all 0.3s;
+    box-shadow: 0 0 4px var(--red);
+    z-index:2;
+  }
+
+  /* GAME WORLD */
+  .world-container {
+    flex:1;
+    position:relative;
+    overflow:hidden;
+  }
+  .world {
+    position:absolute;
+    width:2000px;
+    height:600px;
+    top:0; left:0;
+    transition: transform 0.1s linear;
+  }
+
+  /* Room backgrounds */
+  .room {
+    position:absolute;
+    top:0; height:100%;
+  }
+  .room-floor {
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:80px;
+  }
+  .room-ceiling {
+    position:absolute;
+    top:0; left:0; right:0;
+    height:60px;
+  }
+  .room-label {
+    position:absolute;
+    top:70px; left:50%;
+    transform:translateX(-50%);
+    font-family:'Orbitron',sans-serif;
+    font-size:0.6rem;
+    letter-spacing:0.2em;
+    color:rgba(0,255,231,0.3);
+    white-space:nowrap;
+  }
+
+  /* HALLWAY */
+  .hallway {
+    background: linear-gradient(180deg, #060c1a 0%, #0a1428 60%, #0d1830 100%);
+    border-left:3px solid var(--dim);
+    border-right:3px solid var(--dim);
+  }
+  .hallway .room-floor { background:linear-gradient(0deg, #1a2a45 0%, #0d1830 100%); border-top:2px solid #1e3050; }
+  .hallway .room-ceiling { background:linear-gradient(180deg, #02060f 0%, #060c1a 100%); border-bottom:2px solid #0e1c35; }
+
+  /* CAFETERIA */
+  .cafeteria { background: linear-gradient(180deg, #08121e 0%, #0c1826 60%, #0f1e30 100%); }
+  .cafeteria .room-floor { background:linear-gradient(0deg, #162338 0%, #0c1826 100%); border-top:2px solid #1c3050; }
+
+  /* CONTROL ROOM */
+  .control-room { background: linear-gradient(180deg, #070d18 0%, #0a1425 60%, #0c1828 100%); }
+  .control-room .room-floor { background:linear-gradient(0deg, #12203a 0%, #0a1425 100%); border-top:2px solid #182d4a; }
+
+  /* ENGINE */
+  .engine-room { background: linear-gradient(180deg, #0e0808 0%, #180e0e 60%, #1c1010 100%); }
+  .engine-room .room-floor { background:linear-gradient(0deg, #2a1212 0%, #180e0e 100%); border-top:2px solid #3a1818; }
+
+  /* Grid overlay */
+  .grid-overlay {
+    position:absolute; inset:0;
+    background-image: 
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none;
+  }
+
+  /* Ambient pipes */
+  .pipe {
+    position:absolute;
+    background: linear-gradient(90deg, #1a2a40, #1e3050, #1a2a40);
+    border-radius:4px;
+  }
+  .pipe.vert {
+    background: linear-gradient(180deg, #1a2a40, #1e3050, #1a2a40);
+  }
+
+  /* Vents */
+  .vent {
+    position:absolute;
+    width:40px; height:20px;
+    background:#0a1428;
+    border:2px solid #1a2a40;
+    border-radius:3px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2px;
+    padding:3px;
+  }
+  .vent-bar { background:#1a2a40; border-radius:1px; }
+
+  /* Lights */
+  .ceiling-light {
+    position:absolute;
+    top:55px;
+    width:60px; height:8px;
+    background: rgba(255,255,200,0.8);
+    border-radius:2px;
+    box-shadow: 0 0 20px 5px rgba(255,255,200,0.15), 0 20px 60px 10px rgba(255,255,200,0.05);
+  }
+
+  /* OBJECTS */
+  .table {
+    position:absolute;
+    border-radius:4px 4px 0 0;
+  }
+  .chair {
+    position:absolute;
+    border-radius:3px 3px 0 0;
+  }
+  .console {
+    position:absolute;
+    cursor:pointer;
+    transition: filter 0.2s;
+  }
+  .console:hover { filter:brightness(1.4); }
+  .console .console-screen {
+    border-radius:3px;
+    animation: screen-flicker 4s infinite;
+  }
+  @keyframes screen-flicker {
+    0%,96%,100% { opacity:1 }
+    97% { opacity:0.7 }
+    98% { opacity:1 }
+    99% { opacity:0.5 }
+  }
+  .console .interact-hint {
+    position:absolute;
+    bottom:-20px; left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.8);
+    color:var(--accent);
+    font-size:0.6rem;
+    padding:2px 6px;
+    border:1px solid var(--accent);
+    border-radius:2px;
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity 0.2s;
+    pointer-events:none;
+  }
+  .console:hover .interact-hint { opacity:1; }
+
+  /* ENGINE CORE */
+  .engine-core {
+    position:absolute;
+    border-radius:50%;
+    animation: engine-spin 3s linear infinite;
+  }
+  @keyframes engine-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .engine-outer {
+    position:absolute;
+    border-radius:50%;
+    animation: engine-spin 6s linear infinite reverse;
+  }
+
+  /* PLAYER (Among Us style crewmate) */
+  .player {
+    position:absolute;
+    bottom:82px;
+    width:44px;
+    height:56px;
+    transition: left 0.08s linear;
+  }
+  .player svg { width:100%; height:100%; }
+  .player.facing-left svg { transform: scaleX(-1); }
+
+  .player-name {
+    position:absolute;
+    bottom:-16px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:0.55rem;
+    color:var(--accent);
+    white-space:nowrap;
+    letter-spacing:0.1em;
+  }
+
+  /* NPC crewmates */
+  .npc {
+    position:absolute;
+    bottom:82px;
+    width:36px; height:46px;
+  }
+
+  /* Shadow */
+  .shadow {
+    position:absolute;
+    bottom:78px;
+    width:36px; height:8px;
+    background:rgba(0,0,0,0.4);
+    border-radius:50%;
+    transform:translateX(4px);
+    transition: left 0.08s linear;
+  }
+
+  /* DOOR */
+  .door {
+    position:absolute;
+    bottom:80px;
+    width:50px; height:80px;
+    background: linear-gradient(90deg, #0a1428, #1a2a45, #0a1428);
+    border:2px solid #1e3050;
+    border-radius:4px 4px 0 0;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.3s;
+  }
+  .door:hover { border-color:var(--accent); box-shadow:0 0 10px rgba(0,255,231,0.3); }
+  .door-label {
+    font-size:0.5rem;
+    color:var(--accent);
+    letter-spacing:0.1em;
+    writing-mode:vertical-lr;
+  }
+  .door-line {
+    position:absolute;
+    top:0; bottom:0;
+    width:2px;
+    background:rgba(0,255,231,0.2);
+    left:50%;
+  }
+
+  /* NPC DIALOG */
+  .speech-bubble {
+    position:absolute;
+    background:rgba(10,20,40,0.95);
+    border:1px solid var(--accent);
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:0.7rem;
+    color:var(--text);
+    max-width:180px;
+    line-height:1.5;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity 0.3s;
+    z-index:5;
+  }
+  .speech-bubble.visible { opacity:1; }
+  .speech-bubble::after {
+    content:'';
+    position:absolute;
+    bottom:-8px; left:50%;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:8px solid transparent;
+    border-right:8px solid transparent;
+    border-top:8px solid var(--accent);
+  }
+
+  /* Controls hint */
+  .controls-hint {
+    position:absolute;
+    bottom:10px; left:10px;
+    font-size:0.6rem;
+    color:var(--dim);
+    z-index:20;
+    line-height:1.8;
+  }
+  .key {
+    display:inline-block;
+    background:rgba(255,255,255,0.1);
+    border:1px solid var(--dim);
+    border-radius:3px;
+    padding:0 4px;
+    font-size:0.55rem;
+    color:var(--text);
+  }
+
+  /* ===== TERMINAL OVERLAY ===== */
+  #terminal-overlay {
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    backdrop-filter:blur(4px);
+  }
+  #terminal-overlay.active { display:flex; }
+
+  .terminal-box {
+    width:min(700px, 95vw);
+    background: var(--panel);
+    border:1px solid var(--accent);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow: 0 0 60px rgba(0,255,231,0.2), 0 0 120px rgba(0,255,231,0.05);
+    animation: terminal-appear 0.3s ease;
+  }
+  @keyframes terminal-appear {
+    from { transform:scale(0.9); opacity:0; }
+    to   { transform:scale(1); opacity:1; }
+  }
+
+  .terminal-header {
+    background: rgba(0,255,231,0.08);
+    border-bottom:1px solid rgba(0,255,231,0.15);
+    padding:12px 20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .terminal-dots { display:flex; gap:6px; }
+  .terminal-dot { width:10px; height:10px; border-radius:50%; }
+  .td-r { background:#ff5f57; }
+  .td-y { background:#febc2e; }
+  .td-g { background:#28c840; }
+  .terminal-title {
+    font-family:'Orbitron',sans-serif;
+    font-size:0.75rem;
+    color:var(--accent);
+    letter-spacing:0.15em;
+    flex:1;
+    text-align:center;
+  }
+  .terminal-close {
+    background:none; border:none;
+    color:var(--dim); cursor:pointer;
+    font-size:1rem; line-height:1;
+    transition:color 0.2s;
+  }
+  .terminal-close:hover { color:var(--red); }
+
+  .terminal-body {
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .terminal-log {
+    background:rgba(0,0,0,0.5);
+    border:1px solid rgba(0,255,231,0.1);
+    border-radius:4px;
+    padding:12px 16px;
+    font-size:0.72rem;
+    line-height:2;
+    min-height:80px;
+    max-height:160px;
+    overflow-y:auto;
+  }
+  .log-line { display:flex; gap:8px; }
+  .log-prefix { color:var(--accent); flex-shrink:0; }
+  .log-info { color:var(--text); }
+  .log-warn { color:var(--yellow); }
+  .log-error { color:var(--red); }
+  .log-success { color:var(--green); }
+
+  /* Progress bar */
+  .brute-progress {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .bp-label {
+    display:flex;
+    justify-content:space-between;
+    font-size:0.65rem;
+    color:var(--dim);
+  }
+  .bp-bar {
+    height:10px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(0,255,231,0.1);
+    border-radius:5px;
+    overflow:hidden;
+  }
+  .bp-fill {
+    height:100%;
+    background: linear-gradient(90deg, var(--accent), var(--blue));
+    border-radius:5px;
+    transition: width 0.2s ease;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* Hints */
+  .hints-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .hint-card {
+    background:rgba(0,0,0,0.4);
+    border:1px solid rgba(0,255,231,0.1);
+    border-radius:6px;
+    padding:10px 14px;
+  }
+  .hint-card.revealed { border-color:rgba(0,255,231,0.4); background:rgba(0,255,231,0.04); }
+  .hint-label {
+    font-size:0.6rem;
+    color:var(--dim);
+    letter-spacing:0.15em;
+    margin-bottom:4px;
+  }
+  .hint-value {
+    font-size:0.85rem;
+    color:var(--accent);
+    font-weight:bold;
+  }
+  .hint-value.hidden { color:var(--dim); letter-spacing:0.3em; }
+
+  /* Password input area */
+  .password-section {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .pwd-title {
+    font-family:'Orbitron',sans-serif;
+    font-size:0.7rem;
+    color:var(--text);
+    letter-spacing:0.1em;
+  }
+  .pwd-display {
+    display:flex;
+    gap:8px;
+    justify-content:center;
+  }
+  .pwd-char {
+    width:44px; height:54px;
+    border:2px solid var(--dim);
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.5rem;
+    font-family:'Orbitron',sans-serif;
+    color:var(--accent);
+    background:rgba(0,0,0,0.4);
+    transition:all 0.2s;
+    position:relative;
+    overflow:hidden;
+  }
+  .pwd-char.active {
+    border-color:var(--accent);
+    box-shadow: 0 0 10px rgba(0,255,231,0.3);
+  }
+  .pwd-char.correct {
+    border-color:var(--green);
+    color:var(--green);
+    box-shadow:0 0 10px rgba(57,255,122,0.3);
+  }
+  .pwd-char.wrong {
+    border-color:var(--red);
+    color:var(--red);
+    animation:shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-4px)}
+    75%{transform:translateX(4px)}
+  }
+  .pwd-char .cursor-blink {
+    width:2px; height:28px;
+    background:var(--accent);
+    animation:blink 1s step-end infinite;
+    display:none;
+  }
+  .pwd-char.active .cursor-blink { display:block; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .pwd-buttons {
+    display:flex;
+    gap:10px;
+    justify-content:center;
+  }
+  .btn-terminal {
+    padding:8px 20px;
+    background:transparent;
+    border:1px solid;
+    border-radius:4px;
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    cursor:pointer;
+    transition:all 0.2s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .btn-brute {
+    border-color:var(--yellow);
+    color:var(--yellow);
+  }
+  .btn-brute:hover { background:var(--yellow); color:var(--hull); box-shadow:0 0 15px var(--yellow); }
+  .btn-brute:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .btn-submit {
+    border-color:var(--green);
+    color:var(--green);
+  }
+  .btn-submit:hover { background:var(--green); color:var(--hull); box-shadow:0 0 15px var(--green); }
+
+  .btn-clear {
+    border-color:var(--red);
+    color:var(--red);
+  }
+  .btn-clear:hover { background:var(--red); color:#fff; }
+
+  .keypad {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+  }
+  .kp-btn {
+    padding:8px 4px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:4px;
+    color:var(--text);
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:all 0.15s;
+    text-align:center;
+  }
+  .kp-btn:hover { background:rgba(0,255,231,0.1); border-color:var(--accent); color:var(--accent); }
+  .kp-btn:active { transform:scale(0.95); }
+  .kp-btn.letter-btn { font-size:0.7rem; }
+
+  /* WIN OVERLAY */
+  #win-overlay {
+    position:fixed; inset:0;
+    background:rgba(0,10,5,0.9);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    flex-direction:column;
+    gap:1.5rem;
+  }
+  #win-overlay.active { display:flex; }
+  .win-title {
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(2rem,6vw,3.5rem);
+    color:var(--green);
+    text-shadow: 0 0 40px var(--green);
+    animation: pulse-glow-green 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes pulse-glow-green {
+    from {text-shadow:0 0 20px var(--green)}
+    to   {text-shadow:0 0 60px var(--green),0 0 100px rgba(57,255,122,0.4)}
+  }
+  .win-sub {
+    font-size:0.9rem;
+    color:var(--dim);
+    letter-spacing:0.2em;
+  }
+  .particle {
+    position:fixed;
+    pointer-events:none;
+    border-radius:50%;
+    animation: particle-fall linear forwards;
+  }
+  @keyframes particle-fall {
+    from { transform:translateY(-20px) rotate(0deg); opacity:1; }
+    to   { transform:translateY(110vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- INTRO SCREEN -->
+<div class="screen active" id="intro">
+  <div class="stars-bg" id="stars"></div>
+  <div class="intro-logo">STARSHIP CIPHER</div>
+  <div class="intro-sub">SECURITY BREACH DETECTED</div>
+  <button class="intro-btn" onclick="startGame()">LAUNCH MISSION</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="game">
+  <!-- HUD -->
+  <div class="hud">
+    <span class="hud-title">SKELD-7</span>
+    <span class="hud-sep">|</span>
+    <span class="hud-room" id="room-name">CAFETERIA</span>
+    <span class="hud-spacer"></span>
+    <span class="hud-task">TASK:</span>
+    <div class="task-bar"><div class="task-fill" id="task-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- World -->
+  <div class="world-container">
+    <div class="world" id="world">
+
+      <!-- CAFETERIA (0–500px) -->
+      <div class="room cafeteria" style="left:0;width:500px;">
+        <div class="room-ceiling"></div>
+        <div class="room-floor"></div>
+        <div class="grid-overlay"></div>
+        <div class="room-label">CAFETERIA</div>
+        <!-- Ceiling lights -->
+        <div class="ceiling-light" style="left:80px;"></div>
+        <div class="ceiling-light" style="left:240px;"></div>
+        <div class="ceiling-light" style="left:400px;"></div>
+        <!-- Table -->
+        <div style="position:absolute;bottom:80px;left:120px;width:200px;height:50px;background:linear-gradient(180deg,#1e3050,#162540);border:2px solid #1e3050;border-radius:4px 4px 0 0;"></div>
+        <!-- Chairs -->
+        <div style="position:absolute;bottom:80px;left:130px;width:30px;height:35px;background:#0d1e35;border:1px solid #1e3050;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;bottom:80px;left:175px;width:30px;height:35px;background:#0d1e35;border:1px solid #1e3050;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;bottom:80px;left:220px;width:30px;height:35px;background:#0d1e35;border:1px solid #1e3050;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;bottom:80px;left:265px;width:30px;height:35px;background:#0d1e35;border:1px solid #1e3050;border-radius:3px 3px 0 0;"></div>
+        <!-- Coffee machine -->
+        <div style="position:absolute;bottom:80px;right:60px;width:50px;height:70px;background:linear-gradient(180deg,#1a2a40,#0d1828);border:2px solid #1e3050;border-radius:4px;"></div>
+        <div style="position:absolute;bottom:130px;right:68px;width:20px;height:10px;background:#ff3b3b;border-radius:2px;box-shadow:0 0 8px #ff3b3b;"></div>
+        <!-- Vent -->
+        <div class="vent" style="bottom:82px;left:50px;">
+          <div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div>
+        </div>
+        <!-- NPC 1 -->
+        <div class="npc" id="npc1" style="left:180px;" title="NPC">
+          <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="22" cy="34" rx="16" ry="20" fill="#ff9900"/>
+            <rect x="14" y="46" width="8" height="10" rx="2" fill="#cc7700"/>
+            <rect x="22" y="46" width="8" height="10" rx="2" fill="#cc7700"/>
+            <ellipse cx="22" cy="20" rx="14" ry="14" fill="#ff9900"/>
+            <ellipse cx="22" cy="19" rx="8" ry="5" fill="#1a2a3a"/>
+            <ellipse cx="22" cy="19" rx="6" ry="3.5" fill="#00ffe7" opacity="0.8"/>
+            <rect x="6" y="28" width="8" height="14" rx="3" fill="#cc7700"/>
+            <rect x="30" y="28" width="8" height="14" rx="3" fill="#cc7700"/>
+          </svg>
+        </div>
+        <div class="speech-bubble" id="bubble1" style="left:140px;bottom:145px;">
+          Find the <span style="color:var(--accent)">control panel</span>.<br>The password has <span style="color:var(--yellow)">4 characters</span>.
+        </div>
+        <!-- Door to hallway -->
+        <div class="door" style="right:0px;" onclick="moveToRoom('hallway')">
+          <div class="door-line"></div>
+          <div class="door-label">→ HALL</div>
+        </div>
+      </div>
+
+      <!-- HALLWAY (500–1000px) -->
+      <div class="room hallway" style="left:500px;width:500px;">
+        <div class="room-ceiling"></div>
+        <div class="room-floor"></div>
+        <div class="grid-overlay"></div>
+        <div class="room-label">HALLWAY</div>
+        <div class="ceiling-light" style="left:150px;"></div>
+        <div class="ceiling-light" style="left:350px;"></div>
+        <!-- Pipes on wall -->
+        <div class="pipe" style="top:70px;left:0;right:0;height:12px;"></div>
+        <div class="pipe" style="top:90px;left:0;right:0;height:6px;"></div>
+        <div class="pipe vert" style="top:70px;left:100px;width:12px;height:200px;"></div>
+        <div class="pipe vert" style="top:70px;left:300px;width:8px;height:150px;"></div>
+        <!-- Warning sign -->
+        <div style="position:absolute;top:120px;left:220px;width:60px;height:60px;background:#1a1000;border:2px solid var(--yellow);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">⚠️</div>
+        <!-- Vents -->
+        <div class="vent" style="bottom:82px;left:80px;">
+          <div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div>
+        </div>
+        <div class="vent" style="bottom:82px;left:350px;">
+          <div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div><div class="vent-bar"></div>
+        </div>
+        <!-- NPC 2 -->
+        <div class="npc" id="npc2" style="left:250px;">
+          <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="22" cy="34" rx="16" ry="20" fill="#7b2fff"/>
+            <rect x="14" y="46" width="8" height="10" rx="2" fill="#5a20cc"/>
+            <rect x="22" y="46" width="8" height="10" rx="2" fill="#5a20cc"/>
+            <ellipse cx="22" cy="20" rx="14" ry="14" fill="#7b2fff"/>
+            <ellipse cx="22" cy="19" rx="8" ry="5" fill="#1a2a3a"/>
+            <ellipse cx="22" cy="19" rx="6" ry="3.5" fill="#00ffe7" opacity="0.8"/>
+            <rect x="6" y="28" width="8" height="14" rx="3" fill="#5a20cc"/>
+            <rect x="30" y="28" width="8" height="14" rx="3" fill="#5a20cc"/>
+          </svg>
+        </div>
+        <div class="speech-bubble" id="bubble2" style="left:200px;bottom:140px;">
+          I heard the code starts with <span style="color:var(--yellow)" id="hint-char1">?</span>...
+        </div>
+        <!-- Doors -->
+        <div class="door" style="left:0;" onclick="moveToRoom('cafeteria')">
+          <div class="door-line"></div>
+          <div class="door-label">← CAFE</div>
+        </div>
+        <div class="door" style="right:0;" onclick="moveToRoom('control')">
+          <div class="door-line"></div>
+          <div class="door-label">CTRL →</div>
+        </div>
+      </div>
+
+      <!-- CONTROL ROOM (1000–1500px) -->
+      <div class="room control-room" style="left:1000px;width:500px;">
+        <div class="room-ceiling"></div>
+        <div class="room-floor"></div>
+        <div class="grid-overlay"></div>
+        <div class="room-label">CONTROL ROOM</div>
+        <div class="ceiling-light" style="left:80px;background:rgba(100,150,255,0.8);"></div>
+        <div class="ceiling-light" style="left:250px;background:rgba(100,150,255,0.8);"></div>
+        <div class="ceiling-light" style="left:400px;background:rgba(100,150,255,0.8);"></div>
+        <!-- Main console -->
+        <div class="console" id="main-console" onclick="openTerminal()" style="bottom:80px;left:150px;width:200px;height:100px;background:linear-gradient(180deg,#0d1a30,#060f1e);border:2px solid var(--accent);border-radius:6px;">
+          <div class="console-screen" style="margin:8px;height:60px;background:#000;border:1px solid rgba(0,255,231,0.3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+            <div style="font-size:0.55rem;color:var(--accent);letter-spacing:0.15em;">SECURITY PANEL</div>
+            <div style="font-size:0.7rem;color:var(--red);animation:screen-flicker 2s infinite;">● LOCKED</div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:8px;padding:4px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--dim);"></div>
+          </div>
+          <div class="interact-hint">Press E / Click to Access</div>
+        </div>
+        <!-- Side consoles -->
+        <div style="position:absolute;bottom:80px;left:20px;width:100px;height:80px;background:linear-gradient(180deg,#0d1a30,#060f1e);border:1px solid rgba(0,150,255,0.3);border-radius:4px;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:6px;">
+          <div style="background:#001828;border:1px solid rgba(0,150,255,0.2);border-radius:2px;"></div>
+          <div style="background:#001828;border:1px solid rgba(0,150,255,0.2);border-radius:2px;"></div>
+          <div style="background:#001828;border:1px solid rgba(0,150,255,0.2);border-radius:2px;"></div>
+          <div style="background:#001828;border:1px solid rgba(0,150,255,0.2);border-radius:2px;"></div>
+        </div>
+        <div style="position:absolute;bottom:80px;right:20px;width:100px;height:80px;background:linear-gradient(180deg,#0d1a30,#060f1e);border:1px solid rgba(0,150,255,0.3);border-radius:4px;padding:6px;">
+          <div style="width:100%;height:30px;background:#000;border:1px solid rgba(0,255,231,0.15);border-radius:2px;margin-bottom:4px;display:flex;align-items:center;padding:0 4px;">
+            <div style="font-size:0.45rem;color:var(--accent);">SYS STATUS</div>
+          </div>
+          <div style="display:flex;gap:3px;flex-wrap:wrap;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 4px var(--red);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 4px var(--yellow);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);"></div>
+          </div>
+        </div>
+        <!-- NPC 3 -->
+        <div class="npc" id="npc3" style="left:370px;">
+          <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="22" cy="34" rx="16" ry="20" fill="#ff5555"/>
+            <rect x="14" y="46" width="8" height="10" rx="2" fill="#cc3333"/>
+            <rect x="22" y="46" width="8" height="10" rx="2" fill="#cc3333"/>
+            <ellipse cx="22" cy="20" rx="14" ry="14" fill="#ff5555"/>
+            <ellipse cx="22" cy="19" rx="8" ry="5" fill="#1a2a3a"/>
+            <ellipse cx="22" cy="19" rx="6" ry="3.5" fill="#00ffe7" opacity="0.8"/>
+            <rect x="6" y="28" width="8" height="14" rx="3" fill="#cc3333"/>
+            <rect x="30" y="28" width="8" height="14" rx="3" fill="#cc3333"/>
+          </svg>
+        </div>
+        <div class="speech-bubble" id="bubble3" style="left:310px;bottom:145px;">
+          The last 2 chars... I think they're <span style="color:var(--yellow)" id="hint-last">??</span>
+        </div>
+        <!-- Doors -->
+        <div class="door" style="left:0;" onclick="moveToRoom('hallway')">
+          <div class="door-line"></div>
+          <div class="door-label">← HALL</div>
+        </div>
+        <div class="door" style="right:0;" onclick="moveToRoom('engine')">
+          <div class="door-line"></div>
+          <div class="door-label">ENG →</div>
+        </div>
+      </div>
+
+      <!-- ENGINE ROOM (1500–2000px) -->
+      <div class="room engine-room" style="left:1500px;width:500px;">
+        <div class="room-ceiling" style="background:linear-gradient(180deg,#0a0404,#160a0a);border-bottom:2px solid #2a1010;"></div>
+        <div class="room-floor"></div>
+        <div class="grid-overlay"></div>
+        <div class="room-label" style="color:rgba(255,80,80,0.3);">ENGINE ROOM</div>
+        <div class="ceiling-light" style="left:200px;background:rgba(255,100,100,0.6);"></div>
+        <!-- Engine core -->
+        <div style="position:absolute;bottom:80px;left:160px;width:180px;height:180px;display:flex;align-items:center;justify-content:center;">
+          <div style="position:absolute;width:180px;height:180px;border-radius:50%;border:3px solid rgba(255,80,0,0.2);"></div>
+          <div class="engine-outer" style="width:150px;height:150px;border:3px dashed rgba(255,100,0,0.3);"></div>
+          <div class="engine-core" style="width:100px;height:100px;border:4px solid rgba(255,80,0,0.5);background:radial-gradient(ellipse,#3a0a00,#1a0500);box-shadow:0 0 30px rgba(255,80,0,0.3);"></div>
+          <div style="position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(ellipse,#ff4500,#800000);box-shadow:0 0 40px rgba(255,69,0,0.6);animation:pulse-glow 1.5s ease-in-out infinite alternate;"></div>
+        </div>
+        <!-- Pipes on floor -->
+        <div class="pipe" style="bottom:80px;left:0;right:0;height:8px;"></div>
+        <div class="pipe vert" style="bottom:80px;left:50px;width:16px;height:200px;"></div>
+        <div class="pipe vert" style="bottom:80px;right:50px;width:16px;height:200px;"></div>
+        <!-- NPC 4 -->
+        <div class="npc" id="npc4" style="left:380px;">
+          <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="22" cy="34" rx="16" ry="20" fill="#39c85a"/>
+            <rect x="14" y="46" width="8" height="10" rx="2" fill="#28963f"/>
+            <rect x="22" y="46" width="8" height="10" rx="2" fill="#28963f"/>
+            <ellipse cx="22" cy="20" rx="14" ry="14" fill="#39c85a"/>
+            <ellipse cx="22" cy="19" rx="8" ry="5" fill="#1a2a3a"/>
+            <ellipse cx="22" cy="19" rx="6" ry="3.5" fill="#00ffe7" opacity="0.8"/>
+            <rect x="6" y="28" width="8" height="14" rx="3" fill="#28963f"/>
+            <rect x="30" y="28" width="8" height="14" rx="3" fill="#28963f"/>
+          </svg>
+        </div>
+        <div class="speech-bubble" id="bubble4" style="left:310px;bottom:145px;">
+          The 2nd character... check the <span style="color:var(--yellow)">engine serial: <span id="hint-serial">???</span></span>
+        </div>
+        <!-- Door -->
+        <div class="door" style="left:0;" onclick="moveToRoom('control')">
+          <div class="door-line"></div>
+          <div class="door-label">← CTRL</div>
+        </div>
+      </div>
+
+      <!-- Player shadow -->
+      <div class="shadow" id="player-shadow"></div>
+
+      <!-- Player -->
+      <div class="player" id="player">
+        <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="22" cy="34" rx="16" ry="20" fill="#4da6ff"/>
+          <rect x="14" y="46" width="8" height="10" rx="2" fill="#2a7acc"/>
+          <rect x="22" y="46" width="8" height="10" rx="2" fill="#2a7acc"/>
+          <ellipse cx="22" cy="20" rx="14" ry="14" fill="#4da6ff"/>
+          <ellipse cx="22" cy="19" rx="8" ry="5" fill="#1a2a3a"/>
+          <ellipse cx="22" cy="19" rx="6" ry="3.5" fill="#ffffff" opacity="0.9"/>
+          <ellipse cx="23" cy="19" rx="2" ry="2" fill="#1a2a3a"/>
+          <rect x="6" y="28" width="8" height="14" rx="3" fill="#2a7acc"/>
+          <rect x="30" y="28" width="8" height="14" rx="3" fill="#2a7acc"/>
+        </svg>
+        <div class="player-name">YOU</div>
+      </div>
+
+    </div><!-- end world -->
+
+    <!-- Ship minimap -->
+    <div class="ship-map">
+      <div class="map-room" id="map-cafe" style="left:4px;top:20px;width:40px;height:50px;">CAFE</div>
+      <div class="map-room" id="map-hall" style="left:46px;top:20px;width:42px;height:50px;">HALL</div>
+      <div class="map-room" id="map-ctrl" style="left:90px;top:20px;width:42px;height:50px;">CTRL</div>
+      <div class="map-room" id="map-eng" style="left:134px;top:20px;width:42px;height:50px;">ENG</div>
+      <div class="map-player-dot" id="map-dot" style="left:15px;top:35px;"></div>
+    </div>
+
+    <!-- Controls hint -->
+    <div class="controls-hint">
+      <span class="key">A</span><span class="key">D</span> Move &nbsp;
+      <span class="key">E</span> Interact with console
+    </div>
+  </div>
+</div>
+
+<!-- TERMINAL OVERLAY -->
+<div id="terminal-overlay">
+  <div class="terminal-box">
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <div class="terminal-dot td-r"></div>
+        <div class="terminal-dot td-y"></div>
+        <div class="terminal-dot td-g"></div>
+      </div>
+      <div class="terminal-title">SECURITY PANEL — CIPHER LOCK v2.4</div>
+      <button class="terminal-close" onclick="closeTerminal()">✕</button>
+    </div>
+    <div class="terminal-body">
+
+      <!-- Log -->
+      <div class="terminal-log" id="term-log">
+        <div class="log-line"><span class="log-prefix">></span><span class="log-info">System boot... SKELD-7 Security Module</span></div>
+        <div class="log-line"><span class="log-prefix">></span><span class="log-warn">WARNING: 4-digit alphanumeric lock active</span></div>
+        <div class="log-line"><span class="log-prefix">></span><span class="log-info">Collect hints from crew. Use brute-force assist.</span></div>
+      </div>
+
+      <!-- Progress -->
+      <div class="brute-progress">
+        <div class="bp-label"><span>BRUTE-FORCE SCAN</span><span id="bp-pct">0%</span></div>
+        <div class="bp-bar"><div class="bp-fill" id="bp-fill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Hints -->
+      <div class="hints-grid">
+        <div class="hint-card" id="hc1">
+          <div class="hint-label">HINT 1 — 1ST CHAR</div>
+          <div class="hint-value hidden" id="hv1">?</div>
+        </div>
+        <div class="hint-card" id="hc2">
+          <div class="hint-label">HINT 2 — 2ND CHAR</div>
+          <div class="hint-value hidden" id="hv2">?</div>
+        </div>
+        <div class="hint-card" id="hc3">
+          <div class="hint-label">HINT 3 — LAST 2 CHARS</div>
+          <div class="hint-value hidden" id="hv3">??</div>
+        </div>
+        <div class="hint-card" id="hc4">
+          <div class="hint-label">BRUTE-FORCE ASSIST</div>
+          <div class="hint-value hidden" id="hv4">—</div>
+        </div>
+      </div>
+
+      <!-- Password Entry -->
+      <div class="password-section">
+        <div class="pwd-title">ENTER ACCESS CODE:</div>
+        <div class="pwd-display">
+          <div class="pwd-char active" id="pc0"><span class="cursor-blink"></span></div>
+          <div class="pwd-char" id="pc1"></div>
+          <div class="pwd-char" id="pc2"></div>
+          <div class="pwd-char" id="pc3"></div>
+        </div>
+        <div class="keypad" id="keypad">
+          <!-- generated by JS -->
+        </div>
+        <div class="pwd-buttons">
+          <button class="btn-terminal btn-brute" id="brute-btn" onclick="startBruteForce()">⚡ BRUTE FORCE</button>
+          <button class="btn-terminal btn-clear" onclick="clearPassword()">✕ CLEAR</button>
+          <button class="btn-terminal btn-submit" onclick="submitPassword()">▶ SUBMIT</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- WIN OVERLAY -->
+<div id="win-overlay">
+  <div class="win-title">ACCESS GRANTED</div>
+  <div class="win-sub">SECURITY BREACH NEUTRALIZED</div>
+  <button class="intro-btn" onclick="resetGame()" style="margin-top:1rem;">PLAY AGAIN</button>
+</div>
+
+<script>
+// ===== GAME STATE =====
+const PASSWORD_LENGTH = 4;
+const CHARS = '12345678901234567890';
+let secretPassword = '';
+let playerInput = [];
+let currentSlot = 0;
+let bruteRunning = false;
+let bruteInterval = null;
+let taskProgress = 0;
+let hintsFound = { h1:false, h2:false, h3:false };
+
+// Player movement
+let playerX = 100;
+let keys = {};
+let facing = 'right';
+const PLAYER_SPEED = 4;
+const WORLD_WIDTH = 2000;
+const PLAYER_MIN = 20;
+const PLAYER_MAX = WORLD_WIDTH - 80;
+
+// Camera
+let camX = 0;
+const VIEWPORT_W = () => document.querySelector('.world-container').clientWidth;
+
+const rooms = [
+  { name:'CAFETERIA', start:0, end:500 },
+  { name:'HALLWAY', start:500, end:1000 },
+  { name:'CONTROL ROOM', start:1000, end:1500 },
+  { name:'ENGINE ROOM', start:1500, end:2000 },
+];
+
+// NPC proximity triggers
+const npcs = [
+  { id:'npc1', bubble:'bubble1', x:180, hint:'h0', triggered:false },
+  { id:'npc2', bubble:'bubble2', x:750, hint:'h1', triggered:false },
+  { id:'npc3', bubble:'bubble3', x:1370, hint:'h3', triggered:false },
+  { id:'npc4', bubble:'bubble4', x:1880, hint:'h2', triggered:false },
+];
+
+// Init
+function init() {
+  generatePassword();
+  generateStars();
+  buildKeypad();
+  updateHintTexts();
+  loop();
+}
+
+function generatePassword() {
+  secretPassword = '';
+  for(let i=0;i<PASSWORD_LENGTH;i++) {
+    secretPassword += CHARS[Math.floor(Math.random()*CHARS.length)];
+  }
+  console.log('Secret password:', secretPassword); // dev hint :)
+  // Set hint texts
+  document.getElementById('hint-char1').textContent = secretPassword[0];
+  document.getElementById('hint-last').textContent = secretPassword[2]+secretPassword[3];
+  // Engine serial: show second char mixed with noise
+  const serial = 'SN-'+secretPassword[1]+'-'+Math.floor(Math.random()*999).toString().padStart(3,'0');
+  document.getElementById('hint-serial').textContent = serial;
+}
+
+function generateStars() {
+  const c = document.getElementById('stars');
+  for(let i=0;i<200;i++) {
+    const s = document.createElement('div');
+    s.className='star';
+    const sz = Math.random()*2.5+0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+1).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s`;
+    c.appendChild(s);
+  }
+}
+
+function buildKeypad() {
+  const kp = document.getElementById('keypad');
+  kp.innerHTML='';
+  // Digits
+  '1234567890'.split('').forEach(c=>{
+    const b=document.createElement('button');
+    b.className='kp-btn';
+    b.textContent=c;
+    b.onclick=()=>typeChar(c);
+    kp.appendChild(b);
+  });
+  // Letters row
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c=>{
+    const b=document.createElement('button');
+    b.className='kp-btn letter-btn';
+    b.textContent=c;
+    b.onclick=()=>typeChar(c);
+    kp.appendChild(b);
+  });
+  // Backspace
+  const back=document.createElement('button');
+  back.className='kp-btn';
+  back.textContent='⌫';
+  back.onclick=backspace;
+  kp.appendChild(back);
+}
+
+function updateHintTexts() {
+  // Already set in generatePassword
+}
+
+// ===== MOVEMENT =====
+document.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if(e.key.toLowerCase()==='e' && !document.getElementById('terminal-overlay').classList.contains('active')) {
+    // Check if near control console
+    if(Math.abs(playerX - 1250) < 150) openTerminal();
+  }
+  // Keyboard input for terminal
+  if(document.getElementById('terminal-overlay').classList.contains('active')) {
+    const k = e.key.toUpperCase();
+    if(CHARS.includes(k) && k.length===1) typeChar(k);
+    if(e.key==='Backspace') backspace();
+    if(e.key==='Enter') submitPassword();
+    if(e.key==='Escape') closeTerminal();
+  }
+});
+document.addEventListener('keyup', e => { keys[e.key.toLowerCase()]=false; });
+
+function loop() {
+  if(!document.getElementById('terminal-overlay').classList.contains('active')) {
+    // Move
+    if(keys['a'] || keys['arrowleft']) {
+      playerX = Math.max(PLAYER_MIN, playerX-PLAYER_SPEED);
+      facing='left';
+    }
+    if(keys['d'] || keys['arrowright']) {
+      playerX = Math.min(PLAYER_MAX, playerX+PLAYER_SPEED);
+      facing='right';
+    }
+    updatePlayer();
+    checkNPCProximity();
+    checkRoom();
+  }
+  requestAnimationFrame(loop);
+}
+
+function updatePlayer() {
+  const p = document.getElementById('player');
+  const sh = document.getElementById('player-shadow');
+  p.style.left = playerX+'px';
+  sh.style.left = (playerX+4)+'px';
+  p.className = 'player' + (facing==='left'?' facing-left':'');
+
+  // Camera follows player
+  const vw = VIEWPORT_W();
+  const targetCam = playerX - vw/2;
+  camX = Math.max(0, Math.min(WORLD_WIDTH-vw, targetCam));
+  document.getElementById('world').style.transform = `translateX(${-camX}px)`;
+
+  // Update minimap dot
+  const pct = playerX/WORLD_WIDTH;
+  document.getElementById('map-dot').style.left = (4 + pct*172)+'px';
+}
+
+function checkRoom() {
+  const roomEl = document.getElementById('room-name');
+  const mapRooms = ['map-cafe','map-hall','map-ctrl','map-eng'];
+  mapRooms.forEach(id=>document.getElementById(id).classList.remove('current'));
+  for(const r of rooms) {
+    if(playerX>=r.start && playerX<r.end) {
+      roomEl.textContent = r.name;
+      const mapId = ['map-cafe','map-hall','map-ctrl','map-eng'][rooms.indexOf(r)];
+      document.getElementById(mapId).classList.add('current');
+      break;
+    }
+  }
+}
+
+function checkNPCProximity() {
+  npcs.forEach(npc=>{
+    const dist = Math.abs(playerX - npc.x);
+    const bubble = document.getElementById(npc.bubble);
+    if(dist < 120) {
+      bubble.classList.add('visible');
+      if(!npc.triggered) {
+        npc.triggered=true;
+        revealHint(npc.hint);
+      }
+    } else {
+      bubble.classList.remove('visible');
+    }
+  });
+}
+
+function revealHint(hintId) {
+  if(hintId==='h1' && !hintsFound.h1) {
+    hintsFound.h1=true;
+    document.getElementById('hv1').textContent=secretPassword[0];
+    document.getElementById('hv1').classList.remove('hidden');
+    document.getElementById('hc1').classList.add('revealed');
+    taskProgress=Math.min(100,taskProgress+25);
+    updateTaskBar();
+    addLog(`HINT: First character is "${secretPassword[0]}"`, 'success');
+  }
+  if(hintId==='h2' && !hintsFound.h2) {
+    hintsFound.h2=true;
+    document.getElementById('hv2').textContent=secretPassword[1];
+    document.getElementById('hv2').classList.remove('hidden');
+    document.getElementById('hc2').classList.add('revealed');
+    taskProgress=Math.min(100,taskProgress+25);
+    updateTaskBar();
+    addLog(`HINT: Second character is "${secretPassword[1]}"`, 'success');
+  }
+  if(hintId==='h3' && !hintsFound.h3) {
+    hintsFound.h3=true;
+    document.getElementById('hv3').textContent=secretPassword[2]+secretPassword[3];
+    document.getElementById('hv3').classList.remove('hidden');
+    document.getElementById('hc3').classList.add('revealed');
+    taskProgress=Math.min(100,taskProgress+25);
+    updateTaskBar();
+    addLog(`HINT: Last 2 characters are "${secretPassword[2]}${secretPassword[3]}"`, 'success');
+  }
+}
+
+function updateTaskBar() {
+  document.getElementById('task-fill').style.width = taskProgress+'%';
+}
+
+// ===== DOOR NAVIGATION =====
+function moveToRoom(r) {
+  const targets = {cafeteria:100,hallway:700,control:1150,engine:1700};
+  playerX = targets[r];
+}
+
+// ===== TERMINAL =====
+function openTerminal() {
+  document.getElementById('terminal-overlay').classList.add('active');
+  taskProgress=Math.min(100,taskProgress+5);
+  updateTaskBar();
+  addLog('Terminal accessed. Enter 4-character security code.','info');
+}
+function closeTerminal() {
+  document.getElementById('terminal-overlay').classList.remove('active');
+  stopBruteForce();
+}
+
+function addLog(msg, type='info') {
+  const log = document.getElementById('term-log');
+  const div = document.createElement('div');
+  div.className='log-line';
+  div.innerHTML=`<span class="log-prefix">></span><span class="log-${type}">${msg}</span>`;
+  log.appendChild(div);
+  log.scrollTop=log.scrollHeight;
+}
+
+// ===== PASSWORD INPUT =====
+function typeChar(c) {
+  if(bruteRunning) return;
+  if(currentSlot>=PASSWORD_LENGTH) return;
+  playerInput[currentSlot]=c;
+  const el=document.getElementById('pc'+currentSlot);
+  el.textContent=c;
+  el.classList.remove('active');
+  currentSlot++;
+  if(currentSlot<PASSWORD_LENGTH) {
+    document.getElementById('pc'+currentSlot).classList.add('active');
+  }
+}
+
+function backspace() {
+  if(bruteRunning) return;
+  if(currentSlot>0) {
+    currentSlot--;
+    playerInput[currentSlot]=undefined;
+    const el=document.getElementById('pc'+currentSlot);
+    el.innerHTML='<span class="cursor-blink"></span>';
+    el.classList.add('active');
+    if(currentSlot<PASSWORD_LENGTH-1) {
+      document.getElementById('pc'+(currentSlot+1)).classList.remove('active');
+    }
+  }
+}
+
+function clearPassword() {
+  if(bruteRunning) return;
+  playerInput=[];
+  currentSlot=0;
+  for(let i=0;i<PASSWORD_LENGTH;i++) {
+    const el=document.getElementById('pc'+i);
+    el.className='pwd-char'+(i===0?' active':'');
+    el.innerHTML=i===0?'<span class="cursor-blink"></span>':'';
+  }
+}
+
+function submitPassword() {
+  if(playerInput.length<PASSWORD_LENGTH || playerInput.includes(undefined)) {
+    addLog('ERROR: Incomplete code entered.','error');
+    shakeAll();
+    return;
+  }
+  const attempt = playerInput.join('');
+  addLog(`Attempting code: ${attempt}`,'info');
+  if(attempt===secretPassword) {
+    addLog('✓ ACCESS GRANTED! Security lock disengaged!','success');
+    setTimeout(()=>{ closeTerminal(); showWin(); },800);
+    for(let i=0;i<PASSWORD_LENGTH;i++) {
+      document.getElementById('pc'+i).classList.add('correct');
+      document.getElementById('pc'+i).classList.remove('active');
+    }
+  } else {
+    addLog(`✗ WRONG CODE. ${attempt} is incorrect.`,'error');
+    shakeAll();
+    // show which chars are right
+    let hint='';
+    for(let i=0;i<PASSWORD_LENGTH;i++) {
+      if(playerInput[i]===secretPassword[i]) hint+=`Pos ${i+1}: correct. `;
+      else if(secretPassword.includes(playerInput[i])) hint+=`Pos ${i+1}: wrong position. `;
+      else hint+=`Pos ${i+1}: not in code. `;
+      document.getElementById('pc'+i).classList.toggle('wrong',playerInput[i]!==secretPassword[i]);
+    }
+    addLog(hint,'warn');
+    setTimeout(()=>{
+      for(let i=0;i<PASSWORD_LENGTH;i++) document.getElementById('pc'+i).classList.remove('wrong');
+    },500);
+  }
+}
+
+function shakeAll() {
+  for(let i=0;i<PASSWORD_LENGTH;i++) {
+    const el=document.getElementById('pc'+i);
+    el.classList.add('wrong');
+    setTimeout(()=>el.classList.remove('wrong'),300);
+  }
+}
+
+// ===== BRUTE FORCE =====
+function startBruteForce() {
+  if(bruteRunning) return;
+  addLog('Initiating brute-force scan... searching keyspace...','warn');
+  document.getElementById('brute-btn').disabled=true;
+  bruteRunning=true;
+  let pct=0;
+  const totalSteps=100;
+  let step=0;
+  const candidates=[];
+  
+  // Fake scan, reveal partial password char by char
+  bruteInterval=setInterval(()=>{
+    step++;
+    pct=Math.floor(step/totalSteps*100);
+    document.getElementById('bp-fill').style.width=pct+'%';
+    document.getElementById('bp-pct').textContent=pct+'%';
+
+    // At 25%, reveal first char (only if not already known)
+    if(step===25) addLog(`Partial match found at pos 1: "${secretPassword[0]}"...`,'warn');
+    if(step===50) addLog(`Partial match found at pos 2: "${secretPassword[1]}"...`,'warn');
+    if(step===75) addLog(`Partial match found at pos 3-4: "${secretPassword[2]}${secretPassword[3]}"...`,'warn');
+
+    if(step>=totalSteps) {
+      clearInterval(bruteInterval);
+      bruteRunning=false;
+      addLog(`SCAN COMPLETE. Full password recovered: ${secretPassword}`,'success');
+      document.getElementById('hv4').textContent=secretPassword;
+      document.getElementById('hv4').classList.remove('hidden');
+      document.getElementById('hc4').classList.add('revealed');
+      // Auto fill
+      clearPassword();
+      let i=0;
+      const fillInterval=setInterval(()=>{
+        typeChar(secretPassword[i]);
+        i++;
+        if(i>=PASSWORD_LENGTH) clearInterval(fillInterval);
+      },200);
+      taskProgress=100;
+      updateTaskBar();
+    }
+  },60);
+}
+
+function stopBruteForce() {
+  if(bruteInterval) clearInterval(bruteInterval);
+  bruteRunning=false;
+}
+
+// ===== WIN =====
+function showWin() {
+  document.getElementById('win-overlay').classList.add('active');
+  spawnParticles();
+}
+
+function spawnParticles() {
+  const colors=['#00ffe7','#39ff7a','#4da6ff','#ffe14d','#ff3b3b'];
+  for(let i=0;i<80;i++) {
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='particle';
+      const sz=Math.random()*10+4;
+      p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;top:0;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${(Math.random()*2+1)+.5}s;animation-delay:0s;`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),3000);
+    },i*30);
+  }
+}
+
+function resetGame() {
+  document.getElementById('win-overlay').classList.remove('active');
+  playerX=100; facing='right'; playerInput=[]; currentSlot=0; taskProgress=0;
+  hintsFound={h1:false,h2:false,h3:false};
+  npcs.forEach(n=>n.triggered=false);
+  generatePassword();
+  clearPassword();
+  document.getElementById('bp-fill').style.width='0%';
+  document.getElementById('bp-pct').textContent='0%';
+  document.getElementById('brute-btn').disabled=false;
+  ['hv1','hv2','hv3','hv4'].forEach(id=>{
+    document.getElementById(id).classList.add('hidden');
+  });
+  ['hc1','hc2','hc3','hc4'].forEach(id=>{
+    document.getElementById(id).classList.remove('revealed');
+  });
+  document.getElementById('hv1').textContent='?';
+  document.getElementById('hv2').textContent='?';
+  document.getElementById('hv3').textContent='??';
+  document.getElementById('hv4').textContent='—';
+  updateTaskBar();
+  document.getElementById('term-log').innerHTML=`
+    <div class="log-line"><span class="log-prefix">></span><span class="log-info">System boot... SKELD-7 Security Module</span></div>
+    <div class="log-line"><span class="log-prefix">></span><span class="log-warn">WARNING: 4-digit alphanumeric lock active</span></div>
+    <div class="log-line"><span class="log-prefix">></span><span class="log-info">Collect hints from crew. Use brute-force assist.</span></div>`;
+}
+
+// ===== START =====
+function startGame() {
+  document.getElementById('intro').classList.remove('active');
+  document.getElementById('game').classList.add('active');
+}
+
+init();
+</script>
+</body>
+</html>
