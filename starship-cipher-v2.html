@@ -54,8 +54,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .hud-hint{font-size:.62rem;color:var(--dimtxt);}
 
 /* CANVAS */
-#canvas-wrap{position:fixed;top:44px;left:0;right:0;bottom:0;}
-canvas{display:block;width:100%;height:100%;}
+#canvas-wrap{position:fixed;top:44px;left:0;right:0;bottom:0;display:grid;}
+canvas{display:block;width:fit-content;height:100%;margin: auto;}
 
 /* MINIMAP */
 #minimap{position:fixed;bottom:14px;right:14px;width:210px;height:140px;background:rgba(4,8,15,.92);border:1px solid var(--border);border-radius:4px;z-index:200;overflow:hidden;}
@@ -333,59 +333,60 @@ const T=44; // tile size px
 
 // rooms: x,y,w,h in tiles
 const ROOMS=[
-  {id:'cafe',    label:'CAFETERIA',   x:0, y:0, w:11,h:7, fc:'#0b1525',wc:'#0d1c38'},
-  {id:'medbay',  label:'MEDBAY',      x:13,y:0, w:7, h:5, fc:'#0a1a20',wc:'#0c2230'},
-  {id:'htop',    label:'CORRIDOR N',  x:11,y:1, w:2, h:3, fc:'#090f1c',wc:'#0d1828'},
-  {id:'weapons', label:'WEAPONS BAY', x:0, y:9, w:8, h:7, fc:'#150a0a',wc:'#1e1010'},
-  {id:'engine',  label:'ENGINE ROOM', x:10,y:7, w:10,h:9, fc:'#130c05',wc:'#1c1208'},
-  {id:'hmid',    label:'CORRIDOR C',  x:8, y:5, w:2, h:4, fc:'#090f1c',wc:'#0d1828'},
-  {id:'storage', label:'STORAGE',     x:0, y:7, w:8, h:2, fc:'#0c1018',wc:'#101828'},
-  {id:'security',label:'SECURITY',    x:13,y:7, w:7, h:5, fc:'#100a18',wc:'#180c24'},
-  {id:'command', label:'COMMAND BAY', x:0, y:16,w:20,h:7, fc:'#050c14',wc:'#081020'},
-  {id:'hbot',    label:'CORRIDOR S',  x:8, y:14,w:4, h:2, fc:'#090f1c',wc:'#0d1828'},
+  {id:'cafe',    label:'CAFETERIA',   x:0, y:0, w:19,h:7, fc:'#0b1525',wc:'#0d1c38'},
+  {id:'medbay',  label:'MEDBAY',      x:21,y:0, w:7, h:7, fc:'#0a1a20',wc:'#0c2230'},
+  {id:'htop',    label:'CORRIDOR N',  x:19,y:1, w:2, h:5, fc:'#090f1c',wc:'#0d1828'},
+  {id:'weapons', label:'WEAPONS BAY', x:0, y:7, w:16, h:9, fc:'#150a0a',wc:'#1e1010'},
+  {id:'engine',  label:'ENGINE ROOM', x:16,y:7, w:12,h:11, fc:'#130c05',wc:'#1c1208'},
+  // {id:'hmid',    label:'CORRIDOR C',  x:14, y:5, w:2, h:4, fc:'#090f1c',wc:'#0d1828'},
+  // {id:'storage', label:'STORAGE',     x:0, y:7, w:8, h:2, fc:'#0c1018',wc:'#101828'},
+  {id:'security',label:'SECURITY',    x:16,y:7, w:7, h:5, fc:'#100a18',wc:'#180c24'},
+  {id:'command', label:'COMMAND BAY', x:0, y:18,w:28,h:7, fc:'#050c14',wc:'#081020'},
+  {id:'hbot',    label:'CORRIDOR S',  x:0, y:16,w:16, h:2, fc:'#090f1c',wc:'#0d1828'},
 ];
 
 // doors: x,y,w,h, lock:null/'alpha'/'beta'/'both'
 const DOORS=[
-  {id:'d1',x:11,y:2,w:1,h:1,lock:null},  // cafe<->htop
-  {id:'d2',x:13,y:2,w:1,h:1,lock:null},  // htop<->medbay
-  {id:'d3',x:8, y:5,w:1,h:2,lock:null},  // cafe<->hmid
-  {id:'d4',x:8, y:7,w:2,h:2,lock:null},  // hmid<->engine area
-  {id:'d5',x:4, y:9,w:1,h:1,lock:null},  // storage<->weapons
-  {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
-  {id:'d7',x:10,y:9,w:1,h:1,lock:null},  // engine<->hmid
-  {id:'d8',x:13,y:9,w:1,h:1,lock:null},  // engine<->security
-  {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot top
-  {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
-  {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
+  {id:'d1',x:18, y:2,w:2,h:1,lock:null},  // cafe<->htop
+  {id:'d2',x:20, y:2,w:2,h:1,lock:null},  // htop<->medbay
+  {id:'d3',x:11,y:6,w:1,h:1,lock:null},  // cafe<->weapons (half 1)
+  {id:'d4',x:11,y:7,w:1,h:1,lock:null},  // cafe<->weapons (half 2)
+  {id:'d5',x:12, y:15,w:1,h:2,lock:"alpha"},  // weapons<->hbot (half 1)
+  {id:'d6',x:12, y:17,w:1,h:2,lock:null},  // hbot<->command (half 2)
+  // {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
+  {id:'d7',x:15,y:13,w:2,h:1,lock:"alpha"},  // weapons<->engine
+  {id:'d8',x:19,y:11,w:1,h:1,lock:"alpha"},  // engine<->security
+  // {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot 
+  // {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
+  // {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
   // {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
-  {id:'d13',x:15,y:11,w:1,h:1,lock:null},
-  {id:'d14',x:9,y:15,w:1,h:1,lock:null}
+  // {id:'d13',x:15,y:11,w:1,h:1,lock:null},
+  // {id:'d14',x:9,y:15,w:1,h:1,lock:null}
 ];
 
 // objects
 const OBJS=[
   // NPCs
   {id:'cook',    x:2, y:2, type:'npc',col:'#ff9900',label:'COOK',     hint:'alpha',hIdx:0},
-  {id:'medic',   x:15,y:2, type:'npc',col:'#00aaff',label:'MEDIC',    hint:'alpha',hIdx:1},
-  {id:'soldier', x:2, y:13,type:'npc',col:'#ff4444',label:'SOLDIER',  hint:'alpha',hIdx:2},
-  {id:'engineer',x:17,y:10,type:'npc',col:'#44ff88',label:'ENGINEER', hint:'beta', hIdx:0},
-  {id:'nav',     x:14,y:8, type:'npc',col:'#bb44ff',label:'NAVIGATOR',hint:'beta', hIdx:1},
-  {id:'captain', x:2,y:18,type:'npc',col:'#ffcc00',label:'CAPTAIN',  hint:'beta', hIdx:2},
+  {id:'medic',   x:23,y:2, type:'npc',col:'#00aaff',label:'MEDIC',    hint:'alpha',hIdx:1},
+  {id:'soldier', x:3, y:13,type:'npc',col:'#ff4444',label:'SOLDIER',  hint:'alpha',hIdx:2},
+  {id:'engineer',x:24,y:10,type:'npc',col:'#44ff88',label:'ENGINEER', hint:'beta', hIdx:0},
+  {id:'nav',     x:17,y:8, type:'npc',col:'#bb44ff',label:'NAVIGATOR',hint:'beta', hIdx:1},
+  {id:'captain', x:2,y:20,type:'npc',col:'#ffcc00',label:'CAPTAIN',  hint:'beta', hIdx:2},
   // Terminals (locked behind doors)
-  {id:'term_a',  x:5, y:10,type:'terminal',label:'TERMINAL Α',tid:'alpha',col:'#00e5ff'},
-  {id:'term_b',  x:16,y:9, type:'terminal',label:'TERMINAL Β',tid:'beta', col:'#ff6b00'},
+  {id:'term_a',  x:10, y:10,type:'terminal',label:'TERMINAL Α',tid:'alpha',col:'#00e5ff'},
+  {id:'term_b',  x:21,y:8, type:'terminal',label:'TERMINAL Β',tid:'beta', col:'#ff6b00'},
   // Props
   {id:'tb1',x:3, y:3, type:'prop',col:'#162540',w:3,h:2},
-  {id:'tb2',x:7, y:3, type:'prop',col:'#162540',w:2,h:1},
-  {id:'med1',x:14,y:1, type:'prop',col:'#0a2030',w:4,h:3},
-  {id:'eng1',x:11,y:8, type:'prop',col:'#1c1205',w:4,h:5,spin:true},
+  {id:'tb2',x:7, y:4, type:'prop',col:'#162540',w:3,h:1},
+  {id:'med1',x:12,y:1, type:'prop',col:'#0a2030',w:4,h:3},
+  {id:'eng1',x:22,y:13, type:'prop',col:'#1c1205',w:5,h:4,spin:true},
   {id:'cr1',x:1, y:10,type:'prop',col:'#1a1a0a',w:2,h:2},
   {id:'cr2',x:5, y:12,type:'prop',col:'#1a1a0a',w:2,h:2},
-  {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
-  {id:'cmd_desk',x:1,y:17,type:'prop',col:'#0a1828',w:1,h:4},
-  {id:'cmd_chair',x:3,y:18,type:'prop',col:'#0d1c35',w:1,h:2},
-  {id:'gun_rack',x:1,y:10,type:'prop',col:'#200808',w:1,h:5},
+  // {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
+  {id:'cmd_desk',x:1,y:19,type:'prop',col:'#0a1828',w:1,h:4},
+  {id:'cmd_chair',x:3,y:20,type:'prop',col:'#0d1c35',w:1,h:2},
+  {id:'gun_rack',x:1,y:10,type:'prop',col:'#200808',w:1,h:5}
 ];
 
 // Build solid tiles
@@ -479,17 +480,17 @@ function drawRoom(r){
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(r.label,px+pw/2,py+ph/2);ctx.restore();
   // ceiling lights
-  for(let lx=r.x+1;lx<r.x+r.w-1;lx+=3){
-    const lxx=lx*T+T*0.5,lyy=r.y*T+T;
-    ctx.save();ctx.globalAlpha=.12;
-    const lg=ctx.createRadialGradient(lxx,lyy,0,lxx,lyy,T*2.5);
-    lg.addColorStop(0,'rgba(200,230,255,.25)');lg.addColorStop(1,'transparent');
-    ctx.fillStyle=lg;ctx.fillRect(r.x*T+T,r.y*T+T,(r.w-2)*T,(r.h-2)*T);
-    ctx.restore();
-    ctx.fillStyle='rgba(220,240,255,.65)';ctx.fillRect(lxx-14,lyy-3,28,4);
-    // pipe bracket
-    ctx.fillStyle='rgba(40,70,110,.6)';ctx.fillRect(lxx-18,lyy-6,36,3);
-  }
+  // for(let lx=r.x+1;lx<r.x+r.w-1;lx+=3){
+  //   const lxx=lx*T+T*0.5,lyy=r.y*T+T;
+  //   ctx.save();ctx.globalAlpha=.12;
+  //   const lg=ctx.createRadialGradient(lxx,lyy,0,lxx,lyy,T*2.5);
+  //   lg.addColorStop(0,'rgba(200,230,255,.25)');lg.addColorStop(1,'transparent');
+  //   ctx.fillStyle=lg;ctx.fillRect(r.x*T+T,r.y*T+T,(r.w-2)*T,(r.h-2)*T);
+  //   ctx.restore();
+  //   ctx.fillStyle='rgba(220,240,255,.65)';ctx.fillRect(lxx-14,lyy-3,28,4);
+  //   // pipe bracket
+  //   ctx.fillStyle='rgba(40,70,110,.6)';ctx.fillRect(lxx-18,lyy-6,36,3);
+  // }
 }
 
 function drawGridLines(){
