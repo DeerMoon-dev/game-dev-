@@ -52,10 +52,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   height: 90vh;
   background: rgba(var(--loading-card-rgb), .95);
   border-radius: 15px;
-  grid-template-rows: 1fr max-content;
+  grid-template-rows: max-content 1fr max-content;
   display: none;
   animation: card-scale .2s;
   z-index: 500;
+}
+#loading-card-logos{
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  margin-left: auto;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+#loading-card-pulz, #loading-card-acicts{
+  height: 50px;
 }
 #loading-card-inner{
   margin: auto;
@@ -357,6 +367,10 @@ canvas{display:block;width:fit-content;height:100%;margin: auto;}
 
 <!-- LOADING -->
 <div id="loading-card">
+  <div id="loading-card-logos">
+    <img src="./imgs/pulz.png" alt="Pulz'25 Logo" id="loading-card-pulz">
+    <img src="./imgs/acicts.png" alt="ACICTS logo" id="loading-card-acicts">
+  </div>
   <div id="loading-card-inner">
     <div id="chars">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
