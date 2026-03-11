@@ -18,6 +18,9 @@
   --bg:#04080f;--wall:#0a1020;--floor:#0c1428;--accent:#00e5ff;--accent2:#ff6b00;
   --red:#ff2244;--green:#00ff88;--yellow:#ffe033;--dim:#1e3050;--dimtxt:#3a6090;
   --text:#b8d4f0;--panel:#060e1c;--border:rgba(0,229,255,.18);
+  --char-max-width: 90px;
+  --char-anim-time: 1s;
+  --loading-card-rgb: 7, 12, 23;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--text);}
@@ -36,6 +39,185 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .intro-story b{color:var(--accent);}
 .intro-btn{margin-top:8px;padding:11px 34px;background:transparent;border:2px solid var(--accent);color:var(--accent);font-family:'VT323',monospace;font-size:1.3rem;letter-spacing:.2em;cursor:pointer;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:all .25s;}
 .intro-btn:hover{background:rgba(0,229,255,.12);box-shadow:0 0 30px rgba(0,229,255,.35);}
+
+/* LOADING */
+#loading-card{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  border: solid 1px white;
+  width: 80vw;
+  height: 90vh;
+  background: rgba(var(--loading-card-rgb), .95);
+  border-radius: 15px;
+  grid-template-rows: 1fr max-content;
+  display: none;
+  animation: card-scale .2s;
+  z-index: 500;
+}
+#loading-card-inner{
+  margin: auto;
+  transform: translateY(25px);
+  text-align: center;
+}
+svg{
+  width: var(--char-max-width);
+  display: block;
+  margin: auto;
+}
+#chars{
+  display: grid;
+  grid-template-columns: repeat(7, max-content);
+  margin: 0 auto;
+  margin-bottom: 25px;
+  width: fit-content;
+}
+.char:nth-child(1){
+  width: calc(var(--char-max-width) - 25px);
+  transform: translateY(-60px);
+  animation: characters-to-right var(--char-anim-time);
+}
+.char:nth-child(2){
+  width: calc(var(--char-max-width) - 20px);
+  transform: translateY(-40px);
+  animation: characters-to-right var(--char-anim-time);
+}
+.char:nth-child(3){
+  width: calc(var(--char-max-width) - 15px);
+  transform: translateY(-20px);
+  animation: characters-to-right var(--char-anim-time);
+}
+.char:nth-child(4){
+  z-index: 1;
+  animation: plyr-char var(--char-anim-time);
+}
+.char:nth-child(5){
+  width: calc(var(--char-max-width) - 15px);
+  transform: translateY(-20px);
+  animation: characters-to-left var(--char-anim-time);
+}
+.char:nth-child(6){
+  width: calc(var(--char-max-width) - 20px);
+  transform: translateY(-40px);
+  animation: characters-to-left var(--char-anim-time);
+}
+.char:nth-child(7){
+  width: calc(var(--char-max-width) - 25px);
+  transform: translateY(-60px);
+  animation: characters-to-left var(--char-anim-time);
+}
+#slogan-spn{
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  animation: text-reveal 1.2s linear;
+}
+#slogan{
+  color: white;
+  font-size: 40px;
+  width: 550px;
+  text-transform: uppercase;
+  text-align: center;
+  margin: auto;
+  letter-spacing: 5px;
+}
+#continue-to-mission{
+  width: fit-content;
+  font-size: 17px;
+  padding: 12px 20px;
+  margin: 0 auto;
+  margin-top: 15px;
+  background: none;
+  border: solid 2px rgb(0, 255, 196);
+  clip-path: polygon(15px 0%, 100% 0px, calc(100% - 15px) 100%, 0% 100%);
+  color: rgb(0, 255, 196);
+  letter-spacing: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+  animation: button-scale-up 1.5s;
+}
+#continue-to-mission:hover{
+  background: rgba(255, 255, 255, .1);
+  transform: translateX(10px);
+}
+#fun-fact{
+  color: rgb(227, 227, 227);
+  font-weight: 900;
+  text-align: center;
+  animation: opacity-up 2s;
+  padding: 8px 0px;
+}
+#fun-fact span{
+  color: rgb(0, 255, 26);     
+}
+
+@keyframes plyr-char {
+  0%{
+      opacity: 0;
+      transform: translateY(-900px);
+  }
+  /* 10%{
+      transform: translateY(-900px);
+  } */
+}
+@keyframes characters-to-right {
+  0%{
+      opacity: 0;
+      transform: translateX(300px) translateY(-900px);
+  }
+  /* 10%{
+      transform: translateX(300px) translateY(-900px);
+  } */
+}
+@keyframes characters-to-left {
+  0%{
+      opacity: 0;
+      transform: translateX(-300px) translateY(-900px);
+  }
+  /* 10%{
+      transform: translateX(-300px) translateY(-900px);
+  } */
+}
+@keyframes text-reveal{
+  0%{
+      width: 0px;
+  }
+  60%{
+      width: 0px;
+  }
+}
+@keyframes button-scale-up{
+  0%{
+      opacity: 0;
+      transform: translateX(-100px);
+  }
+  50%{
+      opacity: 0;
+      transform: translateX(-100px);
+  }
+}
+@keyframes opacity-up {
+  0%{
+      opacity: 0;
+  }
+  60%{
+      opacity: 0;
+  }
+}
+@keyframes card-scale{
+  0%{
+      transform: translate(-50%, -50%) scale(0);
+  }
+}
+@keyframes opacity-down{
+  100%{
+      opacity: 0;
+  }
+}
+
 
 /* HUD */
 #hud{position:fixed;top:0;left:0;right:0;height:44px;background:linear-gradient(180deg,rgba(4,8,15,.98),rgba(6,14,28,.95));border-bottom:1px solid var(--border);z-index:200;display:flex;align-items:center;padding:0 14px;gap:14px;}
@@ -170,7 +352,146 @@ canvas{display:block;width:fit-content;height:100%;margin: auto;}
     Explore the ship. Decode the crew's <b>cryptic messages</b>. Crack <b>Terminal Α</b> in the Weapons Bay and <b>Terminal Β</b> in Security to restore control.<br><br>
     <span style="color:var(--dimtxt);font-size:.75rem">💡 Hint: Open browser DevTools → Console for developer backdoor.</span>
   </div>
-  <button class="intro-btn" onclick="startGame()">▶ BEGIN MISSION</button>
+  <button class="intro-btn" onclick="showLoadingScreen()">▶ BEGIN MISSION</button>
+</div>
+
+<!-- LOADING -->
+<div id="loading-card">
+  <div id="loading-card-inner">
+    <div id="chars">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ff9900"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="rgb(183,110,0)"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="rgb(183,110,0)"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="rgb(158,94,0)"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="rgb(158,94,0)"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ff9900"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ff4444"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#aa2d2d"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#aa2d2d"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#932727"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#932727"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ff4444"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#00aaff"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#0071aa"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#0071aa"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#00699e"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#00699e"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#00aaff"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#4da6ff"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#3777b7"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#3777b7"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#2c5f93"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#2c5f93"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#4da6ff"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#bb44ff"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#7d2daa"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#7d2daa"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#6b2793"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#6b2793"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#bb44ff"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#44ff88"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#30b761"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#30b761"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#27934e"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#27934e"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#44ff88"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
+        <!-- Body -->
+        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ffcc00"/>
+        <!-- Arms -->
+        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#aa8800"/>
+        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#aa8800"/>
+        <!-- Legs -->
+        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#9e7e00"/>
+        <rect x="64"   y="104" width="17.6" height="19.2" fill="#9e7e00"/>
+        <!-- Head -->
+        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ffcc00"/>
+        <!-- Helmet visor (dark) -->
+        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
+        <!-- Helmet visor (shine) -->
+        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
+        <!-- Eye detail -->
+        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+      </svg>
+    </div>
+    <span id="slogan-spn">
+        <h2 id="slogan">Crack the password and save the starship!</h2>
+    </span>
+    <button id="continue-to-mission" onclick="startGame()">Continue to Mission ▶</button>
+  </div>
+  <p id="fun-fact"><span>Fun Fact: </span>This game has no rules ;)</p>
 </div>
 
 <!-- HUD -->
@@ -972,8 +1293,18 @@ buildKp('alpha');buildKp('beta');buildPwd('alpha');buildPwd('beta');
 resize();loop();
 ST.startTime=Date.now();
 
+function showLoadingScreen(){
+  document.getElementById("loading-card").style.display = "grid";
+}
 function startGame(){
+  let loadingCard = document.getElementById('loading-card');
   document.getElementById('intro').classList.add('fade-out');
+  loadingCard.style.animation = "opacity-down .4s";
+  loadingCard.onanimationend = () => {
+    loadingCard.style.display = "none";
+    loadingCard.style.animation = "card-scale .2s";
+    loadingCard.onanimationend = null;
+  }
   setTimeout(()=>{document.getElementById('intro').style.display='none';ST.running=true;},800);
 }
 
