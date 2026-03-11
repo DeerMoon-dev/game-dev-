@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
 ╔══════════════════════════════════════════════════════════════════╗
 ║          STARSHIP CIPHER — SKELD-9 SECURITY SYSTEM              ║
@@ -9,1339 +9,3325 @@
 ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>STARSHIP CIPHER — SKELD-9</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@300;500;700&display=swap');
-:root{
-  --bg:#04080f;--wall:#0a1020;--floor:#0c1428;--accent:#00e5ff;--accent2:#ff6b00;
-  --red:#ff2244;--green:#00ff88;--yellow:#ffe033;--dim:#1e3050;--dimtxt:#3a6090;
-  --text:#b8d4f0;--panel:#060e1c;--border:rgba(0,229,255,.18);
-  --char-max-width: 90px;
-  --char-anim-time: 1s;
-  --loading-card-rgb: 7, 12, 23;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--text);}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);pointer-events:none;z-index:9000;}
+    <head>
+        <meta charset="UTF-8" />
+        <title>STARSHIP CIPHER — SKELD-9</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@300;500;700&display=swap");
+            :root {
+                --bg: #04080f;
+                --wall: #0a1020;
+                --floor: #0c1428;
+                --accent: #00e5ff;
+                --accent2: #ff6b00;
+                --red: #ff2244;
+                --green: #00ff88;
+                --yellow: #ffe033;
+                --dim: #1e3050;
+                --dimtxt: #3a6090;
+                --text: #b8d4f0;
+                --panel: #060e1c;
+                --border: rgba(0, 229, 255, 0.18);
+                --char-max-width: 90px;
+                --char-anim-time: 1s;
+                --loading-card-rgb: 7, 12, 23;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background: var(--bg);
+                font-family: "Rajdhani", sans-serif;
+                color: var(--text);
+            }
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.07) 2px,
+                    rgba(0, 0, 0, 0.07) 4px
+                );
+                pointer-events: none;
+                z-index: 9000;
+            }
 
-/* INTRO */
-#intro{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 40%,#030a18,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:500;transition:opacity .8s;}
-#intro.fade-out{opacity:0;pointer-events:none;}
-.star-field{position:absolute;inset:0;overflow:hidden;}
-.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) infinite alternate;}
-@keyframes twinkle{from{opacity:.05}to{opacity:.9}}
-.intro-badge{font-family:'VT323',monospace;font-size:clamp(2.5rem,6vw,4rem);color:var(--accent);letter-spacing:.2em;text-align:center;text-shadow:0 0 30px var(--accent),0 0 80px rgba(0,229,255,.25);animation:hshift 4s infinite alternate;}
-@keyframes hshift{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(15deg)}}
-.intro-sub{font-size:.8rem;letter-spacing:.4em;color:var(--dimtxt);text-transform:uppercase;}
-.intro-story{max-width:500px;text-align:center;font-size:.82rem;line-height:1.9;color:#6a9ab8;border:1px solid var(--border);padding:14px 22px;border-radius:4px;background:rgba(0,229,255,.03);}
-.intro-story b{color:var(--accent);}
-.intro-btn{margin-top:8px;padding:11px 34px;background:transparent;border:2px solid var(--accent);color:var(--accent);font-family:'VT323',monospace;font-size:1.3rem;letter-spacing:.2em;cursor:pointer;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:all .25s;}
-.intro-btn:hover{background:rgba(0,229,255,.12);box-shadow:0 0 30px rgba(0,229,255,.35);}
+            /* INTRO */
+            #intro {
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(ellipse at 50% 40%, #030a18, #000);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                z-index: 500;
+                transition: opacity 0.8s;
+            }
+            #intro.fade-out {
+                opacity: 0;
+                pointer-events: none;
+            }
+            .star-field {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+            }
+            .star {
+                position: absolute;
+                border-radius: 50%;
+                background: #fff;
+                animation: twinkle var(--d, 3s) infinite alternate;
+            }
+            @keyframes twinkle {
+                from {
+                    opacity: 0.05;
+                }
+                to {
+                    opacity: 0.9;
+                }
+            }
+            .intro-badge {
+                font-family: "VT323", monospace;
+                font-size: clamp(2.5rem, 6vw, 4rem);
+                color: var(--accent);
+                letter-spacing: 0.2em;
+                text-align: center;
+                text-shadow:
+                    0 0 30px var(--accent),
+                    0 0 80px rgba(0, 229, 255, 0.25);
+                animation: hshift 4s infinite alternate;
+            }
+            @keyframes hshift {
+                from {
+                    filter: hue-rotate(0deg);
+                }
+                to {
+                    filter: hue-rotate(15deg);
+                }
+            }
+            .intro-sub {
+                font-size: 0.8rem;
+                letter-spacing: 0.4em;
+                color: var(--dimtxt);
+                text-transform: uppercase;
+            }
+            .intro-story {
+                max-width: 500px;
+                text-align: center;
+                font-size: 0.82rem;
+                line-height: 1.9;
+                color: #6a9ab8;
+                border: 1px solid var(--border);
+                padding: 14px 22px;
+                border-radius: 4px;
+                background: rgba(0, 229, 255, 0.03);
+            }
+            .intro-story b {
+                color: var(--accent);
+            }
+            .intro-btn {
+                margin-top: 8px;
+                padding: 11px 34px;
+                background: transparent;
+                border: 2px solid var(--accent);
+                color: var(--accent);
+                font-family: "VT323", monospace;
+                font-size: 1.3rem;
+                letter-spacing: 0.2em;
+                cursor: pointer;
+                clip-path: polygon(
+                    12px 0%,
+                    100% 0%,
+                    calc(100% - 12px) 100%,
+                    0% 100%
+                );
+                transition: all 0.25s;
+            }
+            .intro-btn:hover {
+                background: rgba(0, 229, 255, 0.12);
+                box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+            }
 
-#intro-logos{
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  gap: 10px;
-}
-#intro-logos img{
-  height: 75px;
-}
+            #intro-logos {
+                display: grid;
+                grid-template-columns: repeat(2, max-content);
+                gap: 10px;
+            }
+            #intro-logos img {
+                height: 75px;
+            }
 
-/* LOADING */
-#loading-card{
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: grid;
-  border: solid 1px white;
-  width: 80vw;
-  height: 90vh;
-  background: rgba(var(--loading-card-rgb), .95);
-  border-radius: 15px;
-  grid-template-rows: max-content 1fr max-content;
-  display: none;
-  animation: card-scale .2s;
-  z-index: 500;
-}
-#loading-card-logos{
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  margin-left: auto;
-  margin-right: 20px;
-  margin-top: 10px;
-}
-#loading-card-pulz, #loading-card-acicts{
-  height: 50px;
-}
-#loading-card-inner{
-  margin: auto;
-  transform: translateY(25px);
-  text-align: center;
-}
-svg{
-  width: var(--char-max-width);
-  display: block;
-  margin: auto;
-}
-#chars{
-  display: grid;
-  grid-template-columns: repeat(7, max-content);
-  margin: 0 auto;
-  margin-bottom: 25px;
-  width: fit-content;
-}
-.char:nth-child(1){
-  width: calc(var(--char-max-width) - 25px);
-  transform: translateY(-60px);
-  animation: characters-to-right var(--char-anim-time);
-}
-.char:nth-child(2){
-  width: calc(var(--char-max-width) - 20px);
-  transform: translateY(-40px);
-  animation: characters-to-right var(--char-anim-time);
-}
-.char:nth-child(3){
-  width: calc(var(--char-max-width) - 15px);
-  transform: translateY(-20px);
-  animation: characters-to-right var(--char-anim-time);
-}
-.char:nth-child(4){
-  z-index: 1;
-  animation: plyr-char var(--char-anim-time);
-}
-.char:nth-child(5){
-  width: calc(var(--char-max-width) - 15px);
-  transform: translateY(-20px);
-  animation: characters-to-left var(--char-anim-time);
-}
-.char:nth-child(6){
-  width: calc(var(--char-max-width) - 20px);
-  transform: translateY(-40px);
-  animation: characters-to-left var(--char-anim-time);
-}
-.char:nth-child(7){
-  width: calc(var(--char-max-width) - 25px);
-  transform: translateY(-60px);
-  animation: characters-to-left var(--char-anim-time);
-}
-#slogan-spn{
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  animation: text-reveal 1.2s linear;
-}
-#slogan{
-  color: white;
-  font-size: 40px;
-  width: 550px;
-  text-transform: uppercase;
-  text-align: center;
-  margin: auto;
-  letter-spacing: 5px;
-}
-#continue-to-mission{
-  width: fit-content;
-  font-size: 17px;
-  padding: 12px 20px;
-  margin: 0 auto;
-  margin-top: 15px;
-  background: none;
-  border: solid 2px rgb(0, 255, 196);
-  clip-path: polygon(15px 0%, 100% 0px, calc(100% - 15px) 100%, 0% 100%);
-  color: rgb(0, 255, 196);
-  letter-spacing: 2px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: .2s;
-  animation: button-scale-up 1.5s;
-}
-#continue-to-mission:hover{
-  background: rgba(255, 255, 255, .1);
-  transform: translateX(10px);
-}
-#fun-fact{
-  color: rgb(227, 227, 227);
-  font-weight: 900;
-  text-align: center;
-  animation: opacity-up 2s;
-  padding: 8px 0px;
-}
-#fun-fact span{
-  color: rgb(0, 255, 26);     
-}
+            /* LOADING */
+            #loading-card {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                display: grid;
+                border: solid 1px white;
+                width: 80vw;
+                height: 90vh;
+                background: rgba(var(--loading-card-rgb), 0.95);
+                border-radius: 15px;
+                grid-template-rows: max-content 1fr max-content;
+                display: none;
+                animation: card-scale 0.2s;
+                z-index: 500;
+            }
+            #loading-card-logos {
+                display: grid;
+                grid-template-columns: repeat(2, max-content);
+                margin-left: auto;
+                margin-right: 20px;
+                margin-top: 10px;
+            }
+            #loading-card-pulz,
+            #loading-card-acicts {
+                height: 50px;
+            }
+            #loading-card-inner {
+                margin: auto;
+                transform: translateY(25px);
+                text-align: center;
+            }
+            svg {
+                width: var(--char-max-width);
+                display: block;
+                margin: auto;
+            }
+            #chars {
+                display: grid;
+                grid-template-columns: repeat(7, max-content);
+                margin: 0 auto;
+                margin-bottom: 25px;
+                width: fit-content;
+            }
+            .char:nth-child(1) {
+                width: calc(var(--char-max-width) - 25px);
+                transform: translateY(-60px);
+                animation: characters-to-right var(--char-anim-time);
+            }
+            .char:nth-child(2) {
+                width: calc(var(--char-max-width) - 20px);
+                transform: translateY(-40px);
+                animation: characters-to-right var(--char-anim-time);
+            }
+            .char:nth-child(3) {
+                width: calc(var(--char-max-width) - 15px);
+                transform: translateY(-20px);
+                animation: characters-to-right var(--char-anim-time);
+            }
+            .char:nth-child(4) {
+                z-index: 1;
+                animation: plyr-char var(--char-anim-time);
+            }
+            .char:nth-child(5) {
+                width: calc(var(--char-max-width) - 15px);
+                transform: translateY(-20px);
+                animation: characters-to-left var(--char-anim-time);
+            }
+            .char:nth-child(6) {
+                width: calc(var(--char-max-width) - 20px);
+                transform: translateY(-40px);
+                animation: characters-to-left var(--char-anim-time);
+            }
+            .char:nth-child(7) {
+                width: calc(var(--char-max-width) - 25px);
+                transform: translateY(-60px);
+                animation: characters-to-left var(--char-anim-time);
+            }
+            #slogan-spn {
+                display: block;
+                width: 100%;
+                overflow: hidden;
+                animation: text-reveal 1.2s linear;
+            }
+            #slogan {
+                color: white;
+                font-size: 40px;
+                width: 550px;
+                text-transform: uppercase;
+                text-align: center;
+                margin: auto;
+                letter-spacing: 5px;
+            }
+            #continue-to-mission {
+                width: fit-content;
+                font-size: 17px;
+                padding: 12px 20px;
+                margin: 0 auto;
+                margin-top: 15px;
+                background: none;
+                border: solid 2px rgb(0, 255, 196);
+                clip-path: polygon(
+                    15px 0%,
+                    100% 0px,
+                    calc(100% - 15px) 100%,
+                    0% 100%
+                );
+                color: rgb(0, 255, 196);
+                letter-spacing: 2px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.2s;
+                animation: button-scale-up 1.5s;
+            }
+            #continue-to-mission:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: translateX(10px);
+            }
+            #fun-fact {
+                color: rgb(227, 227, 227);
+                font-weight: 900;
+                text-align: center;
+                animation: opacity-up 2s;
+                padding: 8px 0px;
+            }
+            #fun-fact span {
+                color: rgb(0, 255, 26);
+            }
 
-@keyframes plyr-char {
-  0%{
-      opacity: 0;
+            @keyframes plyr-char {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-900px);
+                }
+                /* 10%{
       transform: translateY(-900px);
-  }
-  /* 10%{
-      transform: translateY(-900px);
   } */
-}
-@keyframes characters-to-right {
-  0%{
-      opacity: 0;
-      transform: translateX(300px) translateY(-900px);
-  }
-  /* 10%{
+            }
+            @keyframes characters-to-right {
+                0% {
+                    opacity: 0;
+                    transform: translateX(300px) translateY(-900px);
+                }
+                /* 10%{
       transform: translateX(300px) translateY(-900px);
   } */
-}
-@keyframes characters-to-left {
-  0%{
-      opacity: 0;
-      transform: translateX(-300px) translateY(-900px);
-  }
-  /* 10%{
+            }
+            @keyframes characters-to-left {
+                0% {
+                    opacity: 0;
+                    transform: translateX(-300px) translateY(-900px);
+                }
+                /* 10%{
       transform: translateX(-300px) translateY(-900px);
   } */
-}
-@keyframes text-reveal{
-  0%{
-      width: 0px;
-  }
-  60%{
-      width: 0px;
-  }
-}
-@keyframes button-scale-up{
-  0%{
-      opacity: 0;
-      transform: translateX(-100px);
-  }
-  50%{
-      opacity: 0;
-      transform: translateX(-100px);
-  }
-}
-@keyframes opacity-up {
-  0%{
-      opacity: 0;
-  }
-  60%{
-      opacity: 0;
-  }
-}
-@keyframes card-scale{
-  0%{
-      transform: translate(-50%, -50%) scale(0);
-  }
-}
-@keyframes opacity-down{
-  100%{
-      opacity: 0;
-  }
-}
+            }
+            @keyframes text-reveal {
+                0% {
+                    width: 0px;
+                }
+                60% {
+                    width: 0px;
+                }
+            }
+            @keyframes button-scale-up {
+                0% {
+                    opacity: 0;
+                    transform: translateX(-100px);
+                }
+                50% {
+                    opacity: 0;
+                    transform: translateX(-100px);
+                }
+            }
+            @keyframes opacity-up {
+                0% {
+                    opacity: 0;
+                }
+                60% {
+                    opacity: 0;
+                }
+            }
+            @keyframes card-scale {
+                0% {
+                    transform: translate(-50%, -50%) scale(0);
+                }
+            }
+            @keyframes opacity-down {
+                100% {
+                    opacity: 0;
+                }
+            }
 
+            /* HUD */
+            #hud {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 44px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(4, 8, 15, 0.98),
+                    rgba(6, 14, 28, 0.95)
+                );
+                border-bottom: 1px solid var(--border);
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                padding: 0 14px;
+                gap: 14px;
+            }
+            .hud-logo {
+                font-family: "VT323", monospace;
+                font-size: 1.35rem;
+                color: var(--accent);
+                letter-spacing: 0.15em;
+            }
+            .hud-sep {
+                color: var(--dim);
+            }
+            .hud-room {
+                font-size: 0.78rem;
+                letter-spacing: 0.18em;
+                color: var(--yellow);
+                font-weight: 700;
+            }
+            .hud-sp {
+                flex: 1;
+            }
+            .hud-pip {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                display: inline-block;
+                margin-right: 5px;
+            }
+            .pip-ok {
+                background: var(--green);
+                box-shadow: 0 0 6px var(--green);
+            }
+            .pip-warn {
+                background: var(--yellow);
+                box-shadow: 0 0 6px var(--yellow);
+                animation: bpip 1s infinite;
+            }
+            .pip-err {
+                background: var(--red);
+                box-shadow: 0 0 6px var(--red);
+                animation: bpip 0.5s infinite;
+            }
+            @keyframes bpip {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.2;
+                }
+            }
+            .hud-stat {
+                font-size: 0.68rem;
+                color: var(--dimtxt);
+                letter-spacing: 0.08em;
+                display: flex;
+                align-items: center;
+            }
+            .task-ctr {
+                font-family: "VT323", monospace;
+                font-size: 1.1rem;
+                color: var(--accent);
+            }
+            .hud-key {
+                display: inline-block;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid var(--dimtxt);
+                border-radius: 2px;
+                padding: 0 4px;
+                font-size: 0.58rem;
+                color: var(--text);
+            }
+            .hud-hint {
+                font-size: 0.62rem;
+                color: var(--dimtxt);
+            }
 
-/* HUD */
-#hud{position:fixed;top:0;left:0;right:0;height:44px;background:linear-gradient(180deg,rgba(4,8,15,.98),rgba(6,14,28,.95));border-bottom:1px solid var(--border);z-index:200;display:flex;align-items:center;padding:0 14px;gap:14px;}
-.hud-logo{font-family:'VT323',monospace;font-size:1.35rem;color:var(--accent);letter-spacing:.15em;}
-.hud-sep{color:var(--dim);}
-.hud-room{font-size:.78rem;letter-spacing:.18em;color:var(--yellow);font-weight:700;}
-.hud-sp{flex:1;}
-.hud-pip{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
-.pip-ok{background:var(--green);box-shadow:0 0 6px var(--green);}
-.pip-warn{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:bpip 1s infinite;}
-.pip-err{background:var(--red);box-shadow:0 0 6px var(--red);animation:bpip .5s infinite;}
-@keyframes bpip{0%,100%{opacity:1}50%{opacity:.2}}
-.hud-stat{font-size:.68rem;color:var(--dimtxt);letter-spacing:.08em;display:flex;align-items:center;}
-.task-ctr{font-family:'VT323',monospace;font-size:1.1rem;color:var(--accent);}
-.hud-key{display:inline-block;background:rgba(255,255,255,.07);border:1px solid var(--dimtxt);border-radius:2px;padding:0 4px;font-size:.58rem;color:var(--text);}
-.hud-hint{font-size:.62rem;color:var(--dimtxt);}
+            /* CANVAS */
+            #canvas-wrap {
+                position: fixed;
+                top: 44px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: grid;
+            }
+            canvas {
+                display: block;
+                width: fit-content;
+                height: 100%;
+                margin: auto;
+            }
 
-/* CANVAS */
-#canvas-wrap{position:fixed;top:44px;left:0;right:0;bottom:0;display:grid;}
-canvas{display:block;width:fit-content;height:100%;margin: auto;}
+            /* MINIMAP */
+            #minimap {
+                position: fixed;
+                bottom: 14px;
+                right: 14px;
+                width: 210px;
+                height: 140px;
+                background: rgba(4, 8, 15, 0.92);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                z-index: 200;
+                overflow: hidden;
+            }
+            #mc {
+                display: block;
+            }
+            .mm-title {
+                position: absolute;
+                top: 4px;
+                left: 8px;
+                font-family: "VT323", monospace;
+                font-size: 0.8rem;
+                color: var(--dimtxt);
+                letter-spacing: 0.1em;
+            }
 
-/* MINIMAP */
-#minimap{position:fixed;bottom:14px;right:14px;width:210px;height:140px;background:rgba(4,8,15,.92);border:1px solid var(--border);border-radius:4px;z-index:200;overflow:hidden;}
-#mc{display:block;}
-.mm-title{position:absolute;top:4px;left:8px;font-family:'VT323',monospace;font-size:.8rem;color:var(--dimtxt);letter-spacing:.1em;}
+            /* INTERACT PROMPT */
+            #ipr {
+                position: fixed;
+                bottom: 22px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(4, 8, 15, 0.94);
+                border: 1px solid var(--accent);
+                padding: 7px 18px;
+                border-radius: 3px;
+                font-size: 0.78rem;
+                letter-spacing: 0.15em;
+                color: var(--accent);
+                z-index: 200;
+                opacity: 0;
+                transition: opacity 0.2s;
+                pointer-events: none;
+                white-space: nowrap;
+            }
+            #ipr.vis {
+                opacity: 1;
+            }
 
-/* INTERACT PROMPT */
-#ipr{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(4,8,15,.94);border:1px solid var(--accent);padding:7px 18px;border-radius:3px;font-size:.78rem;letter-spacing:.15em;color:var(--accent);z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
-#ipr.vis{opacity:1;}
+            /* MODAL */
+            .modal-ov {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.88);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 300;
+                backdrop-filter: blur(5px);
+            }
+            .modal-ov.active {
+                display: flex;
+            }
+            .mbox {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                overflow: hidden;
+                box-shadow: 0 0 80px rgba(0, 229, 255, 0.1);
+                animation: min 0.3s ease;
+                width: min(740px, 96vw);
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            @keyframes min {
+                from {
+                    transform: scale(0.9) translateY(18px);
+                    opacity: 0;
+                }
+                to {
+                    transform: scale(1) translateY(0);
+                    opacity: 1;
+                }
+            }
+            .mhdr {
+                display: flex;
+                align-items: center;
+                padding: 11px 16px;
+                gap: 11px;
+                background: rgba(0, 229, 255, 0.05);
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                z-index: 5;
+                backdrop-filter: blur(8px);
+            }
+            .mdots {
+                display: flex;
+                gap: 5px;
+            }
+            .md {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+            .md-r {
+                background: #ff5f57;
+            }
+            .md-y {
+                background: #febc2e;
+            }
+            .md-g {
+                background: #28c840;
+            }
+            .mtitle {
+                font-family: "VT323", monospace;
+                font-size: 1.25rem;
+                letter-spacing: 0.15em;
+                color: var(--accent);
+                flex: 1;
+                text-align: center;
+            }
+            .mcls {
+                background: none;
+                border: none;
+                color: var(--dimtxt);
+                font-size: 1rem;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+            .mcls:hover {
+                color: var(--red);
+            }
+            .mbody {
+                padding: 20px;
+            }
 
-/* MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(5px);}
-.modal-ov.active{display:flex;}
-.mbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 0 80px rgba(0,229,255,.1);animation:min .3s ease;width:min(740px,96vw);max-height:90vh;overflow-y:auto;}
-@keyframes min{from{transform:scale(.9) translateY(18px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.mhdr{display:flex;align-items:center;padding:11px 16px;gap:11px;background:rgba(0,229,255,.05);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5;backdrop-filter:blur(8px);}
-.mdots{display:flex;gap:5px;}
-.md{width:10px;height:10px;border-radius:50%;}
-.md-r{background:#ff5f57;}.md-y{background:#febc2e;}.md-g{background:#28c840;}
-.mtitle{font-family:'VT323',monospace;font-size:1.25rem;letter-spacing:.15em;color:var(--accent);flex:1;text-align:center;}
-.mcls{background:none;border:none;color:var(--dimtxt);font-size:1rem;cursor:pointer;transition:color .2s;}
-.mcls:hover{color:var(--red);}
-.mbody{padding:20px;}
+            /* DOOR MODAL */
+            .lock-icon {
+                text-align: center;
+                font-size: 2.8rem;
+                padding: 8px 0 4px;
+                animation: pwarn 1.5s ease-in-out infinite alternate;
+            }
+            @keyframes pwarn {
+                from {
+                    text-shadow: none;
+                }
+                to {
+                    text-shadow: 0 0 20px rgba(255, 107, 0, 0.7);
+                }
+            }
+            .lock-msg {
+                font-size: 0.86rem;
+                text-align: center;
+                color: var(--dimtxt);
+                line-height: 1.8;
+                padding: 0 16px 16px;
+            }
+            .lock-msg b {
+                color: var(--yellow);
+            }
 
-/* DOOR MODAL */
-.lock-icon{text-align:center;font-size:2.8rem;padding:8px 0 4px;animation:pwarn 1.5s ease-in-out infinite alternate;}
-@keyframes pwarn{from{text-shadow:none}to{text-shadow:0 0 20px rgba(255,107,0,.7)}}
-.lock-msg{font-size:.86rem;text-align:center;color:var(--dimtxt);line-height:1.8;padding:0 16px 16px;}
-.lock-msg b{color:var(--yellow);}
+            /* STAGE BADGE */
+            .sb {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 3px 10px;
+                border-radius: 2px;
+                font-size: 0.63rem;
+                letter-spacing: 0.15em;
+                border: 1px solid;
+                margin-bottom: 12px;
+            }
+            .sb-a {
+                border-color: rgba(0, 229, 255, 0.35);
+                color: var(--accent);
+                background: rgba(0, 229, 255, 0.05);
+            }
+            .sb-b {
+                border-color: rgba(255, 107, 0, 0.35);
+                color: var(--accent2);
+                background: rgba(255, 107, 0, 0.05);
+            }
+            .sb-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+            }
+            .sb-a .sb-dot {
+                background: var(--accent);
+                box-shadow: 0 0 5px var(--accent);
+            }
+            .sb-b .sb-dot {
+                background: var(--accent2);
+                box-shadow: 0 0 5px var(--accent2);
+            }
 
-/* STAGE BADGE */
-.sb{display:inline-flex;align-items:center;gap:7px;padding:3px 10px;border-radius:2px;font-size:.63rem;letter-spacing:.15em;border:1px solid;margin-bottom:12px;}
-.sb-a{border-color:rgba(0,229,255,.35);color:var(--accent);background:rgba(0,229,255,.05);}
-.sb-b{border-color:rgba(255,107,0,.35);color:var(--accent2);background:rgba(255,107,0,.05);}
-.sb-dot{width:7px;height:7px;border-radius:50%;}
-.sb-a .sb-dot{background:var(--accent);box-shadow:0 0 5px var(--accent);}
-.sb-b .sb-dot{background:var(--accent2);box-shadow:0 0 5px var(--accent2);}
+            /* HINT GRID */
+            .hgrid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .hcard {
+                background: rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+                padding: 11px 13px;
+            }
+            .hcard.found {
+                border-color: rgba(0, 229, 255, 0.3);
+                background: rgba(0, 229, 255, 0.04);
+            }
+            .hc-tag {
+                font-size: 0.58rem;
+                letter-spacing: 0.15em;
+                color: var(--dimtxt);
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+            .hc-clue {
+                font-size: 0.79rem;
+                color: #6a9ab8;
+                line-height: 1.7;
+            }
+            .hc-clue.locked {
+                color: var(--dim);
+                letter-spacing: 0.15em;
+            }
+            .hc-decode {
+                font-family: "VT323", monospace;
+                font-size: 0.95rem;
+                color: var(--green);
+                margin-top: 5px;
+                display: none;
+            }
+            .hcard.found .hc-decode {
+                display: block;
+            }
 
-/* HINT GRID */
-.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.hcard{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:11px 13px;}
-.hcard.found{border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.04);}
-.hc-tag{font-size:.58rem;letter-spacing:.15em;color:var(--dimtxt);text-transform:uppercase;margin-bottom:5px;}
-.hc-clue{font-size:.79rem;color:#6a9ab8;line-height:1.7;}
-.hc-clue.locked{color:var(--dim);letter-spacing:.15em;}
-.hc-decode{font-family:'VT323',monospace;font-size:.95rem;color:var(--green);margin-top:5px;display:none;}
-.hcard.found .hc-decode{display:block;}
+            /* TERM LOG */
+            .tlog {
+                background: rgba(0, 0, 0, 0.55);
+                border: 1px solid rgba(0, 229, 255, 0.08);
+                border-radius: 4px;
+                padding: 9px 13px;
+                font-family: "VT323", monospace;
+                font-size: 0.92rem;
+                min-height: 68px;
+                max-height: 110px;
+                overflow-y: auto;
+                line-height: 1.75;
+                margin-bottom: 12px;
+            }
+            .tr {
+                display: flex;
+                gap: 7px;
+            }
+            .tp {
+                color: var(--accent);
+                flex-shrink: 0;
+            }
+            .ti {
+                color: var(--text);
+            }
+            .tw {
+                color: var(--yellow);
+            }
+            .te {
+                color: var(--red);
+            }
+            .tok {
+                color: var(--green);
+            }
 
-/* TERM LOG */
-.tlog{background:rgba(0,0,0,.55);border:1px solid rgba(0,229,255,.08);border-radius:4px;padding:9px 13px;font-family:'VT323',monospace;font-size:.92rem;min-height:68px;max-height:110px;overflow-y:auto;line-height:1.75;margin-bottom:12px;}
-.tr{display:flex;gap:7px;}
-.tp{color:var(--accent);flex-shrink:0;}
-.ti{color:var(--text);}.tw{color:var(--yellow);}.te{color:var(--red);}.tok{color:var(--green);}
+            /* PROGRESS */
+            .pw {
+                margin-bottom: 12px;
+            }
+            .pl {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.63rem;
+                color: var(--dimtxt);
+                margin-bottom: 4px;
+                letter-spacing: 0.1em;
+            }
+            .pt {
+                height: 7px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+                border: 1px solid rgba(0, 229, 255, 0.07);
+                overflow: hidden;
+            }
+            .pf {
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent), #0088ff);
+                border-radius: 4px;
+                transition: width 0.2s;
+                box-shadow: 0 0 5px var(--accent);
+            }
 
-/* PROGRESS */
-.pw{margin-bottom:12px;}
-.pl{display:flex;justify-content:space-between;font-size:.63rem;color:var(--dimtxt);margin-bottom:4px;letter-spacing:.1em;}
-.pt{height:7px;background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(0,229,255,.07);overflow:hidden;}
-.pf{height:100%;background:linear-gradient(90deg,var(--accent),#0088ff);border-radius:4px;transition:width .2s;box-shadow:0 0 5px var(--accent);}
+            /* PASSWORD DISPLAY */
+            .pwd-row {
+                display: flex;
+                gap: 9px;
+                justify-content: center;
+                margin: 12px 0;
+            }
+            .pc {
+                width: 50px;
+                height: 60px;
+                border: 2px solid var(--dim);
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "VT323", monospace;
+                font-size: 1.9rem;
+                color: var(--accent);
+                background: rgba(0, 0, 0, 0.5);
+                transition: all 0.2s;
+            }
+            .pc.active {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+            }
+            .pc.ok {
+                border-color: var(--green);
+                color: var(--green);
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.25);
+            }
+            .pc.err {
+                border-color: var(--red);
+                color: var(--red);
+                animation: shk 0.3s ease;
+            }
+            @keyframes shk {
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+                25% {
+                    transform: translateX(-5px);
+                }
+                75% {
+                    transform: translateX(5px);
+                }
+            }
+            .pc .cr {
+                width: 2px;
+                height: 30px;
+                background: var(--accent);
+                animation: cblink 1s step-end infinite;
+                display: none;
+            }
+            .pc.active .cr {
+                display: block;
+            }
+            @keyframes cblink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
 
-/* PASSWORD DISPLAY */
-.pwd-row{display:flex;gap:9px;justify-content:center;margin:12px 0;}
-.pc{width:50px;height:60px;border:2px solid var(--dim);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:1.9rem;color:var(--accent);background:rgba(0,0,0,.5);transition:all .2s;}
-.pc.active{border-color:var(--accent);box-shadow:0 0 10px rgba(0,229,255,.25);}
-.pc.ok{border-color:var(--green);color:var(--green);box-shadow:0 0 10px rgba(0,255,136,.25);}
-.pc.err{border-color:var(--red);color:var(--red);animation:shk .3s ease;}
-@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.pc .cr{width:2px;height:30px;background:var(--accent);animation:cblink 1s step-end infinite;display:none;}
-.pc.active .cr{display:block;}
-@keyframes cblink{0%,100%{opacity:1}50%{opacity:0}}
+            /* KEYPAD */
+            .kpad {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 4px;
+                margin-bottom: 12px;
+            }
+            .kb {
+                padding: 7px 3px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.07);
+                border-radius: 3px;
+                color: var(--text);
+                font-family: "VT323", monospace;
+                font-size: 1.05rem;
+                cursor: pointer;
+                text-align: center;
+                transition: all 0.13s;
+            }
+            .kb:hover {
+                background: rgba(0, 229, 255, 0.1);
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+            .kb:active {
+                transform: scale(0.93);
+            }
 
-/* KEYPAD */
-.kpad{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:12px;}
-.kb{padding:7px 3px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:3px;color:var(--text);font-family:'VT323',monospace;font-size:1.05rem;cursor:pointer;text-align:center;transition:all .13s;}
-.kb:hover{background:rgba(0,229,255,.1);border-color:var(--accent);color:var(--accent);}
-.kb:active{transform:scale(.93);}
+            /* ACTIONS */
+            .arow {
+                display: flex;
+                gap: 9px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .ab {
+                padding: 8px 20px;
+                background: transparent;
+                border: 1px solid;
+                font-family: "VT323", monospace;
+                font-size: 1.05rem;
+                letter-spacing: 0.1em;
+                cursor: pointer;
+                clip-path: polygon(
+                    7px 0%,
+                    100% 0%,
+                    calc(100% - 7px) 100%,
+                    0% 100%
+                );
+                transition: all 0.2s;
+            }
+            .ab-brute {
+                border-color: var(--yellow);
+                color: var(--yellow);
+            }
+            .ab-brute:hover {
+                background: var(--yellow);
+                color: #000;
+                box-shadow: 0 0 18px rgba(255, 224, 51, 0.35);
+            }
+            .ab-brute:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+            .ab-sub {
+                border-color: var(--green);
+                color: var(--green);
+            }
+            .ab-sub:hover {
+                background: var(--green);
+                color: #000;
+            }
+            .ab-clr {
+                border-color: var(--red);
+                color: var(--red);
+            }
+            .ab-clr:hover {
+                background: var(--red);
+                color: #fff;
+            }
 
-/* ACTIONS */
-.arow{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
-.ab{padding:8px 20px;background:transparent;border:1px solid;font-family:'VT323',monospace;font-size:1.05rem;letter-spacing:.1em;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all .2s;}
-.ab-brute{border-color:var(--yellow);color:var(--yellow);}
-.ab-brute:hover{background:var(--yellow);color:#000;box-shadow:0 0 18px rgba(255,224,51,.35);}
-.ab-brute:disabled{opacity:.3;cursor:not-allowed;}
-.ab-sub{border-color:var(--green);color:var(--green);}
-.ab-sub:hover{background:var(--green);color:#000;}
-.ab-clr{border-color:var(--red);color:var(--red);}
-.ab-clr:hover{background:var(--red);color:#fff;}
+            /* WIN */
+            #win-screen {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 10, 5, 0.94);
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 18px;
+                z-index: 400;
+            }
+            #win-screen.active {
+                display: flex;
+            }
+            .win-title {
+                font-family: "VT323", monospace;
+                font-size: clamp(2.5rem, 7vw, 4.5rem);
+                color: var(--green);
+                letter-spacing: 0.15em;
+                text-align: center;
+                animation: pg 1.5s ease-in-out infinite alternate;
+            }
+            @keyframes pg {
+                from {
+                    text-shadow: 0 0 20px var(--green);
+                }
+                to {
+                    text-shadow:
+                        0 0 60px var(--green),
+                        0 0 100px rgba(0, 255, 136, 0.25);
+                }
+            }
+            .win-sub {
+                font-size: 0.82rem;
+                letter-spacing: 0.25em;
+                color: var(--dimtxt);
+            }
+            .win-stats {
+                display: flex;
+                gap: 24px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .ws {
+                text-align: center;
+            }
+            .wsv {
+                font-family: "VT323", monospace;
+                font-size: 2rem;
+                color: var(--accent);
+            }
+            .wsl {
+                font-size: 0.62rem;
+                letter-spacing: 0.15em;
+                color: var(--dimtxt);
+            }
+            .cfetti {
+                position: fixed;
+                pointer-events: none;
+                border-radius: 2px;
+                animation: cfall linear forwards;
+            }
+            @keyframes cfall {
+                from {
+                    transform: translateY(-20px) rotate(0deg);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateY(110vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- INTRO -->
+        <div id="intro">
+            <div class="star-field" id="sf"></div>
+            <div id="intro-logos">
+                <img src="./imgs/pulz.png" alt="Pulz'25 Logo" id="intro-pulz" />
+                <img
+                    src="./imgs/acicts.png"
+                    alt="ACICTS logo"
+                    id="intro-acicts"
+                />
+            </div>
+            <div class="intro-badge">STARSHIP<br />CIPHER</div>
+            <div class="intro-sub">
+                S K E L D — 9 &nbsp;·&nbsp; S E C U R I T Y
+            </div>
+            <div class="intro-story">
+                The rogue AI <b>ARES-9</b> has locked the
+                <b>Command Bay</b> behind two cipher locks.<br /><br />
+                Explore the ship. Decode the crew's <b>cryptic messages</b>.
+                Crack <b>Terminal Α</b> in the Weapons Bay and
+                <b>Terminal Β</b> in Security to restore control.<br /><br />
+                <span style="color: var(--dimtxt); font-size: 0.75rem"
+                    >💡 Hint: Open browser DevTools → Console for developer
+                    backdoor.</span
+                >
+            </div>
+            <button class="intro-btn" onclick="showLoadingScreen()">
+                ▶ BEGIN MISSION
+            </button>
+        </div>
 
-/* WIN */
-#win-screen{position:fixed;inset:0;background:rgba(0,10,5,.94);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:400;}
-#win-screen.active{display:flex;}
-.win-title{font-family:'VT323',monospace;font-size:clamp(2.5rem,7vw,4.5rem);color:var(--green);letter-spacing:.15em;text-align:center;animation:pg 1.5s ease-in-out infinite alternate;}
-@keyframes pg{from{text-shadow:0 0 20px var(--green)}to{text-shadow:0 0 60px var(--green),0 0 100px rgba(0,255,136,.25)}}
-.win-sub{font-size:.82rem;letter-spacing:.25em;color:var(--dimtxt);}
-.win-stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
-.ws{text-align:center;}
-.wsv{font-family:'VT323',monospace;font-size:2rem;color:var(--accent);}
-.wsl{font-size:.62rem;letter-spacing:.15em;color:var(--dimtxt);}
-.cfetti{position:fixed;pointer-events:none;border-radius:2px;animation:cfall linear forwards;}
-@keyframes cfall{from{transform:translateY(-20px) rotate(0deg);opacity:1}to{transform:translateY(110vh) rotate(720deg);opacity:0}}
-</style>
-</head>
-<body>
+        <!-- LOADING -->
+        <div id="loading-card">
+            <div id="loading-card-logos">
+                <img
+                    src="./imgs/pulz.png"
+                    alt="Pulz'25 Logo"
+                    id="loading-card-pulz"
+                />
+                <img
+                    src="./imgs/acicts.png"
+                    alt="ACICTS logo"
+                    id="loading-card-acicts"
+                />
+            </div>
+            <div id="loading-card-inner">
+                <div id="chars">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#ff9900"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="rgb(183,110,0)"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="rgb(183,110,0)"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="rgb(158,94,0)"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="rgb(158,94,0)"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#ff9900"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#ff4444"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#aa2d2d"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#aa2d2d"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#932727"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#932727"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#ff4444"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#00aaff"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#0071aa"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#0071aa"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#00699e"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#00699e"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#00aaff"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#4da6ff"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#3777b7"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#3777b7"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#2c5f93"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#2c5f93"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#4da6ff"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <circle
+                            cx="64.8"
+                            cy="40.8"
+                            r="4.4"
+                            fill="rgba(255,255,255,0.88)"
+                        />
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#bb44ff"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#7d2daa"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#7d2daa"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#6b2793"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#6b2793"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#bb44ff"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#44ff88"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#30b761"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#30b761"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#27934e"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#27934e"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#44ff88"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="10 14 100 128"
+                        class="char"
+                    >
+                        <!-- Body -->
+                        <ellipse
+                            cx="60"
+                            cy="74"
+                            rx="27.2"
+                            ry="40"
+                            fill="#ffcc00"
+                        />
+                        <!-- Arms -->
+                        <ellipse
+                            cx="26.8"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#aa8800"
+                        />
+                        <ellipse
+                            cx="93.2"
+                            cy="68.8"
+                            rx="8.4"
+                            ry="19.2"
+                            fill="#aa8800"
+                        />
+                        <!-- Legs -->
+                        <rect
+                            x="38.8"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#9e7e00"
+                        />
+                        <rect
+                            x="64"
+                            y="104"
+                            width="17.6"
+                            height="19.2"
+                            fill="#9e7e00"
+                        />
+                        <!-- Head -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="27.2"
+                            ry="23.2"
+                            fill="#ffcc00"
+                        />
+                        <!-- Helmet visor (dark) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="16.8"
+                            ry="12"
+                            fill="rgba(18,48,78,0.9)"
+                        />
+                        <!-- Helmet visor (shine) -->
+                        <ellipse
+                            cx="60"
+                            cy="42"
+                            rx="11.2"
+                            ry="7.2"
+                            fill="rgba(100,200,255,0.55)"
+                        />
+                        <!-- Eye detail -->
+                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
+                    </svg>
+                </div>
+                <span id="slogan-spn">
+                    <h2 id="slogan">
+                        Crack the password and save the starship!
+                    </h2>
+                </span>
+                <button id="continue-to-mission" onclick="startGame()">
+                    Continue to Mission ▶
+                </button>
+            </div>
+            <p id="fun-fact">
+                <span>Fun Fact: </span>This game has no rules ;)
+            </p>
+        </div>
 
-<!-- INTRO -->
-<div id="intro">
-  <div class="star-field" id="sf"></div>
-  <div id="intro-logos">
-    <img src="./imgs/pulz.png" alt="Pulz'25 Logo" id="intro-pulz">
-    <img src="./imgs/acicts.png" alt="ACICTS logo" id="intro-acicts">
-  </div>
-  <div class="intro-badge">STARSHIP<br>CIPHER</div>
-  <div class="intro-sub">S K E L D — 9 &nbsp;·&nbsp; S E C U R I T Y</div>
-  <div class="intro-story">
-    The rogue AI <b>ARES-9</b> has locked the <b>Command Bay</b> behind two cipher locks.<br><br>
-    Explore the ship. Decode the crew's <b>cryptic messages</b>. Crack <b>Terminal Α</b> in the Weapons Bay and <b>Terminal Β</b> in Security to restore control.<br><br>
-    <span style="color:var(--dimtxt);font-size:.75rem">💡 Hint: Open browser DevTools → Console for developer backdoor.</span>
-  </div>
-  <button class="intro-btn" onclick="showLoadingScreen()">▶ BEGIN MISSION</button>
-</div>
+        <!-- HUD -->
+        <div id="hud">
+            <span class="hud-logo">SKELD-9</span>
+            <span class="hud-sep">|</span>
+            <span class="hud-room" id="hud-room">CAFETERIA</span>
+            <span class="hud-sp"></span>
+            <div class="hud-stat">
+                <span class="hud-pip pip-ok"></span>LIFE SUPPORT
+            </div>
+            <div class="hud-stat">
+                <span class="hud-pip pip-warn" id="pip-a"></span>ALPHA LOCK
+            </div>
+            <div class="hud-stat">
+                <span class="hud-pip pip-err" id="pip-b"></span>BETA LOCK
+            </div>
+            <span class="hud-sep">|</span>
+            <span class="task-ctr" id="tctr">0/2 CRACKED</span>
+            <span class="hud-sep">|</span>
+            <span class="hud-hint"
+                ><span class="hud-key">WASD</span> Move &nbsp;<span
+                    class="hud-key"
+                    >E</span
+                >
+                Interact &nbsp;<span class="hud-key">ESC</span> Close</span
+            >
+        </div>
 
-<!-- LOADING -->
-<div id="loading-card">
-  <div id="loading-card-logos">
-    <img src="./imgs/pulz.png" alt="Pulz'25 Logo" id="loading-card-pulz">
-    <img src="./imgs/acicts.png" alt="ACICTS logo" id="loading-card-acicts">
-  </div>
-  <div id="loading-card-inner">
-    <div id="chars">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ff9900"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="rgb(183,110,0)"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="rgb(183,110,0)"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="rgb(158,94,0)"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="rgb(158,94,0)"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ff9900"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ff4444"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#aa2d2d"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#aa2d2d"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#932727"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#932727"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ff4444"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#00aaff"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#0071aa"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#0071aa"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#00699e"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#00699e"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#00aaff"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#4da6ff"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#3777b7"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#3777b7"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#2c5f93"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#2c5f93"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#4da6ff"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/>
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#bb44ff"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#7d2daa"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#7d2daa"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#6b2793"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#6b2793"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#bb44ff"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#44ff88"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#30b761"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#30b761"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#27934e"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#27934e"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#44ff88"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 100 128" class="char">
-        <!-- Body -->
-        <ellipse cx="60" cy="74" rx="27.2" ry="40" fill="#ffcc00"/>
-        <!-- Arms -->
-        <ellipse cx="26.8" cy="68.8" rx="8.4" ry="19.2" fill="#aa8800"/>
-        <ellipse cx="93.2" cy="68.8" rx="8.4" ry="19.2" fill="#aa8800"/>
-        <!-- Legs -->
-        <rect x="38.8" y="104" width="17.6" height="19.2" fill="#9e7e00"/>
-        <rect x="64"   y="104" width="17.6" height="19.2" fill="#9e7e00"/>
-        <!-- Head -->
-        <ellipse cx="60" cy="42" rx="27.2" ry="23.2" fill="#ffcc00"/>
-        <!-- Helmet visor (dark) -->
-        <ellipse cx="60" cy="42" rx="16.8" ry="12" fill="rgba(18,48,78,0.9)"/>
-        <!-- Helmet visor (shine) -->
-        <ellipse cx="60" cy="42" rx="11.2" ry="7.2" fill="rgba(100,200,255,0.55)"/>
-        <!-- Eye detail -->
-        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
-      </svg>
-    </div>
-    <span id="slogan-spn">
-        <h2 id="slogan">Crack the password and save the starship!</h2>
-    </span>
-    <button id="continue-to-mission" onclick="startGame()">Continue to Mission ▶</button>
-  </div>
-  <p id="fun-fact"><span>Fun Fact: </span>This game has no rules ;)</p>
-</div>
+        <!-- CANVAS -->
+        <div id="canvas-wrap"><canvas id="gc"></canvas></div>
 
-<!-- HUD -->
-<div id="hud">
-  <span class="hud-logo">SKELD-9</span>
-  <span class="hud-sep">|</span>
-  <span class="hud-room" id="hud-room">CAFETERIA</span>
-  <span class="hud-sp"></span>
-  <div class="hud-stat"><span class="hud-pip pip-ok"></span>LIFE SUPPORT</div>
-  <div class="hud-stat"><span class="hud-pip pip-warn" id="pip-a"></span>ALPHA LOCK</div>
-  <div class="hud-stat"><span class="hud-pip pip-err" id="pip-b"></span>BETA LOCK</div>
-  <span class="hud-sep">|</span>
-  <span class="task-ctr" id="tctr">0/2 CRACKED</span>
-  <span class="hud-sep">|</span>
-  <span class="hud-hint"><span class="hud-key">WASD</span> Move &nbsp;<span class="hud-key">E</span> Interact &nbsp;<span class="hud-key">ESC</span> Close</span>
-</div>
+        <!-- MINIMAP -->
+        <div id="minimap">
+            <canvas id="mc" width="210" height="140"></canvas>
+            <div class="mm-title">NAV MAP</div>
+        </div>
 
-<!-- CANVAS -->
-<div id="canvas-wrap"><canvas id="gc"></canvas></div>
+        <!-- INTERACT PROMPT -->
+        <div id="ipr"></div>
 
-<!-- MINIMAP -->
-<div id="minimap">
-  <canvas id="mc" width="210" height="140"></canvas>
-  <div class="mm-title">NAV MAP</div>
-</div>
+        <!-- DOOR LOCKED MODAL -->
+        <div class="modal-ov" id="door-modal">
+            <div class="mbox" style="max-width: 420px">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle" id="door-modal-title">DOOR SEALED</div>
+                    <button class="mcls" onclick="closeModal('door-modal')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div class="lock-icon" id="door-icon">🔒</div>
+                    <div class="lock-msg" id="door-msg"></div>
+                </div>
+            </div>
+        </div>
 
-<!-- INTERACT PROMPT -->
-<div id="ipr"></div>
+        <!-- CRACK ALPHA -->
+        <div class="modal-ov" id="modal-alpha">
+            <div class="mbox">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">TERMINAL Α — CIPHER LOCK ALPHA</div>
+                    <button class="mcls" onclick="closeModal('modal-alpha')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div class="sb sb-a">
+                        <div class="sb-dot"></div>
+                        STAGE 1 OF 2 — ALPHA CLEARANCE — 5-CHAR CODE
+                    </div>
+                    <div class="hgrid" id="hgrid-alpha"></div>
+                    <div class="tlog" id="tlog-alpha">
+                        <div class="tr">
+                            <span class="tp">SYS&gt;</span
+                            ><span class="ti"
+                                >ALPHA TERMINAL ONLINE. ENTER 5-CHARACTER CIPHER
+                                CODE.</span
+                            >
+                        </div>
+                    </div>
+                    <div class="pw">
+                        <div class="pl">
+                            <span>BRUTE-FORCE SCAN</span
+                            ><span id="ap-pct">0%</span>
+                        </div>
+                        <div class="pt">
+                            <div
+                                class="pf"
+                                id="ap-fill"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="pwd-row" id="pwd-alpha"></div>
+                    <div class="kpad" id="kp-alpha"></div>
+                    <div class="arow">
+                        <button
+                            class="ab ab-brute"
+                            id="btn-brute-alpha"
+                            onclick="startBrute('alpha')"
+                        >
+                            ⚡ BRUTE SCAN
+                        </button>
+                        <button class="ab ab-clr" onclick="clearPwd('alpha')">
+                            ✕ CLR
+                        </button>
+                        <button class="ab ab-sub" onclick="submitPwd('alpha')">
+                            ▶ SUBMIT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- DOOR LOCKED MODAL -->
-<div class="modal-ov" id="door-modal">
-  <div class="mbox" style="max-width:420px">
-    <div class="mhdr">
-      <div class="mdots"><div class="md md-r"></div><div class="md md-y"></div><div class="md md-g"></div></div>
-      <div class="mtitle" id="door-modal-title">DOOR SEALED</div>
-      <button class="mcls" onclick="closeModal('door-modal')">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="lock-icon" id="door-icon">🔒</div>
-      <div class="lock-msg" id="door-msg"></div>
-    </div>
-  </div>
-</div>
+        <!-- CRACK BETA -->
+        <div class="modal-ov" id="modal-beta">
+            <div class="mbox">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">TERMINAL Β — CIPHER LOCK BETA</div>
+                    <button class="mcls" onclick="closeModal('modal-beta')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div class="sb sb-b">
+                        <div class="sb-dot"></div>
+                        STAGE 2 OF 2 — BETA CLEARANCE — 6-CHAR CODE
+                    </div>
+                    <div class="hgrid" id="hgrid-beta"></div>
+                    <div class="tlog" id="tlog-beta">
+                        <div class="tr">
+                            <span class="tp">SYS&gt;</span
+                            ><span class="ti"
+                                >BETA TERMINAL ONLINE. ENTER 6-CHARACTER CIPHER
+                                CODE.</span
+                            >
+                        </div>
+                    </div>
+                    <div class="pw">
+                        <div class="pl">
+                            <span>BRUTE-FORCE SCAN</span
+                            ><span id="bp-pct">0%</span>
+                        </div>
+                        <div class="pt">
+                            <div
+                                class="pf"
+                                id="bp-fill"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="pwd-row" id="pwd-beta"></div>
+                    <div class="kpad" id="kp-beta"></div>
+                    <div class="arow">
+                        <button
+                            class="ab ab-brute"
+                            id="btn-brute-beta"
+                            onclick="startBrute('beta')"
+                        >
+                            ⚡ BRUTE SCAN
+                        </button>
+                        <button class="ab ab-clr" onclick="clearPwd('beta')">
+                            ✕ CLR
+                        </button>
+                        <button class="ab ab-sub" onclick="submitPwd('beta')">
+                            ▶ SUBMIT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- CRACK ALPHA -->
-<div class="modal-ov" id="modal-alpha">
-  <div class="mbox">
-    <div class="mhdr">
-      <div class="mdots"><div class="md md-r"></div><div class="md md-y"></div><div class="md md-g"></div></div>
-      <div class="mtitle">TERMINAL Α — CIPHER LOCK ALPHA</div>
-      <button class="mcls" onclick="closeModal('modal-alpha')">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="sb sb-a"><div class="sb-dot"></div>STAGE 1 OF 2 — ALPHA CLEARANCE — 5-CHAR CODE</div>
-      <div class="hgrid" id="hgrid-alpha"></div>
-      <div class="tlog" id="tlog-alpha"><div class="tr"><span class="tp">SYS&gt;</span><span class="ti">ALPHA TERMINAL ONLINE. ENTER 5-CHARACTER CIPHER CODE.</span></div></div>
-      <div class="pw"><div class="pl"><span>BRUTE-FORCE SCAN</span><span id="ap-pct">0%</span></div><div class="pt"><div class="pf" id="ap-fill" style="width:0%"></div></div></div>
-      <div class="pwd-row" id="pwd-alpha"></div>
-      <div class="kpad" id="kp-alpha"></div>
-      <div class="arow">
-        <button class="ab ab-brute" id="btn-brute-alpha" onclick="startBrute('alpha')">⚡ BRUTE SCAN</button>
-        <button class="ab ab-clr" onclick="clearPwd('alpha')">✕ CLR</button>
-        <button class="ab ab-sub" onclick="submitPwd('alpha')">▶ SUBMIT</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- WIN -->
+        <div id="win-screen">
+            <div class="win-title">SHIP CONTROL<br />RESTORED</div>
+            <div class="win-sub">
+                BOTH CIPHER LOCKS DISENGAGED — ARES-9 NEUTRALISED
+            </div>
+            <div class="win-stats">
+                <div class="ws">
+                    <div class="wsv" id="ws-t">0s</div>
+                    <div class="wsl">TIME</div>
+                </div>
+                <div class="ws">
+                    <div class="wsv" id="ws-a">0</div>
+                    <div class="wsl">ATTEMPTS</div>
+                </div>
+                <div class="ws">
+                    <div class="wsv" id="ws-h">0</div>
+                    <div class="wsl">HINTS</div>
+                </div>
+            </div>
+            <button class="intro-btn" onclick="resetAll()">
+                ↺ NEW MISSION
+            </button>
+        </div>
 
-<!-- CRACK BETA -->
-<div class="modal-ov" id="modal-beta">
-  <div class="mbox">
-    <div class="mhdr">
-      <div class="mdots"><div class="md md-r"></div><div class="md md-y"></div><div class="md md-g"></div></div>
-      <div class="mtitle">TERMINAL Β — CIPHER LOCK BETA</div>
-      <button class="mcls" onclick="closeModal('modal-beta')">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="sb sb-b"><div class="sb-dot"></div>STAGE 2 OF 2 — BETA CLEARANCE — 6-CHAR CODE</div>
-      <div class="hgrid" id="hgrid-beta"></div>
-      <div class="tlog" id="tlog-beta"><div class="tr"><span class="tp">SYS&gt;</span><span class="ti">BETA TERMINAL ONLINE. ENTER 6-CHARACTER CIPHER CODE.</span></div></div>
-      <div class="pw"><div class="pl"><span>BRUTE-FORCE SCAN</span><span id="bp-pct">0%</span></div><div class="pt"><div class="pf" id="bp-fill" style="width:0%"></div></div></div>
-      <div class="pwd-row" id="pwd-beta"></div>
-      <div class="kpad" id="kp-beta"></div>
-      <div class="arow">
-        <button class="ab ab-brute" id="btn-brute-beta" onclick="startBrute('beta')">⚡ BRUTE SCAN</button>
-        <button class="ab ab-clr" onclick="clearPwd('beta')">✕ CLR</button>
-        <button class="ab ab-sub" onclick="submitPwd('beta')">▶ SUBMIT</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <script>
+            // ══════════════════════════════════════════════════════
+            //  PASSWORD GENERATION
+            // ══════════════════════════════════════════════════════
+            const CS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            function rch() {
+                return CS[Math.floor(Math.random() * CS.length)];
+            }
+            function gp(n) {
+                return Array.from({ length: n }, rch).join("");
+            }
+            let PA = gp(5),
+                PB = gp(6);
 
-<!-- WIN -->
-<div id="win-screen">
-  <div class="win-title">SHIP CONTROL<br>RESTORED</div>
-  <div class="win-sub">BOTH CIPHER LOCKS DISENGAGED — ARES-9 NEUTRALISED</div>
-  <div class="win-stats">
-    <div class="ws"><div class="wsv" id="ws-t">0s</div><div class="wsl">TIME</div></div>
-    <div class="ws"><div class="wsv" id="ws-a">0</div><div class="wsl">ATTEMPTS</div></div>
-    <div class="ws"><div class="wsv" id="ws-h">0</div><div class="wsl">HINTS</div></div>
-  </div>
-  <button class="intro-btn" onclick="resetAll()">↺ NEW MISSION</button>
-</div>
+            window.__SHIP_MANIFEST = {
+                alpha: btoa(PA),
+                beta: btoa(PB),
+                note: "Use atob(window.__SHIP_MANIFEST.alpha) in console to get ALPHA password",
+            };
 
-<script>
-// ══════════════════════════════════════════════════════
-//  PASSWORD GENERATION
-// ══════════════════════════════════════════════════════
-const CS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-function rch(){return CS[Math.floor(Math.random()*CS.length)];}
-function gp(n){return Array.from({length:n},rch).join('');}
-let PA=gp(5), PB=gp(6);
+            // ══════════════════════════════════════════════════════
+            //  CIPHER HELPERS (for obfuscated hints)
+            // ══════════════════════════════════════════════════════
+            const CSA = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+            function caesar(s, n) {
+                return s
+                    .split("")
+                    .map((c) => {
+                        const i = CSA.indexOf(c);
+                        return i >= 0
+                            ? CSA[(i + n + CSA.length) % CSA.length]
+                            : c;
+                    })
+                    .join("");
+            }
+            function rot13(s) {
+                return s
+                    .split("")
+                    .map((c) => {
+                        const i = CSA.indexOf(c);
+                        return i >= 0 ? CSA[(i + 13) % CSA.length] : c;
+                    })
+                    .join("");
+            }
+            function toHex(s) {
+                return s
+                    .split("")
+                    .map((c) => c.charCodeAt(0).toString(16).toUpperCase())
+                    .join("-");
+            }
+            function toBin(c) {
+                return c.charCodeAt(0).toString(2).padStart(8, "0");
+            }
+            function morseCode(c) {
+                const M = {
+                    A: ".-",
+                    B: "-...",
+                    C: "-.-.",
+                    D: "-..",
+                    E: ".",
+                    F: "..-.",
+                    G: "--.",
+                    H: "....",
+                    I: "..",
+                    J: ".---",
+                    K: "-.-",
+                    L: ".-..",
+                    M: "--",
+                    N: "-.",
+                    O: "---",
+                    P: ".--.",
+                    Q: "--.-",
+                    R: ".-.",
+                    S: "...",
+                    T: "-",
+                    U: "..-",
+                    V: "...-",
+                    W: ".--",
+                    X: "-..-",
+                    Y: "-.--",
+                    Z: "--..",
+                    2: "..---",
+                    3: "...--",
+                    4: "....-",
+                    5: ".....",
+                    6: "-....",
+                    7: "--...",
+                    8: "---..",
+                    9: "----.",
+                    8: "---..",
+                };
+                return M[c] || "???";
+            }
+            function asciiSum(s) {
+                return s.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+            }
 
-window.__SHIP_MANIFEST={
-  alpha:btoa(PA),beta:btoa(PB),
-  note:'Use atob(window.__SHIP_MANIFEST.alpha) in console to get ALPHA password'
-};
+            let HINTS_A, HINTS_B;
+            function buildHints() {
+                HINTS_A = [
+                    {
+                        tag: "COOK — DAILY LOG #4471",
+                        clue: `Overheard fragment encoded Caesar+3: "<b>${caesar(PA.slice(0, 2), 3)}</b>" — shift it back to find the first 2 chars.`,
+                        decode: `→ CHARS 1-2: ${PA[0]}${PA[1]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "MEDIC — PATIENT FILE Σ-7",
+                        clue: `The ASCII sum of chars 3 and 4 equals <b>${PA.charCodeAt(2) + PA.charCodeAt(3)}</b>. Chars 3+4 individually: ${PA.charCodeAt(2)} and ${PA.charCodeAt(3)}.`,
+                        decode: `→ CHARS 3-4: ${PA[2]}${PA[3]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "SOLDIER — ENCRYPTED DISPATCH",
+                        clue: `Final character in Morse: <b>${morseCode(PA[4])}</b>. Decode and you have the last piece.`,
+                        decode: `→ CHAR 5: ${PA[4]}`,
+                        found: false,
+                    },
+                ];
+                HINTS_B = [
+                    {
+                        tag: "ENGINEER — MAINTENANCE LOG SN-88",
+                        clue: `First 3 chars in hex bytes: <b>${toHex(PB.slice(0, 3))}</b>. Convert each hex pair to ASCII.`,
+                        decode: `→ CHARS 1-3: ${PB[0]}${PB[1]}${PB[2]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "NAVIGATOR — STELLAR CHART Ω-9",
+                        clue: `Chars 4-5 passed through ROT-13: <b>${rot13(PB.slice(3, 5))}</b>. Apply ROT-13 again to decode.`,
+                        decode: `→ CHARS 4-5: ${PB[3]}${PB[4]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "CAPTAIN — SEALED ORDERS VOL III",
+                        clue: `Last char binary: <b>${toBin(PB[5])}</b>. Convert binary → decimal → ASCII character.`,
+                        decode: `→ CHAR 6: ${PB[5]}`,
+                        found: false,
+                    },
+                ];
+            }
 
-// ══════════════════════════════════════════════════════
-//  CIPHER HELPERS (for obfuscated hints)
-// ══════════════════════════════════════════════════════
-const CSA='ABCDEFGHJKLMNPQRSTUVWXYZ';
-function caesar(s,n){return s.split('').map(c=>{const i=CSA.indexOf(c);return i>=0?CSA[(i+n+CSA.length)%CSA.length]:c}).join('');}
-function rot13(s){return s.split('').map(c=>{const i=CSA.indexOf(c);return i>=0?CSA[(i+13)%CSA.length]:c}).join('');}
-function toHex(s){return s.split('').map(c=>c.charCodeAt(0).toString(16).toUpperCase()).join('-');}
-function toBin(c){return c.charCodeAt(0).toString(2).padStart(8,'0');}
-function morseCode(c){const M={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.','8':'---..'}; return M[c]||'???';}
-function asciiSum(s){return s.split('').reduce((a,c)=>a+c.charCodeAt(0),0);}
+            // ══════════════════════════════════════════════════════
+            //  MAP
+            // ══════════════════════════════════════════════════════
+            const T = 44; // tile size px
 
-let HINTS_A, HINTS_B;
-function buildHints(){
-  HINTS_A=[
-    {tag:'COOK — DAILY LOG #4471',
-     clue:`Overheard fragment encoded Caesar+3: "<b>${caesar(PA.slice(0,2),3)}</b>" — shift it back to find the first 2 chars.`,
-     decode:`→ CHARS 1-2: ${PA[0]}${PA[1]}`,found:false},
-    {tag:'MEDIC — PATIENT FILE Σ-7',
-     clue:`The ASCII sum of chars 3 and 4 equals <b>${PA.charCodeAt(2)+PA.charCodeAt(3)}</b>. Chars 3+4 individually: ${PA.charCodeAt(2)} and ${PA.charCodeAt(3)}.`,
-     decode:`→ CHARS 3-4: ${PA[2]}${PA[3]}`,found:false},
-    {tag:'SOLDIER — ENCRYPTED DISPATCH',
-     clue:`Final character in Morse: <b>${morseCode(PA[4])}</b>. Decode and you have the last piece.`,
-     decode:`→ CHAR 5: ${PA[4]}`,found:false},
-  ];
-  HINTS_B=[
-    {tag:'ENGINEER — MAINTENANCE LOG SN-88',
-     clue:`First 3 chars in hex bytes: <b>${toHex(PB.slice(0,3))}</b>. Convert each hex pair to ASCII.`,
-     decode:`→ CHARS 1-3: ${PB[0]}${PB[1]}${PB[2]}`,found:false},
-    {tag:'NAVIGATOR — STELLAR CHART Ω-9',
-     clue:`Chars 4-5 passed through ROT-13: <b>${rot13(PB.slice(3,5))}</b>. Apply ROT-13 again to decode.`,
-     decode:`→ CHARS 4-5: ${PB[3]}${PB[4]}`,found:false},
-    {tag:'CAPTAIN — SEALED ORDERS VOL III',
-     clue:`Last char binary: <b>${toBin(PB[5])}</b>. Convert binary → decimal → ASCII character.`,
-     decode:`→ CHAR 6: ${PB[5]}`,found:false},
-  ];
-}
+            // rooms: x,y,w,h in tiles
+            const ROOMS = [
+                {
+                    id: "cafe",
+                    label: "CAFETERIA",
+                    x: 0,
+                    y: 0,
+                    w: 19,
+                    h: 7,
+                    fc: "#0b1525",
+                    wc: "#0d1c38",
+                },
+                {
+                    id: "medbay",
+                    label: "MEDBAY",
+                    x: 21,
+                    y: 0,
+                    w: 7,
+                    h: 7,
+                    fc: "#0a1a20",
+                    wc: "#0c2230",
+                },
+                {
+                    id: "htop",
+                    label: "CORRIDOR N",
+                    x: 19,
+                    y: 1,
+                    w: 2,
+                    h: 5,
+                    fc: "#090f1c",
+                    wc: "#0d1828",
+                },
+                {
+                    id: "weapons",
+                    label: "WEAPONS BAY",
+                    x: 0,
+                    y: 7,
+                    w: 16,
+                    h: 9,
+                    fc: "#150a0a",
+                    wc: "#1e1010",
+                },
+                {
+                    id: "engine",
+                    label: "ENGINE ROOM",
+                    x: 16,
+                    y: 7,
+                    w: 12,
+                    h: 11,
+                    fc: "#130c05",
+                    wc: "#1c1208",
+                },
+                // {id:'hmid',    label:'CORRIDOR C',  x:14, y:5, w:2, h:4, fc:'#090f1c',wc:'#0d1828'},
+                // {id:'storage', label:'STORAGE',     x:0, y:7, w:8, h:2, fc:'#0c1018',wc:'#101828'},
+                {
+                    id: "security",
+                    label: "SECURITY",
+                    x: 16,
+                    y: 7,
+                    w: 7,
+                    h: 5,
+                    fc: "#100a18",
+                    wc: "#180c24",
+                },
+                {
+                    id: "command",
+                    label: "COMMAND BAY",
+                    x: 0,
+                    y: 18,
+                    w: 28,
+                    h: 7,
+                    fc: "#050c14",
+                    wc: "#081020",
+                },
+                {
+                    id: "hbot",
+                    label: "CORRIDOR S",
+                    x: 0,
+                    y: 16,
+                    w: 16,
+                    h: 2,
+                    fc: "#090f1c",
+                    wc: "#0d1828",
+                },
+            ];
 
-// ══════════════════════════════════════════════════════
-//  MAP
-// ══════════════════════════════════════════════════════
-const T=44; // tile size px
+            // doors: x,y,w,h, lock:null/'alpha'/'beta'/'both'
+            const DOORS = [
+                { id: "d1", x: 18, y: 2, w: 2, h: 1, lock: null }, // cafe<->htop
+                { id: "d2", x: 20, y: 2, w: 2, h: 1, lock: null }, // htop<->medbay
+                { id: "d3", x: 11, y: 6, w: 1, h: 1, lock: null }, // cafe<->weapons (half 1)
+                { id: "d4", x: 11, y: 7, w: 1, h: 1, lock: null }, // cafe<->weapons (half 2)
+                { id: "d5", x: 12, y: 15, w: 1, h: 2, lock: "alpha" }, // weapons<->hbot (half 1)
+                { id: "d6", x: 12, y: 17, w: 1, h: 2, lock: null }, // hbot<->command (half 2)
+                // {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
+                { id: "d7", x: 15, y: 13, w: 2, h: 1, lock: "alpha" }, // weapons<->engine
+                { id: "d8", x: 19, y: 11, w: 1, h: 1, lock: "alpha" }, // engine<->security
+                // {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot
+                // {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
+                // {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
+                // {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
+                // {id:'d13',x:15,y:11,w:1,h:1,lock:null},
+                // {id:'d14',x:9,y:15,w:1,h:1,lock:null}
+            ];
 
-// rooms: x,y,w,h in tiles
-const ROOMS=[
-  {id:'cafe',    label:'CAFETERIA',   x:0, y:0, w:19,h:7, fc:'#0b1525',wc:'#0d1c38'},
-  {id:'medbay',  label:'MEDBAY',      x:21,y:0, w:7, h:7, fc:'#0a1a20',wc:'#0c2230'},
-  {id:'htop',    label:'CORRIDOR N',  x:19,y:1, w:2, h:5, fc:'#090f1c',wc:'#0d1828'},
-  {id:'weapons', label:'WEAPONS BAY', x:0, y:7, w:16, h:9, fc:'#150a0a',wc:'#1e1010'},
-  {id:'engine',  label:'ENGINE ROOM', x:16,y:7, w:12,h:11, fc:'#130c05',wc:'#1c1208'},
-  // {id:'hmid',    label:'CORRIDOR C',  x:14, y:5, w:2, h:4, fc:'#090f1c',wc:'#0d1828'},
-  // {id:'storage', label:'STORAGE',     x:0, y:7, w:8, h:2, fc:'#0c1018',wc:'#101828'},
-  {id:'security',label:'SECURITY',    x:16,y:7, w:7, h:5, fc:'#100a18',wc:'#180c24'},
-  {id:'command', label:'COMMAND BAY', x:0, y:18,w:28,h:7, fc:'#050c14',wc:'#081020'},
-  {id:'hbot',    label:'CORRIDOR S',  x:0, y:16,w:16, h:2, fc:'#090f1c',wc:'#0d1828'},
-];
+            // objects
+            const OBJS = [
+                // NPCs
+                {
+                    id: "cook",
+                    x: 2,
+                    y: 2,
+                    type: "npc",
+                    col: "#ff9900",
+                    label: "COOK",
+                    hint: "alpha",
+                    hIdx: 0,
+                },
+                {
+                    id: "medic",
+                    x: 23,
+                    y: 2,
+                    type: "npc",
+                    col: "#00aaff",
+                    label: "MEDIC",
+                    hint: "alpha",
+                    hIdx: 1,
+                },
+                {
+                    id: "soldier",
+                    x: 3,
+                    y: 13,
+                    type: "npc",
+                    col: "#ff4444",
+                    label: "SOLDIER",
+                    hint: "alpha",
+                    hIdx: 2,
+                },
+                {
+                    id: "engineer",
+                    x: 24,
+                    y: 10,
+                    type: "npc",
+                    col: "#44ff88",
+                    label: "ENGINEER",
+                    hint: "beta",
+                    hIdx: 0,
+                },
+                {
+                    id: "nav",
+                    x: 17,
+                    y: 8,
+                    type: "npc",
+                    col: "#bb44ff",
+                    label: "NAVIGATOR",
+                    hint: "beta",
+                    hIdx: 1,
+                },
+                {
+                    id: "captain",
+                    x: 2,
+                    y: 20,
+                    type: "npc",
+                    col: "#ffcc00",
+                    label: "CAPTAIN",
+                    hint: "beta",
+                    hIdx: 2,
+                },
+                // Terminals (locked behind doors)
+                {
+                    id: "term_a",
+                    x: 10,
+                    y: 10,
+                    type: "terminal",
+                    label: "TERMINAL Α",
+                    tid: "alpha",
+                    col: "#00e5ff",
+                },
+                {
+                    id: "term_b",
+                    x: 21,
+                    y: 8,
+                    type: "terminal",
+                    label: "TERMINAL Β",
+                    tid: "beta",
+                    col: "#ff6b00",
+                },
+                // Props
+                {
+                    id: "tb1",
+                    x: 3,
+                    y: 3,
+                    type: "prop",
+                    col: "#162540",
+                    w: 3,
+                    h: 2,
+                },
+                {
+                    id: "tb2",
+                    x: 7,
+                    y: 4,
+                    type: "prop",
+                    col: "#162540",
+                    w: 3,
+                    h: 1,
+                },
+                {
+                    id: "med1",
+                    x: 12,
+                    y: 1,
+                    type: "prop",
+                    col: "#0a2030",
+                    w: 4,
+                    h: 3,
+                },
+                {
+                    id: "eng1",
+                    x: 22,
+                    y: 13,
+                    type: "prop",
+                    col: "#1c1205",
+                    w: 5,
+                    h: 4,
+                    spin: true,
+                },
+                {
+                    id: "cr1",
+                    x: 1,
+                    y: 10,
+                    type: "prop",
+                    col: "#1a1a0a",
+                    w: 2,
+                    h: 2,
+                },
+                {
+                    id: "cr2",
+                    x: 5,
+                    y: 12,
+                    type: "prop",
+                    col: "#1a1a0a",
+                    w: 2,
+                    h: 2,
+                },
+                // {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
+                {
+                    id: "cmd_desk",
+                    x: 1,
+                    y: 19,
+                    type: "prop",
+                    col: "#0a1828",
+                    w: 1,
+                    h: 4,
+                },
+                {
+                    id: "cmd_chair",
+                    x: 3,
+                    y: 20,
+                    type: "prop",
+                    col: "#0d1c35",
+                    w: 1,
+                    h: 2,
+                },
+                {
+                    id: "gun_rack",
+                    x: 1,
+                    y: 10,
+                    type: "prop",
+                    col: "#200808",
+                    w: 1,
+                    h: 5,
+                },
+            ];
 
-// doors: x,y,w,h, lock:null/'alpha'/'beta'/'both'
-const DOORS=[
-  {id:'d1',x:18, y:2,w:2,h:1,lock:null},  // cafe<->htop
-  {id:'d2',x:20, y:2,w:2,h:1,lock:null},  // htop<->medbay
-  {id:'d3',x:11,y:6,w:1,h:1,lock:null},  // cafe<->weapons (half 1)
-  {id:'d4',x:11,y:7,w:1,h:1,lock:null},  // cafe<->weapons (half 2)
-  {id:'d5',x:12, y:15,w:1,h:2,lock:"alpha"},  // weapons<->hbot (half 1)
-  {id:'d6',x:12, y:17,w:1,h:2,lock:null},  // hbot<->command (half 2)
-  // {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
-  {id:'d7',x:15,y:13,w:2,h:1,lock:"alpha"},  // weapons<->engine
-  {id:'d8',x:19,y:11,w:1,h:1,lock:"alpha"},  // engine<->security
-  // {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot 
-  // {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
-  // {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
-  // {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
-  // {id:'d13',x:15,y:11,w:1,h:1,lock:null},
-  // {id:'d14',x:9,y:15,w:1,h:1,lock:null}
-];
+            // Build solid tiles
+            const SOLID = new Set();
+            function buildSolids() {
+                ROOMS.forEach((r) => {
+                    for (let tx = r.x; tx < r.x + r.w; tx++) {
+                        SOLID.add(`${tx},${r.y}`);
+                        SOLID.add(`${tx},${r.y + r.h - 1}`);
+                    }
+                    for (let ty = r.y; ty < r.y + r.h; ty++) {
+                        SOLID.add(`${r.x},${ty}`);
+                        SOLID.add(`${r.x + r.w - 1},${ty}`);
+                    }
+                });
+                DOORS.forEach((d) => {
+                    for (let tx = d.x; tx < d.x + d.w; tx++)
+                        for (let ty = d.y; ty < d.y + d.h; ty++)
+                            SOLID.delete(`${tx},${ty}`);
+                });
+                OBJS.filter(
+                    (o) => o.type === "prop" || o.type === "terminal",
+                ).forEach((o) => {
+                    const ow = o.w || 1,
+                        oh = o.h || 1;
+                    for (let tx = o.x; tx < o.x + ow; tx++) {
+                        for (let ty = o.y; ty < o.y + oh; ty++) {
+                            if (tx !== 8) {
+                                SOLID.add(`${tx},${ty}`);
+                            }
+                        }
+                    }
+                });
+            }
 
-// objects
-const OBJS=[
-  // NPCs
-  {id:'cook',    x:2, y:2, type:'npc',col:'#ff9900',label:'COOK',     hint:'alpha',hIdx:0},
-  {id:'medic',   x:23,y:2, type:'npc',col:'#00aaff',label:'MEDIC',    hint:'alpha',hIdx:1},
-  {id:'soldier', x:3, y:13,type:'npc',col:'#ff4444',label:'SOLDIER',  hint:'alpha',hIdx:2},
-  {id:'engineer',x:24,y:10,type:'npc',col:'#44ff88',label:'ENGINEER', hint:'beta', hIdx:0},
-  {id:'nav',     x:17,y:8, type:'npc',col:'#bb44ff',label:'NAVIGATOR',hint:'beta', hIdx:1},
-  {id:'captain', x:2,y:20,type:'npc',col:'#ffcc00',label:'CAPTAIN',  hint:'beta', hIdx:2},
-  // Terminals (locked behind doors)
-  {id:'term_a',  x:10, y:10,type:'terminal',label:'TERMINAL Α',tid:'alpha',col:'#00e5ff'},
-  {id:'term_b',  x:21,y:8, type:'terminal',label:'TERMINAL Β',tid:'beta', col:'#ff6b00'},
-  // Props
-  {id:'tb1',x:3, y:3, type:'prop',col:'#162540',w:3,h:2},
-  {id:'tb2',x:7, y:4, type:'prop',col:'#162540',w:3,h:1},
-  {id:'med1',x:12,y:1, type:'prop',col:'#0a2030',w:4,h:3},
-  {id:'eng1',x:22,y:13, type:'prop',col:'#1c1205',w:5,h:4,spin:true},
-  {id:'cr1',x:1, y:10,type:'prop',col:'#1a1a0a',w:2,h:2},
-  {id:'cr2',x:5, y:12,type:'prop',col:'#1a1a0a',w:2,h:2},
-  // {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
-  {id:'cmd_desk',x:1,y:19,type:'prop',col:'#0a1828',w:1,h:4},
-  {id:'cmd_chair',x:3,y:20,type:'prop',col:'#0d1c35',w:1,h:2},
-  {id:'gun_rack',x:1,y:10,type:'prop',col:'#200808',w:1,h:5}
-];
+            // ══════════════════════════════════════════════════════
+            //  STATE
+            // ══════════════════════════════════════════════════════
+            const ST = {
+                running: false,
+                alphaOk: false,
+                betaOk: false,
+                attempts: 0,
+                hintsGot: 0,
+                startTime: 0,
+                bruting: { alpha: false, beta: false },
+                bruteIvl: { alpha: null, beta: null },
+                input: { alpha: [], beta: [] },
+                slot: { alpha: 0, beta: 0 },
+            };
 
-// Build solid tiles
-const SOLID=new Set();
-function buildSolids(){
-  ROOMS.forEach(r=>{
-    for(let tx=r.x;tx<r.x+r.w;tx++){SOLID.add(`${tx},${r.y}`);SOLID.add(`${tx},${r.y+r.h-1}`);}
-    for(let ty=r.y;ty<r.y+r.h;ty++){SOLID.add(`${r.x},${ty}`);SOLID.add(`${r.x+r.w-1},${ty}`);}
-  });
-  DOORS.forEach(d=>{for(let tx=d.x;tx<d.x+d.w;tx++)for(let ty=d.y;ty<d.y+d.h;ty++)SOLID.delete(`${tx},${ty}`);});
-  OBJS.filter(o=>o.type==='prop'||o.type==='terminal').forEach(o=>{
-    const ow=o.w||1,oh=o.h||1;
-    for(let tx=o.x; tx < o.x+ow; tx++){
-      for(let ty=o.y; ty<o.y+oh; ty++){
-        if(tx !== 8) {
-        SOLID.add(`${tx},${ty}`);
-        }
-      }
-    }
-  });
-}
+            // ══════════════════════════════════════════════════════
+            //  PLAYER
+            // ══════════════════════════════════════════════════════
+            const pl = {
+                px: 2.5 * T,
+                py: 3.5 * T,
+                r: 13,
+                col: "#4da6ff",
+                animF: 0,
+            };
+            const SPEED = 3.2;
+            const ky = {};
 
-// ══════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════
-const ST={
-  running:false, alphaOk:false, betaOk:false,
-  attempts:0, hintsGot:0, startTime:0,
-  bruting:{alpha:false,beta:false}, bruteIvl:{alpha:null,beta:null},
-  input:{alpha:[],beta:[]}, slot:{alpha:0,beta:0}
-};
+            // ══════════════════════════════════════════════════════
+            //  CANVAS SETUP
+            // ══════════════════════════════════════════════════════
+            const gc = document.getElementById("gc");
+            const ctx = gc.getContext("2d");
+            const mc2 = document.getElementById("mc");
+            const mctx = mc2.getContext("2d");
+            let W,
+                H,
+                camX = 0,
+                camY = 0,
+                animT = 0;
 
-// ══════════════════════════════════════════════════════
-//  PLAYER
-// ══════════════════════════════════════════════════════
-const pl={px:2.5*T,py:3.5*T,r:13,col:'#4da6ff',animF:0};
-const SPEED=3.2;
-const ky={};
+            function resize() {
+                W = gc.width = gc.clientWidth;
+                H = gc.height = gc.clientHeight;
+            }
+            window.addEventListener("resize", resize);
 
-// ══════════════════════════════════════════════════════
-//  CANVAS SETUP
-// ══════════════════════════════════════════════════════
-const gc=document.getElementById('gc');
-const ctx=gc.getContext('2d');
-const mc2=document.getElementById('mc');
-const mctx=mc2.getContext('2d');
-let W,H,camX=0,camY=0,animT=0;
+            // ══════════════════════════════════════════════════════
+            //  RENDER
+            // ══════════════════════════════════════════════════════
+            function render() {
+                animT++;
+                ctx.clearRect(0, 0, W, H);
+                ctx.fillStyle = "#02040a";
+                ctx.fillRect(0, 0, W, H);
+                // Camera
+                const ww = 21 * T,
+                    wh = 24 * T;
+                camX = Math.max(0, Math.min(ww - W, pl.px - W / 2));
+                camY = Math.max(0, Math.min(wh - H, pl.py - H / 2));
+                ctx.save();
+                ctx.translate(-camX, -camY);
+                ROOMS.forEach(drawRoom);
+                drawGridLines();
+                DOORS.forEach(drawDoor);
+                OBJS.forEach(drawObj);
+                drawPl();
+                ctx.restore();
+                drawMM();
+            }
 
-function resize(){W=gc.width=gc.clientWidth;H=gc.height=gc.clientHeight;}
-window.addEventListener('resize',resize);
+            function drawRoom(r) {
+                const px = r.x * T,
+                    py = r.y * T,
+                    pw = r.w * T,
+                    ph = r.h * T;
+                ctx.fillStyle = r.fc;
+                ctx.fillRect(px, py, pw, ph);
+                ctx.fillStyle = r.wc;
+                ctx.fillRect(px, py, pw, T);
+                ctx.fillRect(px, py + ph - T, pw, T);
+                ctx.fillRect(px, py, T, ph);
+                ctx.fillRect(px + pw - T, py, T, ph);
+                // floor pattern
+                ctx.save();
+                ctx.globalAlpha = 0.04;
+                for (let tx = r.x + 1; tx < r.x + r.w - 1; tx += 2) {
+                    for (let ty = r.y + 1; ty < r.y + r.h - 1; ty += 2) {
+                        ctx.fillStyle = "#00e5ff";
+                        ctx.fillRect(
+                            tx * T + T / 2 - 2,
+                            ty * T + T / 2 - 2,
+                            4,
+                            4,
+                        );
+                    }
+                }
+                ctx.restore();
+                // room label
+                ctx.save();
+                ctx.globalAlpha = 0.15;
+                ctx.fillStyle = "#00e5ff";
+                ctx.font = `bold ${T * 0.32}px Rajdhani, sans-serif`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(r.label, px + pw / 2, py + ph / 2);
+                ctx.restore();
+                // ceiling lights
+                // for(let lx=r.x+1;lx<r.x+r.w-1;lx+=3){
+                //   const lxx=lx*T+T*0.5,lyy=r.y*T+T;
+                //   ctx.save();ctx.globalAlpha=.12;
+                //   const lg=ctx.createRadialGradient(lxx,lyy,0,lxx,lyy,T*2.5);
+                //   lg.addColorStop(0,'rgba(200,230,255,.25)');lg.addColorStop(1,'transparent');
+                //   ctx.fillStyle=lg;ctx.fillRect(r.x*T+T,r.y*T+T,(r.w-2)*T,(r.h-2)*T);
+                //   ctx.restore();
+                //   ctx.fillStyle='rgba(220,240,255,.65)';ctx.fillRect(lxx-14,lyy-3,28,4);
+                //   // pipe bracket
+                //   ctx.fillStyle='rgba(40,70,110,.6)';ctx.fillRect(lxx-18,lyy-6,36,3);
+                // }
+            }
 
-// ══════════════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════════════
-function render(){
-  animT++;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#02040a';ctx.fillRect(0,0,W,H);
-  // Camera
-  const ww=21*T,wh=24*T;
-  camX=Math.max(0,Math.min(ww-W,pl.px-W/2));
-  camY=Math.max(0,Math.min(wh-H,pl.py-H/2));
-  ctx.save();ctx.translate(-camX,-camY);
-  ROOMS.forEach(drawRoom);
-  drawGridLines();
-  DOORS.forEach(drawDoor);
-  OBJS.forEach(drawObj);
-  drawPl();
-  ctx.restore();
-  drawMM();
-}
+            function drawGridLines() {
+                ctx.save();
+                ctx.globalAlpha = 0.035;
+                ctx.strokeStyle = "#00e5ff";
+                ctx.lineWidth = 0.5;
+                for (let tx = 0; tx < 22; tx++) {
+                    ctx.beginPath();
+                    ctx.moveTo(tx * T, 0);
+                    ctx.lineTo(tx * T, 24 * T);
+                    ctx.stroke();
+                }
+                for (let ty = 0; ty < 25; ty++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, ty * T);
+                    ctx.lineTo(22 * T, ty * T);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
 
-function drawRoom(r){
-  const px=r.x*T,py=r.y*T,pw=r.w*T,ph=r.h*T;
-  ctx.fillStyle=r.fc;ctx.fillRect(px,py,pw,ph);
-  ctx.fillStyle=r.wc;
-  ctx.fillRect(px,py,pw,T);ctx.fillRect(px,py+ph-T,pw,T);
-  ctx.fillRect(px,py,T,ph);ctx.fillRect(px+pw-T,py,T,ph);
-  // floor pattern
-  ctx.save();ctx.globalAlpha=.04;
-  for(let tx=r.x+1;tx<r.x+r.w-1;tx+=2){
-    for(let ty=r.y+1;ty<r.y+r.h-1;ty+=2){
-      ctx.fillStyle='#00e5ff';
-      ctx.fillRect(tx*T+T/2-2,ty*T+T/2-2,4,4);
-    }
-  }
-  ctx.restore();
-  // room label
-  ctx.save();ctx.globalAlpha=.15;ctx.fillStyle='#00e5ff';
-  ctx.font=`bold ${T*.32}px Rajdhani, sans-serif`;
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(r.label,px+pw/2,py+ph/2);ctx.restore();
-  // ceiling lights
-  // for(let lx=r.x+1;lx<r.x+r.w-1;lx+=3){
-  //   const lxx=lx*T+T*0.5,lyy=r.y*T+T;
-  //   ctx.save();ctx.globalAlpha=.12;
-  //   const lg=ctx.createRadialGradient(lxx,lyy,0,lxx,lyy,T*2.5);
-  //   lg.addColorStop(0,'rgba(200,230,255,.25)');lg.addColorStop(1,'transparent');
-  //   ctx.fillStyle=lg;ctx.fillRect(r.x*T+T,r.y*T+T,(r.w-2)*T,(r.h-2)*T);
-  //   ctx.restore();
-  //   ctx.fillStyle='rgba(220,240,255,.65)';ctx.fillRect(lxx-14,lyy-3,28,4);
-  //   // pipe bracket
-  //   ctx.fillStyle='rgba(40,70,110,.6)';ctx.fillRect(lxx-18,lyy-6,36,3);
-  // }
-}
+            function drawDoor(d) {
+                const px = d.x * T,
+                    py = d.y * T,
+                    pw = d.w * T,
+                    ph = d.h * T;
+                const unlocked =
+                    !d.lock ||
+                    (d.lock === "alpha" && ST.alphaOk) ||
+                    (d.lock === "beta" && ST.betaOk) ||
+                    (d.lock === "both" && ST.alphaOk && ST.betaOk);
+                ctx.fillStyle = unlocked ? "#0a1a28" : "#2a0808";
+                ctx.fillRect(px, py, pw, ph);
+                ctx.strokeStyle = unlocked ? "#1e3a5a" : "#660000";
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(px + 1, py + 1, pw - 2, ph - 2);
+                if (d.lock) {
+                    ctx.save();
+                    ctx.font = `${T * 0.4}px sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(
+                        unlocked ? "🔓" : "🔒",
+                        px + pw / 2,
+                        py + ph / 2,
+                    );
+                    ctx.restore();
+                } else {
+                    // open door indicator lines
+                    ctx.strokeStyle = "rgba(30,60,100,.8)";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(px + pw / 2, py);
+                    ctx.lineTo(px + pw / 2, py + ph);
+                    ctx.stroke();
+                }
+            }
 
-function drawGridLines(){
-  ctx.save();ctx.globalAlpha=.035;ctx.strokeStyle='#00e5ff';ctx.lineWidth=.5;
-  for(let tx=0;tx<22;tx++){ctx.beginPath();ctx.moveTo(tx*T,0);ctx.lineTo(tx*T,24*T);ctx.stroke();}
-  for(let ty=0;ty<25;ty++){ctx.beginPath();ctx.moveTo(0,ty*T);ctx.lineTo(22*T,ty*T);ctx.stroke();}
-  ctx.restore();
-}
+            function drawObj(o) {
+                const px = o.x * T,
+                    py = o.y * T,
+                    ow = (o.w || 1) * T,
+                    oh = (o.h || 1) * T;
+                if (o.type === "prop") {
+                    ctx.fillStyle = o.col || "#1a2030";
+                    ctx.fillRect(px + 2, py + 2, ow - 4, oh - 4);
+                    ctx.strokeStyle = "rgba(255,255,255,.07)";
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(px + 2, py + 2, ow - 4, oh - 4);
+                    if (o.spin) {
+                        const cx = px + ow / 2,
+                            cy = py + oh / 2,
+                            r = Math.min(ow, oh) * 0.38;
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.rotate(animT * 0.018);
+                        ctx.strokeStyle = "rgba(255,100,0,.5)";
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, r, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.rotate(-animT * 0.036);
+                        ctx.strokeStyle = "rgba(255,160,0,.3)";
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        for (let i = 0; i < 6; i++) {
+                            const a = (i * Math.PI) / 3;
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+                        }
+                        ctx.stroke();
+                        const grd = ctx.createRadialGradient(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            r * 0.55,
+                        );
+                        grd.addColorStop(0, "rgba(255,130,0,.85)");
+                        grd.addColorStop(1, "rgba(255,50,0,.1)");
+                        ctx.fillStyle = grd;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                }
+                if (o.type === "npc") {
+                    const isNear =
+                        Math.hypot(
+                            pl.px - (px + T * 0.5),
+                            pl.py - (py + T * 0.5),
+                        ) <
+                        T * 1.9;
+                    drawCrew(
+                        px + T * 0.5,
+                        py + T * 0.5,
+                        T * 0.42,
+                        o.col,
+                        o.label,
+                        o.hint !== undefined && !isHintCollected(o),
+                    );
+                    if (isNear && o.hint) {
+                        // hint bubble preview
+                        ctx.save();
+                        const bx = px - 20,
+                            by = py - 28,
+                            bw = 130,
+                            bh = 22;
+                        ctx.fillStyle = "rgba(0,0,0,.8)";
+                        ctx.fillRect(bx, by, bw, bh);
+                        ctx.strokeStyle = "rgba(0,229,255,.4)";
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(bx, by, bw, bh);
+                        ctx.fillStyle = "#ffe033";
+                        ctx.font = `${T * 0.22}px Rajdhani, sans-serif`;
+                        ctx.textAlign = "left";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText("[E] Hear message", bx + 6, by + bh / 2);
+                        ctx.restore();
+                    }
+                }
+                if (o.type === "terminal") {
+                    const isBeta = o.tid === "beta";
+                    const unlocked = isBeta ? ST.betaOk : ST.alphaOk;
+                    const col = isBeta ? "#ff6b00" : "#00e5ff";
+                    ctx.fillStyle = unlocked ? "#0a2018" : "#0a1828";
+                    ctx.fillRect(px + 3, py + 3, ow - 6, oh - 6);
+                    ctx.strokeStyle = unlocked ? "#00ff88" : col;
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeRect(px + 3, py + 3, ow - 6, oh - 6);
+                    ctx.fillStyle = unlocked
+                        ? "rgba(0,255,136,.07)"
+                        : "rgba(0,229,255,.07)";
+                    ctx.fillRect(px + 6, py + 6, ow - 12, oh - 12);
+                    if (Math.sin(animT * 0.09) > 0) {
+                        ctx.fillStyle = unlocked ? "#00ff88" : col;
+                        ctx.beginPath();
+                        ctx.arc(px + ow - 9, py + 9, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = col;
+                    ctx.font = `bold ${T * 0.19}px Rajdhani, sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(o.label, px + ow / 2, py + oh / 2);
+                    // screen lines
+                    for (let i = 1; i < 3; i++) {
+                        ctx.strokeStyle = `rgba(${isBeta ? "255,107,0" : "0,229,255"},.12)`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(px + 8, py + oh * 0.3 * i + 5);
+                        ctx.lineTo(px + ow - 8, py + oh * 0.3 * i + 5);
+                        ctx.stroke();
+                    }
+                }
+            }
 
-function drawDoor(d){
-  const px=d.x*T,py=d.y*T,pw=d.w*T,ph=d.h*T;
-  const unlocked=!d.lock||
-    (d.lock==='alpha'&&ST.alphaOk)||
-    (d.lock==='beta'&&ST.betaOk)||
-    (d.lock==='both'&&ST.alphaOk&&ST.betaOk);
-  ctx.fillStyle=unlocked?'#0a1a28':'#2a0808';
-  ctx.fillRect(px,py,pw,ph);
-  ctx.strokeStyle=unlocked?'#1e3a5a':'#660000';
-  ctx.lineWidth=1.5;ctx.strokeRect(px+1,py+1,pw-2,ph-2);
-  if(d.lock){
-    ctx.save();ctx.font=`${T*.4}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(unlocked?'🔓':'🔒',px+pw/2,py+ph/2);ctx.restore();
-  } else {
-    // open door indicator lines
-    ctx.strokeStyle='rgba(30,60,100,.8)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(px+pw/2,py);ctx.lineTo(px+pw/2,py+ph);ctx.stroke();
-  }
-}
+            function isHintCollected(o) {
+                const hints = o.hint === "alpha" ? HINTS_A : HINTS_B;
+                return hints && hints[o.hIdx] && hints[o.hIdx].found;
+            }
 
-function drawObj(o){
-  const px=o.x*T,py=o.y*T,ow=(o.w||1)*T,oh=(o.h||1)*T;
-  if(o.type==='prop'){
-    ctx.fillStyle=o.col||'#1a2030';ctx.fillRect(px+2,py+2,ow-4,oh-4);
-    ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.strokeRect(px+2,py+2,ow-4,oh-4);
-    if(o.spin){
-      const cx=px+ow/2,cy=py+oh/2,r=Math.min(ow,oh)*.38;
-      ctx.save();ctx.translate(cx,cy);ctx.rotate(animT*.018);
-      ctx.strokeStyle='rgba(255,100,0,.5)';ctx.lineWidth=3;
-      ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();
-      ctx.rotate(-animT*.036);
-      ctx.strokeStyle='rgba(255,160,0,.3)';ctx.lineWidth=1.5;
-      ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.stroke();
-      const grd=ctx.createRadialGradient(0,0,0,0,0,r*.55);
-      grd.addColorStop(0,'rgba(255,130,0,.85)');grd.addColorStop(1,'rgba(255,50,0,.1)');
-      ctx.fillStyle=grd;ctx.beginPath();ctx.arc(0,0,r*.55,0,Math.PI*2);ctx.fill();
-      ctx.restore();
-    }
-  }
-  if(o.type==='npc'){
-    const isNear=Math.hypot(pl.px-(px+T*.5),pl.py-(py+T*.5))<T*1.9;
-    drawCrew(px+T*.5,py+T*.5,T*.42,o.col,o.label,o.hint!==undefined&&!isHintCollected(o));
-    if(isNear&&o.hint){
-      // hint bubble preview
-      ctx.save();
-      const bx=px-20,by=py-28,bw=130,bh=22;
-      ctx.fillStyle='rgba(0,0,0,.8)';ctx.fillRect(bx,by,bw,bh);
-      ctx.strokeStyle='rgba(0,229,255,.4)';ctx.lineWidth=1;ctx.strokeRect(bx,by,bw,bh);
-      ctx.fillStyle='#ffe033';ctx.font=`${T*.22}px Rajdhani, sans-serif`;
-      ctx.textAlign='left';ctx.textBaseline='middle';
-      ctx.fillText('[E] Hear message',bx+6,by+bh/2);ctx.restore();
-    }
-  }
-  if(o.type==='terminal'){
-    const isBeta=o.tid==='beta';
-    const unlocked=isBeta?ST.betaOk:ST.alphaOk;
-    const col=isBeta?'#ff6b00':'#00e5ff';
-    ctx.fillStyle=unlocked?'#0a2018':'#0a1828';ctx.fillRect(px+3,py+3,ow-6,oh-6);
-    ctx.strokeStyle=unlocked?'#00ff88':col;ctx.lineWidth=1.5;ctx.strokeRect(px+3,py+3,ow-6,oh-6);
-    ctx.fillStyle=unlocked?'rgba(0,255,136,.07)':'rgba(0,229,255,.07)';ctx.fillRect(px+6,py+6,ow-12,oh-12);
-    if(Math.sin(animT*.09)>0){
-      ctx.fillStyle=unlocked?'#00ff88':col;
-      ctx.beginPath();ctx.arc(px+ow-9,py+9,3,0,Math.PI*2);ctx.fill();
-    }
-    ctx.fillStyle=col;ctx.font=`bold ${T*.19}px Rajdhani, sans-serif`;
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(o.label,px+ow/2,py+oh/2);
-    // screen lines
-    for(let i=1;i<3;i++){
-      ctx.strokeStyle=`rgba(${isBeta?'255,107,0':'0,229,255'},.12)`;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(px+8,py+oh*0.3*i+5);ctx.lineTo(px+ow-8,py+oh*0.3*i+5);ctx.stroke();
-    }
-  }
-}
+            function drawCrew(cx, cy, r, col, label, hasHint) {
+                ctx.fillStyle = col;
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + r * 0.35, r * 0.68, r, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(
+                    cx,
+                    cy - r * 0.45,
+                    r * 0.68,
+                    r * 0.58,
+                    0,
+                    0,
+                    Math.PI * 2,
+                );
+                ctx.fill();
+                ctx.fillStyle = "rgba(18,48,78,.9)";
+                ctx.beginPath();
+                ctx.ellipse(
+                    cx,
+                    cy - r * 0.45,
+                    r * 0.42,
+                    r * 0.3,
+                    0,
+                    0,
+                    Math.PI * 2,
+                );
+                ctx.fill();
+                ctx.fillStyle = "rgba(100,200,255,.55)";
+                ctx.beginPath();
+                ctx.ellipse(
+                    cx,
+                    cy - r * 0.45,
+                    r * 0.28,
+                    r * 0.18,
+                    0,
+                    0,
+                    Math.PI * 2,
+                );
+                ctx.fill();
+                const dc = darken(col, 0.62);
+                ctx.fillStyle = dc;
+                ctx.fillRect(cx - r * 0.53, cy + r * 1.1, r * 0.44, r * 0.48);
+                ctx.fillRect(cx + r * 0.1, cy + r * 1.1, r * 0.44, r * 0.48);
+                ctx.fillStyle = darken(col, 0.72);
+                ctx.beginPath();
+                ctx.ellipse(
+                    cx - r * 0.83,
+                    cy + r * 0.22,
+                    r * 0.21,
+                    r * 0.48,
+                    0,
+                    0,
+                    Math.PI * 2,
+                );
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(
+                    cx + r * 0.83,
+                    cy + r * 0.22,
+                    r * 0.21,
+                    r * 0.48,
+                    0,
+                    0,
+                    Math.PI * 2,
+                );
+                ctx.fill();
+                if (hasHint) {
+                    const blink = Math.sin(animT * 0.12) > 0;
+                    ctx.fillStyle = blink ? "#ffe033" : "#cc9900";
+                    ctx.beginPath();
+                    ctx.arc(
+                        cx + r * 0.72,
+                        cy - r * 0.88,
+                        r * 0.19,
+                        0,
+                        Math.PI * 2,
+                    );
+                    ctx.fill();
+                    ctx.fillStyle = "#000";
+                    ctx.font = `bold ${r * 0.22}px sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("!", cx + r * 0.72, cy - r * 0.88);
+                }
+                ctx.fillStyle = "rgba(184,212,240,.65)";
+                ctx.font = `${r * 0.36}px Rajdhani, sans-serif`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "top";
+                ctx.fillText(label, cx, cy + r * 1.65);
+            }
 
-function isHintCollected(o){
-  const hints=o.hint==='alpha'?HINTS_A:HINTS_B;
-  return hints&&hints[o.hIdx]&&hints[o.hIdx].found;
-}
+            function drawPl() {
+                const cx = pl.px,
+                    cy = pl.py,
+                    r = pl.r;
+                ctx.save();
+                ctx.globalAlpha = 0.28;
+                ctx.fillStyle = "#000";
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + r, r * 0.8, r * 0.22, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                drawCrew(cx, cy, r, "#4da6ff", "YOU", false);
+                // extra eye detail
+                ctx.fillStyle = "rgba(255,255,255,.88)";
+                ctx.beginPath();
+                ctx.arc(cx + r * 0.12, cy - r * 0.48, r * 0.11, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
-function drawCrew(cx,cy,r,col,label,hasHint){
-  ctx.fillStyle=col;
-  ctx.beginPath();ctx.ellipse(cx,cy+r*.35,r*.68,r,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx,cy-r*.45,r*.68,r*.58,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='rgba(18,48,78,.9)';
-  ctx.beginPath();ctx.ellipse(cx,cy-r*.45,r*.42,r*.3,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='rgba(100,200,255,.55)';
-  ctx.beginPath();ctx.ellipse(cx,cy-r*.45,r*.28,r*.18,0,0,Math.PI*2);ctx.fill();
-  const dc=darken(col,.62);
-  ctx.fillStyle=dc;
-  ctx.fillRect(cx-r*.53,cy+r*1.1,r*.44,r*.48);ctx.fillRect(cx+r*.1,cy+r*1.1,r*.44,r*.48);
-  ctx.fillStyle=darken(col,.72);
-  ctx.beginPath();ctx.ellipse(cx-r*.83,cy+r*.22,r*.21,r*.48,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+r*.83,cy+r*.22,r*.21,r*.48,0,0,Math.PI*2);ctx.fill();
-  if(hasHint){
-    const blink=Math.sin(animT*.12)>0;
-    ctx.fillStyle=blink?'#ffe033':'#cc9900';
-    ctx.beginPath();ctx.arc(cx+r*.72,cy-r*.88,r*.19,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#000';ctx.font=`bold ${r*.22}px sans-serif`;
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',cx+r*.72,cy-r*.88);
-  }
-  ctx.fillStyle='rgba(184,212,240,.65)';ctx.font=`${r*.36}px Rajdhani, sans-serif`;
-  ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(label,cx,cy+r*1.65);
-}
+            function darken(hex, f) {
+                const c = parseInt(hex.slice(1), 16);
+                return `rgb(${Math.floor(((c >> 16) & 0xff) * f)},${Math.floor(((c >> 8) & 0xff) * f)},${Math.floor((c & 0xff) * f)})`;
+            }
 
-function drawPl(){
-  const cx=pl.px,cy=pl.py,r=pl.r;
-  ctx.save();ctx.globalAlpha=.28;ctx.fillStyle='#000';
-  ctx.beginPath();ctx.ellipse(cx,cy+r,r*.8,r*.22,0,0,Math.PI*2);ctx.fill();ctx.restore();
-  drawCrew(cx,cy,r,'#4da6ff','YOU',false);
-  // extra eye detail
-  ctx.fillStyle='rgba(255,255,255,.88)';ctx.beginPath();ctx.arc(cx+r*.12,cy-r*.48,r*.11,0,Math.PI*2);ctx.fill();
-}
+            function drawMM() {
+                mctx.fillStyle = "#02040a";
+                mctx.fillRect(0, 0, 210, 140);
+                const sx = 210 / (21 * T),
+                    sy = 140 / (24 * T);
+                ROOMS.forEach((r) => {
+                    mctx.fillStyle = r.wc;
+                    mctx.fillRect(
+                        r.x * T * sx,
+                        r.y * T * sy,
+                        r.w * T * sx,
+                        r.h * T * sy,
+                    );
+                    mctx.fillStyle = r.fc;
+                    mctx.fillRect(
+                        (r.x + 1) * T * sx,
+                        (r.y + 1) * T * sy,
+                        (r.w - 2) * T * sx,
+                        (r.h - 2) * T * sy,
+                    );
+                });
+                DOORS.forEach((d) => {
+                    const unl =
+                        !d.lock ||
+                        (d.lock === "alpha" && ST.alphaOk) ||
+                        (d.lock === "beta" && ST.betaOk) ||
+                        (d.lock === "both" && ST.alphaOk && ST.betaOk);
+                    mctx.fillStyle = unl ? "#0a1a28" : "#3a0808";
+                    mctx.fillRect(
+                        d.x * T * sx,
+                        d.y * T * sy,
+                        d.w * T * sx,
+                        d.h * T * sy,
+                    );
+                });
+                mctx.fillStyle = "#4da6ff";
+                mctx.beginPath();
+                mctx.arc(pl.px * sx, pl.py * sy, 3.5, 0, Math.PI * 2);
+                mctx.fill();
+                // objectives
+                OBJS.filter((o) => o.type === "terminal").forEach((o) => {
+                    const unlocked = o.tid === "beta" ? ST.betaOk : ST.alphaOk;
+                    mctx.fillStyle = unlocked
+                        ? "#00ff88"
+                        : o.tid === "beta"
+                          ? "#ff6b00"
+                          : "#00e5ff";
+                    mctx.beginPath();
+                    mctx.arc(
+                        (o.x + 0.5) * T * sx,
+                        (o.y + 0.5) * T * sy,
+                        3,
+                        0,
+                        Math.PI * 2,
+                    );
+                    mctx.fill();
+                });
+            }
 
-function darken(hex,f){
-  const c=parseInt(hex.slice(1),16);
-  return `rgb(${Math.floor(((c>>16)&0xff)*f)},${Math.floor(((c>>8)&0xff)*f)},${Math.floor((c&0xff)*f)})`;
-}
+            // ══════════════════════════════════════════════════════
+            //  MOVEMENT
+            // ══════════════════════════════════════════════════════
+            function isSolid(tx, ty) {
+                const door = DOORS.find(
+                    (d) =>
+                        tx >= d.x &&
+                        tx < d.x + d.w &&
+                        ty >= d.y &&
+                        ty < d.y + d.h,
+                );
+                if (door) {
+                    if (!door.lock) return false;
+                    if (door.lock === "alpha" && ST.alphaOk) return false;
+                    if (door.lock === "beta" && ST.betaOk) return false;
+                    if (door.lock === "both" && ST.alphaOk && ST.betaOk)
+                        return false;
+                    return true;
+                }
+                return SOLID.has(`${tx},${ty}`);
+            }
+            function canMove(nx, ny) {
+                const r = pl.r - 3;
+                for (const [cx, cy] of [
+                    [nx - r, ny - r],
+                    [nx + r, ny - r],
+                    [nx - r, ny + r],
+                    [nx + r, ny + r],
+                ]) {
+                    if (isSolid(Math.floor(cx / T), Math.floor(cy / T)))
+                        return false;
+                    if (
+                        !ROOMS.some(
+                            (rm) =>
+                                cx >= rm.x * T &&
+                                cx < (rm.x + rm.w) * T &&
+                                cy >= rm.y * T &&
+                                cy < (rm.y + rm.h) * T,
+                        )
+                    )
+                        return false;
+                }
+                return true;
+            }
+            function movePlayer() {
+                let dx = 0,
+                    dy = 0;
+                if (ky["w"] || ky["arrowup"]) dy = -1;
+                if (ky["s"] || ky["arrowdown"]) dy = 1;
+                if (ky["a"] || ky["arrowleft"]) dx = -1;
+                if (ky["d"] || ky["arrowright"]) dx = 1;
+                if (dx && dy) {
+                    dx *= 0.707;
+                    dy *= 0.707;
+                }
+                if (canMove(pl.px + dx * SPEED, pl.py)) pl.px += dx * SPEED;
+                if (canMove(pl.px, pl.py + dy * SPEED)) pl.py += dy * SPEED;
+            }
 
-function drawMM(){
-  mctx.fillStyle='#02040a';mctx.fillRect(0,0,210,140);
-  const sx=210/(21*T),sy=140/(24*T);
-  ROOMS.forEach(r=>{
-    mctx.fillStyle=r.wc;mctx.fillRect(r.x*T*sx,r.y*T*sy,r.w*T*sx,r.h*T*sy);
-    mctx.fillStyle=r.fc;mctx.fillRect((r.x+1)*T*sx,(r.y+1)*T*sy,(r.w-2)*T*sx,(r.h-2)*T*sy);
-  });
-  DOORS.forEach(d=>{
-    const unl=!d.lock||(d.lock==='alpha'&&ST.alphaOk)||(d.lock==='beta'&&ST.betaOk)||(d.lock==='both'&&ST.alphaOk&&ST.betaOk);
-    mctx.fillStyle=unl?'#0a1a28':'#3a0808';
-    mctx.fillRect(d.x*T*sx,d.y*T*sy,d.w*T*sx,d.h*T*sy);
-  });
-  mctx.fillStyle='#4da6ff';mctx.beginPath();
-  mctx.arc(pl.px*sx,pl.py*sy,3.5,0,Math.PI*2);mctx.fill();
-  // objectives
-  OBJS.filter(o=>o.type==='terminal').forEach(o=>{
-    const unlocked=o.tid==='beta'?ST.betaOk:ST.alphaOk;
-    mctx.fillStyle=unlocked?'#00ff88':(o.tid==='beta'?'#ff6b00':'#00e5ff');
-    mctx.beginPath();mctx.arc((o.x+.5)*T*sx,(o.y+.5)*T*sy,3,0,Math.PI*2);mctx.fill();
-  });
-}
+            // ══════════════════════════════════════════════════════
+            //  INTERACTION
+            // ══════════════════════════════════════════════════════
+            let nearObj = null;
+            function checkNear() {
+                const DIST = T * 1.85;
+                nearObj = null;
+                let bd = Infinity;
+                OBJS.forEach((o) => {
+                    const d = Math.hypot(
+                        pl.px - (o.x + 0.5) * T,
+                        pl.py - (o.y + (o.h || 1) * 0.5) * T,
+                    );
+                    if (d < DIST && d < bd) {
+                        bd = d;
+                        nearObj = o;
+                    }
+                });
+                // locked doors
+                DOORS.filter((d) => d.lock).forEach((d) => {
+                    const dx = (d.x + 0.5) * T,
+                        dy = (d.y + 0.5) * T;
+                    const dist = Math.hypot(pl.px - dx, pl.py - dy);
+                    const unl =
+                        (d.lock === "alpha" && ST.alphaOk) ||
+                        (d.lock === "beta" && ST.betaOk) ||
+                        (d.lock === "both" && ST.alphaOk && ST.betaOk);
+                    if (!unl && dist < T * 1.4 && dist < bd) {
+                        bd = dist;
+                        nearObj = { type: "lockdoor", door: d };
+                    }
+                });
+                const ipr = document.getElementById("ipr");
+                if (nearObj) {
+                    let lbl = "";
+                    if (nearObj.type === "npc")
+                        lbl = `[E] Talk to ${nearObj.label}`;
+                    else if (nearObj.type === "terminal")
+                        lbl = `[E] Access ${nearObj.label}`;
+                    else if (nearObj.type === "lockdoor")
+                        lbl = "[E] Inspect locked door";
+                    else if (nearObj.type === "prop") lbl = "";
+                    ipr.textContent = lbl;
+                    ipr.classList.toggle("vis", !!lbl);
+                } else {
+                    ipr.classList.remove("vis");
+                }
+            }
 
-// ══════════════════════════════════════════════════════
-//  MOVEMENT
-// ══════════════════════════════════════════════════════
-function isSolid(tx,ty){
-  const door=DOORS.find(d=>tx>=d.x&&tx<d.x+d.w&&ty>=d.y&&ty<d.y+d.h);
-  if(door){
-    if(!door.lock) return false;
-    if(door.lock==='alpha'&&ST.alphaOk) return false;
-    if(door.lock==='beta'&&ST.betaOk) return false;
-    if(door.lock==='both'&&ST.alphaOk&&ST.betaOk) return false;
-    return true;
-  }
-  return SOLID.has(`${tx},${ty}`);
-}
-function canMove(nx,ny){
-  const r=pl.r-3;
-  for(const [cx,cy] of [[nx-r,ny-r],[nx+r,ny-r],[nx-r,ny+r],[nx+r,ny+r]]){
-    if(isSolid(Math.floor(cx/T),Math.floor(cy/T))) return false;
-    if(!ROOMS.some(rm=>cx>=rm.x*T&&cx<(rm.x+rm.w)*T&&cy>=rm.y*T&&cy<(rm.y+rm.h)*T)) return false;
-  }
-  return true;
-}
-function movePlayer(){
-  let dx=0,dy=0;
-  if(ky['w']||ky['arrowup']) dy=-1;
-  if(ky['s']||ky['arrowdown']) dy=1;
-  if(ky['a']||ky['arrowleft']) dx=-1;
-  if(ky['d']||ky['arrowright']) dx=1;
-  if(dx&&dy){dx*=.707;dy*=.707;}
-  if(canMove(pl.px+dx*SPEED,pl.py)) pl.px+=dx*SPEED;
-  if(canMove(pl.px,pl.py+dy*SPEED)) pl.py+=dy*SPEED;
-}
+            function interact() {
+                if (!nearObj) return;
+                if (nearObj.type === "npc") showHint(nearObj);
+                else if (nearObj.type === "terminal") openTerminal(nearObj.tid);
+                else if (nearObj.type === "lockdoor")
+                    showLockedDoor(nearObj.door);
+            }
 
-// ══════════════════════════════════════════════════════
-//  INTERACTION
-// ══════════════════════════════════════════════════════
-let nearObj=null;
-function checkNear(){
-  const DIST=T*1.85;
-  nearObj=null;let bd=Infinity;
-  OBJS.forEach(o=>{
-    const d=Math.hypot(pl.px-(o.x+.5)*T,pl.py-(o.y+(o.h||1)*.5)*T);
-    if(d<DIST&&d<bd){bd=d;nearObj=o;}
-  });
-  // locked doors
-  DOORS.filter(d=>d.lock).forEach(d=>{
-    const dx=(d.x+.5)*T,dy=(d.y+.5)*T;
-    const dist=Math.hypot(pl.px-dx,pl.py-dy);
-    const unl=(d.lock==='alpha'&&ST.alphaOk)||(d.lock==='beta'&&ST.betaOk)||(d.lock==='both'&&ST.alphaOk&&ST.betaOk);
-    if(!unl&&dist<T*1.4&&dist<bd){bd=dist;nearObj={type:'lockdoor',door:d};}
-  });
-  const ipr=document.getElementById('ipr');
-  if(nearObj){
-    let lbl='';
-    if(nearObj.type==='npc') lbl=`[E] Talk to ${nearObj.label}`;
-    else if(nearObj.type==='terminal') lbl=`[E] Access ${nearObj.label}`;
-    else if(nearObj.type==='lockdoor') lbl='[E] Inspect locked door';
-    else if(nearObj.type==='prop') lbl='';
-    ipr.textContent=lbl;
-    ipr.classList.toggle('vis',!!lbl);
-  } else {ipr.classList.remove('vis');}
-}
-
-function interact(){
-  if(!nearObj) return;
-  if(nearObj.type==='npc') showHint(nearObj);
-  else if(nearObj.type==='terminal') openTerminal(nearObj.tid);
-  else if(nearObj.type==='lockdoor') showLockedDoor(nearObj.door);
-}
-
-function showHint(npc){
-  const hints=npc.hint==='alpha'?HINTS_A:HINTS_B;
-  const h=hints[npc.hIdx];
-  if(!h) return;
-  if(!h.found){h.found=true;ST.hintsGot++;}
-  refreshGrids();
-  document.getElementById('door-modal-title').textContent=h.tag;
-  document.getElementById('door-icon').textContent='💬';
-  document.getElementById('door-msg').innerHTML=
-    `<div style="color:#8ab8d4;font-size:.83rem;line-height:1.85;padding:0 8px 8px">${h.clue}</div>
+            function showHint(npc) {
+                const hints = npc.hint === "alpha" ? HINTS_A : HINTS_B;
+                const h = hints[npc.hIdx];
+                if (!h) return;
+                if (!h.found) {
+                    h.found = true;
+                    ST.hintsGot++;
+                }
+                refreshGrids();
+                document.getElementById("door-modal-title").textContent = h.tag;
+                document.getElementById("door-icon").textContent = "💬";
+                document.getElementById("door-msg").innerHTML =
+                    `<div style="color:#8ab8d4;font-size:.83rem;line-height:1.85;padding:0 8px 8px">${h.clue}</div>
      <div style="margin-top:6px;font-size:.7rem;color:var(--dimtxt);text-align:center">Clue recorded to terminal log.</div>`;
-  openModal('door-modal');
-}
+                openModal("door-modal");
+            }
 
-function showLockedDoor(door){
-  document.getElementById('door-modal-title').textContent='DOOR SEALED';
-  document.getElementById('door-icon').textContent='🔒';
-  let msg='';
-  if(door.lock==='alpha'&&!ST.alphaOk)
-    msg=`Requires <b>ALPHA CLEARANCE</b>.<br>Crack Terminal Α in the Weapons Bay.`;
-  else if(door.lock==='beta'&&!ST.betaOk)
-    msg=`Requires <b>BETA CLEARANCE</b>.<br>Crack Terminal Β in the Security Room.`;
-  else if(door.lock==='both')
-    msg=`Requires <b>BOTH ALPHA + BETA CLEARANCE</b>.<br>Both terminals must be cracked first.`;
-  document.getElementById('door-msg').innerHTML=msg;
-  openModal('door-modal');
-}
+            function showLockedDoor(door) {
+                document.getElementById("door-modal-title").textContent =
+                    "DOOR SEALED";
+                document.getElementById("door-icon").textContent = "🔒";
+                let msg = "";
+                if (door.lock === "alpha" && !ST.alphaOk)
+                    msg = `Requires <b>ALPHA CLEARANCE</b>.<br>Crack Terminal Α in the Weapons Bay.`;
+                else if (door.lock === "beta" && !ST.betaOk)
+                    msg = `Requires <b>BETA CLEARANCE</b>.<br>Crack Terminal Β in the Security Room.`;
+                else if (door.lock === "both")
+                    msg = `Requires <b>BOTH ALPHA + BETA CLEARANCE</b>.<br>Both terminals must be cracked first.`;
+                document.getElementById("door-msg").innerHTML = msg;
+                openModal("door-modal");
+            }
 
-function openTerminal(id){
-  if(id==='alpha'&&ST.alphaOk){tlog(id,'ALPHA CLEARANCE ALREADY ACTIVE.',{t:'ok'});return;}
-  if(id==='beta'&&ST.betaOk){tlog(id,'BETA CLEARANCE ALREADY ACTIVE.',{t:'ok'});return;}
-  refreshGrids();
-  openModal(`modal-${id}`);
-}
+            function openTerminal(id) {
+                if (id === "alpha" && ST.alphaOk) {
+                    tlog(id, "ALPHA CLEARANCE ALREADY ACTIVE.", { t: "ok" });
+                    return;
+                }
+                if (id === "beta" && ST.betaOk) {
+                    tlog(id, "BETA CLEARANCE ALREADY ACTIVE.", { t: "ok" });
+                    return;
+                }
+                refreshGrids();
+                openModal(`modal-${id}`);
+            }
 
-// ══════════════════════════════════════════════════════
-//  HINT GRID RENDER
-// ══════════════════════════════════════════════════════
-function buildGrid(id,hints){
-  const g=document.getElementById(`hgrid-${id}`);g.innerHTML='';
-  hints.forEach((h,i)=>{
-    const c=document.createElement('div');c.className='hcard'+(h.found?' found':'');
-    c.innerHTML=`<div class="hc-tag">${h.tag}</div>
-      <div class="hc-clue${h.found?'':' locked'}">${h.found?h.clue:'?? ??? ??? ????'}</div>
+            // ══════════════════════════════════════════════════════
+            //  HINT GRID RENDER
+            // ══════════════════════════════════════════════════════
+            function buildGrid(id, hints) {
+                const g = document.getElementById(`hgrid-${id}`);
+                g.innerHTML = "";
+                hints.forEach((h, i) => {
+                    const c = document.createElement("div");
+                    c.className = "hcard" + (h.found ? " found" : "");
+                    c.innerHTML = `<div class="hc-tag">${h.tag}</div>
+      <div class="hc-clue${h.found ? "" : " locked"}">${h.found ? h.clue : "?? ??? ??? ????"}</div>
       <div class="hc-decode">${h.decode}</div>`;
-    g.appendChild(c);
-  });
-}
-function refreshGrids(){buildGrid('alpha',HINTS_A);buildGrid('beta',HINTS_B);}
+                    g.appendChild(c);
+                });
+            }
+            function refreshGrids() {
+                buildGrid("alpha", HINTS_A);
+                buildGrid("beta", HINTS_B);
+            }
 
-// ══════════════════════════════════════════════════════
-//  CRACK SYSTEM
-// ══════════════════════════════════════════════════════
-function buildKp(id){
-  const kp=document.getElementById(`kp-${id}`);kp.innerHTML='';
-  '1234567890ABCDEFGHJKLMNPQRSTUVWXYZ23456789⌫'.split('').filter((v,i,a)=>a.indexOf(v)===i).forEach(k=>{
-    const b=document.createElement('button');b.className='kb';b.textContent=k;
-    b.onclick=()=>k==='⌫'?bksp(id):typeC(id,k);kp.appendChild(b);
-  });
-}
-function buildPwd(id){
-  const len=id==='alpha'?5:6;
-  const row=document.getElementById(`pwd-${id}`);row.innerHTML='';
-  for(let i=0;i<len;i++){
-    const d=document.createElement('div');d.className='pc'+(i===0?' active':'');
-    d.id=`${id}-c-${i}`;if(i===0)d.innerHTML='<div class="cr"></div>';row.appendChild(d);
-  }
-  ST.input[id]=[];ST.slot[id]=0;
-}
-function typeC(id,c){
-  if(ST.bruting[id]) return;
-  const len=id==='alpha'?5:6,sl=ST.slot[id];
-  if(sl>=len) return;
-  ST.input[id][sl]=c;
-  const el=document.getElementById(`${id}-c-${sl}`);
-  el.textContent=c;el.classList.remove('active');
-  ST.slot[id]++;
-  if(ST.slot[id]<len){const n=document.getElementById(`${id}-c-${ST.slot[id]}`);n.classList.add('active');n.innerHTML='<div class="cr"></div>';}
-}
-function bksp(id){
-  if(ST.bruting[id]) return;
-  if(ST.slot[id]<=0) return;
-  ST.slot[id]--;ST.input[id][ST.slot[id]]=undefined;
-  const el=document.getElementById(`${id}-c-${ST.slot[id]}`);
-  el.className='pc active';el.innerHTML='<div class="cr"></div>';
-  const len=id==='alpha'?5:6;
-  if(ST.slot[id]<len-1){const n=document.getElementById(`${id}-c-${ST.slot[id]+1}`);if(n){n.className='pc';n.innerHTML='';}}
-}
-function clearPwd(id){if(ST.bruting[id])return;buildPwd(id);}
-function submitPwd(id){
-  const pwd=id==='alpha'?PA:PB;
-  const inp=ST.input[id];
-  ST.attempts++;
-  if(inp.length<pwd.length||inp.some(v=>v===undefined||v===null)){
-    tlog(id,'INCOMPLETE — ENTER ALL CHARACTERS.',{t:'e'});shakeAll(id);return;
-  }
-  const att=inp.join('');
-  tlog(id,`ATTEMPT: ${att}`,{t:'i'});
-  if(att===pwd){
-    tlog(id,`✓ CORRECT — ${id.toUpperCase()} CLEARANCE GRANTED`,{t:'ok'});
-    const len=pwd.length;
-    for(let i=0;i<len;i++){const el=document.getElementById(`${id}-c-${i}`);if(el)el.classList.add('ok');}
-    if(id==='alpha'){ST.alphaOk=true;document.getElementById('pip-a').className='hud-pip pip-ok';}
-    else{ST.betaOk=true;document.getElementById('pip-b').className='hud-pip pip-ok';}
-    document.getElementById('tctr').textContent=`${(ST.alphaOk?1:0)+(ST.betaOk?1:0)}/2 CRACKED`;
-    document.getElementById(`btn-brute-${id}`).disabled=true;
-    setTimeout(()=>{closeModal(`modal-${id}`);if(ST.alphaOk&&ST.betaOk)setTimeout(showWin,600);},1200);
-  } else {
-    tlog(id,`✗ WRONG — REJECTED`,{t:'e'});
-    const len=pwd.length;
-    for(let i=0;i<len;i++){
-      const el=document.getElementById(`${id}-c-${i}`);if(!el)continue;
-      if(inp[i]===pwd[i])el.classList.add('ok');else el.classList.add('err');
-    }
-    let partial='';
-    for(let i=0;i<len;i++){
-      if(inp[i]===pwd[i])partial+=`[${i+1}:✓]`;
-      else if(pwd.includes(inp[i]))partial+=`[${i+1}:∼]`;
-      else partial+=`[${i+1}:✗]`;
-      partial+=' ';
-    }
-    tlog(id,partial,{t:'w'});
-    setTimeout(()=>{for(let i=0;i<len;i++){const el=document.getElementById(`${id}-c-${i}`);if(el){el.classList.remove('err');el.classList.remove('ok');}}},600);
-  }
-}
-function shakeAll(id){
-  const len=id==='alpha'?5:6;
-  for(let i=0;i<len;i++){const el=document.getElementById(`${id}-c-${i}`);if(el){el.classList.add('err');setTimeout(()=>el.classList.remove('err'),400);}}
-}
-function startBrute(id){
-  if(ST.bruting[id])return;
-  ST.bruting[id]=true;
-  document.getElementById(`btn-brute-${id}`).disabled=true;
-  tlog(id,'⚡ BRUTE-FORCE INITIATED — SCANNING CIPHER SPACE...',{t:'w'});
-  const pwd=id==='alpha'?PA:PB;
-  let step=0,total=130;
-  const reveals=pwd.split('').map((_,i)=>Math.round((i+1)/(pwd.length+1)*total));
-  ST.bruteIvl[id]=setInterval(()=>{
-    step++;
-    const pct=Math.floor(step/total*100);
-    document.getElementById(`${id==='alpha'?'a':'b'}p-fill`).style.width=pct+'%';
-    document.getElementById(`${id==='alpha'?'a':'b'}p-pct`).textContent=pct+'%';
-    reveals.forEach((rt,i)=>{if(step===rt)tlog(id,`→ POSITION ${i+1} DECRYPTED: "${pwd[i]}"`,{t:'w'});});
-    if(step>=total){
-      clearInterval(ST.bruteIvl[id]);ST.bruting[id]=false;
-      tlog(id,`SCAN COMPLETE — FULL CODE: ${pwd}`,{t:'ok'});
-      clearPwd(id);let i=0;
-      const fill=setInterval(()=>{typeC(id,pwd[i]);i++;if(i>=pwd.length)clearInterval(fill);},180);
-    }
-  },50);
-}
-function tlog(id,msg,{t='i'}={}){
-  const log=document.getElementById(`tlog-${id}`);
-  const row=document.createElement('div');row.className='tr';
-  const cls={i:'ti',w:'tw',e:'te',ok:'tok'}[t]||'ti';
-  row.innerHTML=`<span class="tp">SYS&gt;</span><span class="${cls}">${msg}</span>`;
-  log.appendChild(row);log.scrollTop=log.scrollHeight;
-}
+            // ══════════════════════════════════════════════════════
+            //  CRACK SYSTEM
+            // ══════════════════════════════════════════════════════
+            function buildKp(id) {
+                const kp = document.getElementById(`kp-${id}`);
+                kp.innerHTML = "";
+                "1234567890ABCDEFGHJKLMNPQRSTUVWXYZ23456789⌫"
+                    .split("")
+                    .filter((v, i, a) => a.indexOf(v) === i)
+                    .forEach((k) => {
+                        const b = document.createElement("button");
+                        b.className = "kb";
+                        b.textContent = k;
+                        b.onclick = () => (k === "⌫" ? bksp(id) : typeC(id, k));
+                        kp.appendChild(b);
+                    });
+            }
+            function buildPwd(id) {
+                const len = id === "alpha" ? 5 : 6;
+                const row = document.getElementById(`pwd-${id}`);
+                row.innerHTML = "";
+                for (let i = 0; i < len; i++) {
+                    const d = document.createElement("div");
+                    d.className = "pc" + (i === 0 ? " active" : "");
+                    d.id = `${id}-c-${i}`;
+                    if (i === 0) d.innerHTML = '<div class="cr"></div>';
+                    row.appendChild(d);
+                }
+                ST.input[id] = [];
+                ST.slot[id] = 0;
+            }
+            function typeC(id, c) {
+                if (ST.bruting[id]) return;
+                const len = id === "alpha" ? 5 : 6,
+                    sl = ST.slot[id];
+                if (sl >= len) return;
+                ST.input[id][sl] = c;
+                const el = document.getElementById(`${id}-c-${sl}`);
+                el.textContent = c;
+                el.classList.remove("active");
+                ST.slot[id]++;
+                if (ST.slot[id] < len) {
+                    const n = document.getElementById(`${id}-c-${ST.slot[id]}`);
+                    n.classList.add("active");
+                    n.innerHTML = '<div class="cr"></div>';
+                }
+            }
+            function bksp(id) {
+                if (ST.bruting[id]) return;
+                if (ST.slot[id] <= 0) return;
+                ST.slot[id]--;
+                ST.input[id][ST.slot[id]] = undefined;
+                const el = document.getElementById(`${id}-c-${ST.slot[id]}`);
+                el.className = "pc active";
+                el.innerHTML = '<div class="cr"></div>';
+                const len = id === "alpha" ? 5 : 6;
+                if (ST.slot[id] < len - 1) {
+                    const n = document.getElementById(
+                        `${id}-c-${ST.slot[id] + 1}`,
+                    );
+                    if (n) {
+                        n.className = "pc";
+                        n.innerHTML = "";
+                    }
+                }
+            }
+            function clearPwd(id) {
+                if (ST.bruting[id]) return;
+                buildPwd(id);
+            }
+            function submitPwd(id) {
+                const pwd = id === "alpha" ? PA : PB;
+                const inp = ST.input[id];
+                ST.attempts++;
+                if (
+                    inp.length < pwd.length ||
+                    inp.some((v) => v === undefined || v === null)
+                ) {
+                    tlog(id, "INCOMPLETE — ENTER ALL CHARACTERS.", { t: "e" });
+                    shakeAll(id);
+                    return;
+                }
+                const att = inp.join("");
+                tlog(id, `ATTEMPT: ${att}`, { t: "i" });
+                if (att === pwd) {
+                    tlog(
+                        id,
+                        `✓ CORRECT — ${id.toUpperCase()} CLEARANCE GRANTED`,
+                        { t: "ok" },
+                    );
+                    const len = pwd.length;
+                    for (let i = 0; i < len; i++) {
+                        const el = document.getElementById(`${id}-c-${i}`);
+                        if (el) el.classList.add("ok");
+                    }
+                    if (id === "alpha") {
+                        ST.alphaOk = true;
+                        document.getElementById("pip-a").className =
+                            "hud-pip pip-ok";
+                    } else {
+                        ST.betaOk = true;
+                        document.getElementById("pip-b").className =
+                            "hud-pip pip-ok";
+                    }
+                    document.getElementById("tctr").textContent =
+                        `${(ST.alphaOk ? 1 : 0) + (ST.betaOk ? 1 : 0)}/2 CRACKED`;
+                    document.getElementById(`btn-brute-${id}`).disabled = true;
+                    setTimeout(() => {
+                        closeModal(`modal-${id}`);
+                        if (ST.alphaOk && ST.betaOk) setTimeout(showWin, 600);
+                    }, 1200);
+                } else {
+                    tlog(id, `✗ WRONG — REJECTED`, { t: "e" });
+                    const len = pwd.length;
+                    for (let i = 0; i < len; i++) {
+                        const el = document.getElementById(`${id}-c-${i}`);
+                        if (!el) continue;
+                        if (inp[i] === pwd[i]) el.classList.add("ok");
+                        else el.classList.add("err");
+                    }
+                    let partial = "";
+                    for (let i = 0; i < len; i++) {
+                        if (inp[i] === pwd[i]) partial += `[${i + 1}:✓]`;
+                        else if (pwd.includes(inp[i]))
+                            partial += `[${i + 1}:∼]`;
+                        else partial += `[${i + 1}:✗]`;
+                        partial += " ";
+                    }
+                    tlog(id, partial, { t: "w" });
+                    setTimeout(() => {
+                        for (let i = 0; i < len; i++) {
+                            const el = document.getElementById(`${id}-c-${i}`);
+                            if (el) {
+                                el.classList.remove("err");
+                                el.classList.remove("ok");
+                            }
+                        }
+                    }, 600);
+                }
+            }
+            function shakeAll(id) {
+                const len = id === "alpha" ? 5 : 6;
+                for (let i = 0; i < len; i++) {
+                    const el = document.getElementById(`${id}-c-${i}`);
+                    if (el) {
+                        el.classList.add("err");
+                        setTimeout(() => el.classList.remove("err"), 400);
+                    }
+                }
+            }
+            function startBrute(id) {
+                if (ST.bruting[id]) return;
+                ST.bruting[id] = true;
+                document.getElementById(`btn-brute-${id}`).disabled = true;
+                tlog(
+                    id,
+                    "⚡ BRUTE-FORCE INITIATED — SCANNING CIPHER SPACE...",
+                    { t: "w" },
+                );
+                const pwd = id === "alpha" ? PA : PB;
+                let step = 0,
+                    total = 130;
+                const reveals = pwd
+                    .split("")
+                    .map((_, i) =>
+                        Math.round(((i + 1) / (pwd.length + 1)) * total),
+                    );
+                ST.bruteIvl[id] = setInterval(() => {
+                    step++;
+                    const pct = Math.floor((step / total) * 100);
+                    document.getElementById(
+                        `${id === "alpha" ? "a" : "b"}p-fill`,
+                    ).style.width = pct + "%";
+                    document.getElementById(
+                        `${id === "alpha" ? "a" : "b"}p-pct`,
+                    ).textContent = pct + "%";
+                    reveals.forEach((rt, i) => {
+                        if (step === rt)
+                            tlog(
+                                id,
+                                `→ POSITION ${i + 1} DECRYPTED: "${pwd[i]}"`,
+                                { t: "w" },
+                            );
+                    });
+                    if (step >= total) {
+                        clearInterval(ST.bruteIvl[id]);
+                        ST.bruting[id] = false;
+                        tlog(id, `SCAN COMPLETE — FULL CODE: ${pwd}`, {
+                            t: "ok",
+                        });
+                        clearPwd(id);
+                        let i = 0;
+                        const fill = setInterval(() => {
+                            typeC(id, pwd[i]);
+                            i++;
+                            if (i >= pwd.length) clearInterval(fill);
+                        }, 180);
+                    }
+                }, 50);
+            }
+            function tlog(id, msg, { t = "i" } = {}) {
+                const log = document.getElementById(`tlog-${id}`);
+                const row = document.createElement("div");
+                row.className = "tr";
+                const cls = { i: "ti", w: "tw", e: "te", ok: "tok" }[t] || "ti";
+                row.innerHTML = `<span class="tp">SYS&gt;</span><span class="${cls}">${msg}</span>`;
+                log.appendChild(row);
+                log.scrollTop = log.scrollHeight;
+            }
 
-// ══════════════════════════════════════════════════════
-//  MODAL
-// ══════════════════════════════════════════════════════
-function openModal(id){document.getElementById(id).classList.add('active');}
-function closeModal(id){document.getElementById(id).classList.remove('active');}
+            // ══════════════════════════════════════════════════════
+            //  MODAL
+            // ══════════════════════════════════════════════════════
+            function openModal(id) {
+                document.getElementById(id).classList.add("active");
+            }
+            function closeModal(id) {
+                document.getElementById(id).classList.remove("active");
+            }
 
-// ══════════════════════════════════════════════════════
-//  WIN
-// ══════════════════════════════════════════════════════
-function showWin(){
-  const e=Math.floor((Date.now()-ST.startTime)/1000);
-  document.getElementById('ws-t').textContent=e+'s';
-  document.getElementById('ws-a').textContent=ST.attempts;
-  document.getElementById('ws-h').textContent=ST.hintsGot;
-  document.getElementById('win-screen').classList.add('active');
-  confetti();
-}
-function confetti(){
-  const cols=['#00e5ff','#00ff88','#4da6ff','#ffe033','#ff6b00','#ff2244'];
-  for(let i=0;i<120;i++)setTimeout(()=>{
-    const p=document.createElement('div');p.className='cfetti';
-    const s=Math.random()*14+4;
-    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}vw;top:0;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${Math.random()*2.5+.8}s;`;
-    document.body.appendChild(p);setTimeout(()=>p.remove(),3500);
-  },i*22);
-}
+            // ══════════════════════════════════════════════════════
+            //  WIN
+            // ══════════════════════════════════════════════════════
+            function showWin() {
+                const e = Math.floor((Date.now() - ST.startTime) / 1000);
+                document.getElementById("ws-t").textContent = e + "s";
+                document.getElementById("ws-a").textContent = ST.attempts;
+                document.getElementById("ws-h").textContent = ST.hintsGot;
+                document.getElementById("win-screen").classList.add("active");
+                confetti();
+            }
+            function confetti() {
+                const cols = [
+                    "#00e5ff",
+                    "#00ff88",
+                    "#4da6ff",
+                    "#ffe033",
+                    "#ff6b00",
+                    "#ff2244",
+                ];
+                for (let i = 0; i < 120; i++)
+                    setTimeout(() => {
+                        const p = document.createElement("div");
+                        p.className = "cfetti";
+                        const s = Math.random() * 14 + 4;
+                        p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}vw;top:0;background:${cols[~~(Math.random() * cols.length)]};animation-duration:${Math.random() * 2.5 + 0.8}s;`;
+                        document.body.appendChild(p);
+                        setTimeout(() => p.remove(), 3500);
+                    }, i * 22);
+            }
 
-// ══════════════════════════════════════════════════════
-//  INPUT
-// ══════════════════════════════════════════════════════
-document.addEventListener('keydown',e=>{
-  ky[e.key.toLowerCase()]=true;
-  const activeTerminal=['modal-alpha','modal-beta'].find(id=>document.getElementById(id).classList.contains('active'));
-  if(activeTerminal){
-    const id=activeTerminal.includes('alpha')?'alpha':'beta';
-    const k=e.key.toUpperCase();
-    if(CS.includes(k)&&k.length===1){e.preventDefault();typeC(id,k);}
-    if(e.key==='Backspace'){e.preventDefault();bksp(id);}
-    if(e.key==='Enter'){e.preventDefault();submitPwd(id);}
-    if(e.key==='Escape'){closeModal(activeTerminal);}
-    return;
-  }
-  if(document.getElementById('door-modal').classList.contains('active')){
-    if(e.key==='Escape'||e.key==='Enter')closeModal('door-modal');return;
-  }
-  if(e.key.toLowerCase()==='e') interact();
-  if(e.key==='Escape'){['modal-alpha','modal-beta','door-modal'].forEach(closeModal);}
-});
-document.addEventListener('keyup',e=>{ky[e.key.toLowerCase()]=false;});
+            // ══════════════════════════════════════════════════════
+            //  INPUT
+            // ══════════════════════════════════════════════════════
+            document.addEventListener("keydown", (e) => {
+                ky[e.key.toLowerCase()] = true;
+                const activeTerminal = ["modal-alpha", "modal-beta"].find(
+                    (id) =>
+                        document
+                            .getElementById(id)
+                            .classList.contains("active"),
+                );
+                if (activeTerminal) {
+                    const id = activeTerminal.includes("alpha")
+                        ? "alpha"
+                        : "beta";
+                    const k = e.key.toUpperCase();
+                    if (CS.includes(k) && k.length === 1) {
+                        e.preventDefault();
+                        typeC(id, k);
+                    }
+                    if (e.key === "Backspace") {
+                        e.preventDefault();
+                        bksp(id);
+                    }
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        submitPwd(id);
+                    }
+                    if (e.key === "Escape") {
+                        closeModal(activeTerminal);
+                    }
+                    return;
+                }
+                if (
+                    document
+                        .getElementById("door-modal")
+                        .classList.contains("active")
+                ) {
+                    if (e.key === "Escape" || e.key === "Enter")
+                        closeModal("door-modal");
+                    return;
+                }
+                if (e.key.toLowerCase() === "e") interact();
+                if (e.key === "Escape") {
+                    ["modal-alpha", "modal-beta", "door-modal"].forEach(
+                        closeModal,
+                    );
+                }
+            });
+            document.addEventListener("keyup", (e) => {
+                ky[e.key.toLowerCase()] = false;
+            });
 
-// ══════════════════════════════════════════════════════
-//  RESET
-// ══════════════════════════════════════════════════════
-function resetAll(){
-  PA=gp(5);PB=gp(6);
-  window.__SHIP_MANIFEST={alpha:btoa(PA),beta:btoa(PB),note:'atob(window.__SHIP_MANIFEST.alpha) gives ALPHA password'};
-  ST.alphaOk=false;ST.betaOk=false;ST.attempts=0;ST.hintsGot=0;ST.startTime=Date.now();
-  ST.bruting={alpha:false,beta:false};
-  if(ST.bruteIvl.alpha)clearInterval(ST.bruteIvl.alpha);
-  if(ST.bruteIvl.beta)clearInterval(ST.bruteIvl.beta);
-  pl.px=2.5*T;pl.py=3.5*T;
-  buildHints();refreshGrids();
-  buildPwd('alpha');buildPwd('beta');
-  document.getElementById('tctr').textContent='0/2 CRACKED';
-  document.getElementById('pip-a').className='hud-pip pip-warn';
-  document.getElementById('pip-b').className='hud-pip pip-err';
-  ['alpha','beta'].forEach(id=>{
-    document.getElementById(`btn-brute-${id}`).disabled=false;
-    document.getElementById(`${id==='alpha'?'a':'b'}p-fill`).style.width='0%';
-    document.getElementById(`${id==='alpha'?'a':'b'}p-pct`).textContent='0%';
-    document.getElementById(`tlog-${id}`).innerHTML=`<div class="tr"><span class="tp">SYS&gt;</span><span class="ti">${id.toUpperCase()} TERMINAL ONLINE. ENTER ${id==='alpha'?5:6}-CHARACTER CIPHER CODE.</span></div>`;
-  });
-  document.getElementById('win-screen').classList.remove('active');
-  document.getElementById('intro').style.display='';document.getElementById('intro').classList.remove('fade-out');
-}
+            // ══════════════════════════════════════════════════════
+            //  RESET
+            // ══════════════════════════════════════════════════════
+            function resetAll() {
+                PA = gp(5);
+                PB = gp(6);
+                window.__SHIP_MANIFEST = {
+                    alpha: btoa(PA),
+                    beta: btoa(PB),
+                    note: "atob(window.__SHIP_MANIFEST.alpha) gives ALPHA password",
+                };
+                ST.alphaOk = false;
+                ST.betaOk = false;
+                ST.attempts = 0;
+                ST.hintsGot = 0;
+                ST.startTime = Date.now();
+                ST.bruting = { alpha: false, beta: false };
+                if (ST.bruteIvl.alpha) clearInterval(ST.bruteIvl.alpha);
+                if (ST.bruteIvl.beta) clearInterval(ST.bruteIvl.beta);
+                pl.px = 2.5 * T;
+                pl.py = 3.5 * T;
+                buildHints();
+                refreshGrids();
+                buildPwd("alpha");
+                buildPwd("beta");
+                document.getElementById("tctr").textContent = "0/2 CRACKED";
+                document.getElementById("pip-a").className = "hud-pip pip-warn";
+                document.getElementById("pip-b").className = "hud-pip pip-err";
+                ["alpha", "beta"].forEach((id) => {
+                    document.getElementById(`btn-brute-${id}`).disabled = false;
+                    document.getElementById(
+                        `${id === "alpha" ? "a" : "b"}p-fill`,
+                    ).style.width = "0%";
+                    document.getElementById(
+                        `${id === "alpha" ? "a" : "b"}p-pct`,
+                    ).textContent = "0%";
+                    document.getElementById(`tlog-${id}`).innerHTML =
+                        `<div class="tr"><span class="tp">SYS&gt;</span><span class="ti">${id.toUpperCase()} TERMINAL ONLINE. ENTER ${id === "alpha" ? 5 : 6}-CHARACTER CIPHER CODE.</span></div>`;
+                });
+                document
+                    .getElementById("win-screen")
+                    .classList.remove("active");
+                document.getElementById("intro").style.display = "";
+                document.getElementById("intro").classList.remove("fade-out");
+            }
 
-// ══════════════════════════════════════════════════════
-//  GAME LOOP
-// ══════════════════════════════════════════════════════
-function getRoomName(){
-  const tx=Math.floor(pl.px/T),ty=Math.floor(pl.py/T);
-  const r=ROOMS.find(r=>tx>=r.x&&tx<r.x+r.w&&ty>=r.y&&ty<r.y+r.h);
-  return r?r.label:'VOID';
-}
-function loop(){
-  const anyModal=['modal-alpha','modal-beta','door-modal'].some(id=>document.getElementById(id).classList.contains('active'));
-  if(!anyModal)movePlayer();
-  checkNear();
-  document.getElementById('hud-room').textContent=getRoomName();
-  render();
-  requestAnimationFrame(loop);
-}
+            // ══════════════════════════════════════════════════════
+            //  GAME LOOP
+            // ══════════════════════════════════════════════════════
+            function getRoomName() {
+                const tx = Math.floor(pl.px / T),
+                    ty = Math.floor(pl.py / T);
+                const r = ROOMS.find(
+                    (r) =>
+                        tx >= r.x &&
+                        tx < r.x + r.w &&
+                        ty >= r.y &&
+                        ty < r.y + r.h,
+                );
+                return r ? r.label : "VOID";
+            }
+            function loop() {
+                const anyModal = [
+                    "modal-alpha",
+                    "modal-beta",
+                    "door-modal",
+                ].some((id) =>
+                    document.getElementById(id).classList.contains("active"),
+                );
+                if (!anyModal) movePlayer();
+                checkNear();
+                document.getElementById("hud-room").textContent = getRoomName();
+                render();
+                requestAnimationFrame(loop);
+            }
 
-// ══════════════════════════════════════════════════════
-//  BOOTSTRAP
-// ══════════════════════════════════════════════════════
-(()=>{const sf=document.getElementById('sf');for(let i=0;i<260;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.5;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+1).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s`;sf.appendChild(s);}})();
+            // ══════════════════════════════════════════════════════
+            //  BOOTSTRAP
+            // ══════════════════════════════════════════════════════
+            (() => {
+                const sf = document.getElementById("sf");
+                for (let i = 0; i < 260; i++) {
+                    const s = document.createElement("div");
+                    s.className = "star";
+                    const sz = Math.random() * 2.5 + 0.5;
+                    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;--d:${(Math.random() * 4 + 1).toFixed(1)}s;animation-delay:${(Math.random() * 4).toFixed(1)}s`;
+                    sf.appendChild(s);
+                }
+            })();
 
-buildSolids();buildHints();refreshGrids();
-buildKp('alpha');buildKp('beta');buildPwd('alpha');buildPwd('beta');
-resize();loop();
-ST.startTime=Date.now();
+            buildSolids();
+            buildHints();
+            refreshGrids();
+            buildKp("alpha");
+            buildKp("beta");
+            buildPwd("alpha");
+            buildPwd("beta");
+            resize();
+            loop();
+            ST.startTime = Date.now();
 
-function showLoadingScreen(){
-  document.getElementById("loading-card").style.display = "grid";
-}
-function startGame(){
-  let loadingCard = document.getElementById('loading-card');
-  document.getElementById('intro').classList.add('fade-out');
-  loadingCard.style.animation = "opacity-down .4s";
-  loadingCard.onanimationend = () => {
-    loadingCard.style.display = "none";
-    loadingCard.style.animation = "card-scale .2s";
-    loadingCard.onanimationend = null;
-  }
-  setTimeout(()=>{document.getElementById('intro').style.display='none';ST.running=true;},800);
-}
+            function showLoadingScreen() {
+                document.getElementById("loading-card").style.display = "grid";
+            }
+            function startGame() {
+                let loadingCard = document.getElementById("loading-card");
+                document.getElementById("intro").classList.add("fade-out");
+                loadingCard.style.animation = "opacity-down .4s";
+                loadingCard.onanimationend = () => {
+                    loadingCard.style.display = "none";
+                    loadingCard.style.animation = "card-scale .2s";
+                    loadingCard.onanimationend = null;
+                };
+                setTimeout(() => {
+                    document.getElementById("intro").style.display = "none";
+                    ST.running = true;
+                }, 800);
+            }
 
-console.log('%c🚀 STARSHIP CIPHER — SKELD-9','color:#00e5ff;font-size:1.4rem;font-weight:bold;font-family:monospace');
-console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━','color:#1e3050');
-console.log('%c DEVELOPER BACKDOOR:','color:#ffe033;font-size:1rem');
-console.log('%c  ALPHA (5-char): %c' + atob(window.__SHIP_MANIFEST.alpha),'color:#3a6090','color:#00e5ff;font-size:1.1rem;font-weight:bold');
-console.log('%c  BETA  (6-char): %c' + atob(window.__SHIP_MANIFEST.beta), 'color:#3a6090','color:#ff6b00;font-size:1.1rem;font-weight:bold');
-console.log('%c  Or: atob(window.__SHIP_MANIFEST.alpha)','color:#3a6090');
-console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━','color:#1e3050');
-</script>
-</body>
+            console.log(
+                "%c🚀 STARSHIP CIPHER — SKELD-9",
+                "color:#00e5ff;font-size:1.4rem;font-weight:bold;font-family:monospace",
+            );
+            console.log("%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "color:#1e3050");
+            console.log(
+                "%c DEVELOPER BACKDOOR:",
+                "color:#ffe033;font-size:1rem",
+            );
+            console.log(
+                "%c  ALPHA (5-char): %c" + atob(window.__SHIP_MANIFEST.alpha),
+                "color:#3a6090",
+                "color:#00e5ff;font-size:1.1rem;font-weight:bold",
+            );
+            console.log(
+                "%c  BETA  (6-char): %c" + atob(window.__SHIP_MANIFEST.beta),
+                "color:#3a6090",
+                "color:#ff6b00;font-size:1.1rem;font-weight:bold",
+            );
+            console.log(
+                "%c  Or: atob(window.__SHIP_MANIFEST.alpha)",
+                "color:#3a6090",
+            );
+            console.log("%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "color:#1e3050");
+        </script>
+    </body>
 </html>
