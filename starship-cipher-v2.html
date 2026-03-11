@@ -32,13 +32,22 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .star-field{position:absolute;inset:0;overflow:hidden;}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) infinite alternate;}
 @keyframes twinkle{from{opacity:.05}to{opacity:.9}}
-.intro-badge{font-family:'VT323',monospace;font-size:clamp(2.8rem,7vw,5rem);color:var(--accent);letter-spacing:.2em;text-align:center;text-shadow:0 0 30px var(--accent),0 0 80px rgba(0,229,255,.25);animation:hshift 4s infinite alternate;}
+.intro-badge{font-family:'VT323',monospace;font-size:clamp(2.5rem,6vw,4rem);color:var(--accent);letter-spacing:.2em;text-align:center;text-shadow:0 0 30px var(--accent),0 0 80px rgba(0,229,255,.25);animation:hshift 4s infinite alternate;}
 @keyframes hshift{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(15deg)}}
 .intro-sub{font-size:.8rem;letter-spacing:.4em;color:var(--dimtxt);text-transform:uppercase;}
 .intro-story{max-width:500px;text-align:center;font-size:.82rem;line-height:1.9;color:#6a9ab8;border:1px solid var(--border);padding:14px 22px;border-radius:4px;background:rgba(0,229,255,.03);}
 .intro-story b{color:var(--accent);}
 .intro-btn{margin-top:8px;padding:11px 34px;background:transparent;border:2px solid var(--accent);color:var(--accent);font-family:'VT323',monospace;font-size:1.3rem;letter-spacing:.2em;cursor:pointer;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:all .25s;}
 .intro-btn:hover{background:rgba(0,229,255,.12);box-shadow:0 0 30px rgba(0,229,255,.35);}
+
+#intro-logos{
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 10px;
+}
+#intro-logos img{
+  height: 75px;
+}
 
 /* LOADING */
 #loading-card{
@@ -355,6 +364,10 @@ canvas{display:block;width:fit-content;height:100%;margin: auto;}
 <!-- INTRO -->
 <div id="intro">
   <div class="star-field" id="sf"></div>
+  <div id="intro-logos">
+    <img src="./imgs/pulz.png" alt="Pulz'25 Logo" id="intro-pulz">
+    <img src="./imgs/acicts.png" alt="ACICTS logo" id="intro-acicts">
+  </div>
   <div class="intro-badge">STARSHIP<br>CIPHER</div>
   <div class="intro-sub">S K E L D — 9 &nbsp;·&nbsp; S E C U R I T Y</div>
   <div class="intro-story">
