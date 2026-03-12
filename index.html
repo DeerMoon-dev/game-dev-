@@ -260,8 +260,8 @@
             }
             #slogan {
                 color: white;
-                font-size: 40px;
-                width: 550px;
+                font-size: clamp(1.1rem, 3.5vw, 40px);
+                width: min(550px, 90vw);
                 text-transform: uppercase;
                 text-align: center;
                 margin: auto;
@@ -676,11 +676,15 @@
             }
 
             /* HINT GRID */
+            .hgrid-wrap {
+                position: relative;
+            }
             .hgrid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
                 margin-bottom: 16px;
+                touch-action: pan-x;
             }
             .hcard {
                 background: rgba(0, 0, 0, 0.4);
@@ -1310,259 +1314,441 @@
    MOBILE BREAKPOINTS
 ═══════════════════════════════════════ */
             @media (max-width: 600px) {
-                /* Intro */
+                /* ── Intro ── */
                 #intro {
-                    gap: 10px;
-                    padding: 16px;
+                    gap: 8px;
+                    padding: 12px 14px;
                     overflow-y: auto;
                     justify-content: flex-start;
-                    padding-top: 40px;
+                    padding-top: 32px;
                 }
                 #intro-logos img {
-                    height: 50px;
+                    height: 44px;
                 }
                 .intro-badge {
-                    font-size: 2.2rem;
-                    letter-spacing: 0.1em;
+                    font-size: 1.9rem;
+                    letter-spacing: 0.08em;
                 }
                 .intro-sub {
-                    font-size: 0.65rem;
-                    letter-spacing: 0.2em;
+                    font-size: 0.6rem;
+                    letter-spacing: 0.15em;
                 }
                 .intro-story {
-                    font-size: 0.75rem;
-                    padding: 10px 14px;
+                    font-size: 0.72rem;
+                    padding: 9px 12px;
                     max-width: 100%;
+                    line-height: 1.7;
                 }
                 .intro-btn {
-                    font-size: 1.1rem;
-                    padding: 10px 24px;
+                    font-size: 1rem;
+                    padding: 9px 20px;
                 }
 
-                /* Loading card */
+                /* ── Loading card ── */
                 #loading-card {
-                    width: 95vw;
-                    height: 92vh;
+                    width: 98vw;
+                    height: 94dvh;
                 }
                 :root {
-                    --char-max-width: 52px;
+                    --char-max-width: 46px;
+                }
+                #chars {
+                    transform: scale(0.75);
+                    transform-origin: center top;
+                    margin-bottom: 0;
                 }
                 #slogan {
-                    font-size: clamp(1rem, 5vw, 1.4rem);
+                    font-size: clamp(0.85rem, 4.5vw, 1.2rem);
                     width: auto;
-                    letter-spacing: 2px;
+                    letter-spacing: 1px;
+                    padding: 0 8px;
+                }
+                #slogan-spn {
+                    overflow: visible;
                 }
                 #continue-to-mission {
-                    font-size: 14px;
-                    padding: 10px 16px;
+                    font-size: 13px;
+                    padding: 9px 14px;
+                    margin-top: 8px;
+                }
+                #fun-fact {
+                    font-size: 0.75rem;
+                    padding: 5px 0;
                 }
 
-                /* HUD — compact */
+                /* ── HUD ── */
                 #hud {
-                    height: 40px;
-                    padding: 0 8px;
-                    gap: 6px;
+                    height: 38px;
+                    padding: 0 6px;
+                    gap: 5px;
                     flex-wrap: nowrap;
+                    overflow: hidden;
                 }
                 .hud-logo {
-                    font-size: 1.1rem;
+                    font-size: 1rem;
+                    letter-spacing: 0.08em;
                 }
                 .hud-sep {
                     display: none;
                 }
                 .hud-room {
-                    font-size: 0.65rem;
-                    letter-spacing: 0.1em;
+                    font-size: 0.6rem;
+                    letter-spacing: 0.06em;
+                    max-width: 22vw;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
                 .hud-stat {
-                    font-size: 0.6rem;
-                    gap: 3px;
+                    font-size: 0.55rem;
+                    gap: 2px;
                 }
-                .hud-stat .hud-pip {
-                    width: 7px;
-                    height: 7px;
-                    margin-right: 3px;
-                }
-                /* Hide verbose labels on mobile, keep pips */
                 .hud-stat span:last-child {
                     display: none;
+                }
+                .hud-pip {
+                    width: 7px;
+                    height: 7px;
+                    margin-right: 2px;
+                }
+                .task-ctr {
+                    font-size: 0.85rem;
                 }
                 .hud-hint {
                     display: none;
                 }
-                .task-ctr {
-                    font-size: 0.9rem;
+                .hud-sp {
+                    min-width: 0;
+                    flex: 1;
                 }
                 #canvas-wrap {
-                    top: 40px;
+                    top: 38px;
                 }
 
-                /* Minimap — smaller, bottom-right */
+                /* ── Minimap ── */
                 #minimap {
-                    width: 130px;
-                    height: 88px;
-                    bottom: 8px;
-                    right: 8px;
+                    width: 110px;
+                    height: 74px;
+                    bottom: 6px;
+                    right: 6px;
+                    opacity: 0.6;
                 }
                 #mc {
-                    width: 130px;
-                    height: 88px;
+                    width: 110px;
+                    height: 74px;
+                }
+                .mm-title {
+                    font-size: 0.65rem;
                 }
 
-                /* Interact prompt — above minimap area */
+                /* ── Interact prompt ── */
                 #ipr {
-                    bottom: 110px;
-                    font-size: 0.7rem;
-                    padding: 5px 12px;
+                    bottom: auto;
+                    top: 46px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-size: 0.68rem;
+                    padding: 4px 10px;
                     white-space: normal;
                     text-align: center;
-                    max-width: 60vw;
+                    max-width: 72vw;
                 }
 
-                /* Modals — full screen on mobile */
-                .mbox {
-                    width: 100vw;
-                    max-width: 100vw;
-                    max-height: 100dvh;
-                    border-radius: 0;
-                    border-left: none;
-                    border-right: none;
-                }
+                /* ── Modal overlay — full-screen sheet from bottom ── */
                 .modal-ov {
                     align-items: flex-end;
                 }
                 .mbox {
-                    max-height: 88dvh;
-                }
-                .mbody {
-                    padding: 12px;
+                    width: 100vw;
+                    max-width: 100vw;
+                    max-height: 92dvh;
+                    height: 92dvh;
+                    border-radius: 12px 12px 0 0;
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: none;
+                    display: flex;
+                    flex-direction: column;
                 }
                 .mhdr {
-                    padding: 8px 12px;
+                    padding: 8px 10px;
+                    flex-shrink: 0;
                 }
                 .mtitle {
-                    font-size: 1rem;
-                    letter-spacing: 0.08em;
+                    font-size: 0.9rem;
+                    letter-spacing: 0.06em;
                 }
                 .mdots {
                     display: none;
                 }
+                .mcls {
+                    font-size: 1.2rem;
+                    padding: 4px 6px;
+                }
 
-                /* Hint grid — single col */
+                /* Modal body scrolls internally */
+                .mbody {
+                    padding: 10px;
+                    overflow-y: auto;
+                    flex: 1;
+                    min-height: 0;
+                }
+
+                /* Hint grid: horizontal scrolling strip */
                 .hgrid {
-                    grid-template-columns: 1fr;
+                    display: flex;
+                    flex-direction: row;
+                    gap: 6px;
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    margin-bottom: 8px;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: none;
+                    padding-bottom: 4px;
+                }
+                .hgrid::-webkit-scrollbar {
+                    display: none;
+                }
+                /* Scroll hint fade on right edge */
+                .hgrid-wrap {
+                    position: relative;
+                }
+                .hgrid-wrap::after {
+                    content: "swipe ›";
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 0.6rem;
+                    color: var(--dimtxt);
+                    pointer-events: none;
+                    background: linear-gradient(
+                        to right,
+                        transparent,
+                        var(--panel) 40%
+                    );
+                    padding: 4px 6px 4px 20px;
+                }
+                .hcard {
+                    min-width: 200px;
+                    max-width: 200px;
+                    flex-shrink: 0;
+                    padding: 8px 10px;
+                }
+                .hc-tag {
+                    font-size: 0.55rem;
                 }
                 .hc-clue {
-                    font-size: 0.72rem;
+                    font-size: 0.68rem;
+                    line-height: 1.55;
+                }
+                .hc-decode {
+                    font-size: 0.82rem;
                 }
 
-                /* Password cells */
-                .pc {
-                    width: 38px;
-                    height: 48px;
-                    font-size: 1.5rem;
-                }
-                .pc .cr {
-                    height: 22px;
-                }
-                .pwd-row {
-                    gap: 5px;
-                }
-
-                /* Keypad — bigger tap targets */
-                .kpad {
-                    grid-template-columns: repeat(6, 1fr);
-                    gap: 5px;
-                }
-                .kb {
-                    padding: 10px 2px;
-                    font-size: 1.1rem;
-                }
-
-                /* Action buttons */
-                .ab {
-                    padding: 10px 16px;
-                    font-size: 1rem;
-                }
-                .arow {
-                    gap: 7px;
-                }
-
-                /* Wire puzzle */
-                .wire-node {
-                    padding: 5px 8px;
-                    font-size: 0.85rem;
-                }
-                #wire-center {
-                    min-height: 160px;
-                }
-
-                /* Reactor */
-                .reactor-btn {
-                    height: 52px;
-                    font-size: 1rem;
-                }
-
-                /* Anomaly grid */
-                #anomaly-grid {
-                    grid-template-columns: repeat(6, 1fr);
-                    gap: 4px;
-                }
-                .anom-cell {
-                    height: 38px;
-                    font-size: 0.85rem;
+                /* Tlog smaller */
+                .tlog {
+                    max-height: 64px;
+                    min-height: 44px;
+                    font-size: 0.78rem;
+                    padding: 6px 8px;
+                    margin-bottom: 8px;
                 }
 
                 /* Stage badge */
                 .sb {
-                    font-size: 0.55rem;
-                    padding: 2px 8px;
+                    font-size: 0.5rem;
+                    padding: 2px 6px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 100%;
                     display: block;
-                    white-space: normal;
                 }
 
-                /* D-pad visible */
+                /* Password row */
+                .pwd-row {
+                    gap: 4px;
+                    margin: 8px 0;
+                    flex-wrap: nowrap;
+                    justify-content: center;
+                }
+                .pc {
+                    width: 36px;
+                    height: 44px;
+                    font-size: 1.35rem;
+                    flex-shrink: 0;
+                }
+                .pc .cr {
+                    height: 20px;
+                }
+
+                /* Keypad */
+                .kpad {
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 4px;
+                    margin-bottom: 8px;
+                }
+                .kb {
+                    padding: 9px 1px;
+                    font-size: 1rem;
+                    min-height: 36px;
+                }
+
+                /* Action row */
+                .ab {
+                    padding: 8px 14px;
+                    font-size: 0.95rem;
+                }
+                .arow {
+                    gap: 6px;
+                }
+
+                /* ── Wire puzzle ── */
+                .wire-title {
+                    font-size: 0.85rem;
+                }
+                .wire-hint {
+                    font-size: 0.65rem;
+                    margin-bottom: 8px;
+                }
+                #wire-board {
+                    grid-template-columns: 1fr 40px 1fr;
+                }
+                .wire-node {
+                    padding: 5px 6px;
+                    font-size: 0.8rem;
+                    letter-spacing: 0;
+                }
+                #wire-center {
+                    min-height: 140px;
+                }
+                #wire-status {
+                    font-size: 0.85rem;
+                    margin-top: 8px;
+                }
+
+                /* ── Reactor ── */
+                .reactor-info {
+                    font-size: 0.7rem;
+                    line-height: 1.6;
+                    margin-bottom: 8px;
+                }
+                #reactor-grid {
+                    gap: 7px;
+                    margin: 10px 0;
+                }
+                .reactor-btn {
+                    height: 48px;
+                    font-size: 0.9rem;
+                }
+                #reactor-status {
+                    font-size: 0.85rem;
+                }
+
+                /* ── Anomaly scanner ── */
+                .anomaly-info {
+                    font-size: 0.7rem;
+                    line-height: 1.6;
+                    margin-bottom: 8px;
+                }
+                #anomaly-grid {
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 3px;
+                    margin: 8px 0;
+                }
+                .anom-cell {
+                    height: 36px;
+                    font-size: 0.8rem;
+                }
+                #anomaly-status {
+                    font-size: 0.85rem;
+                }
+
+                /* ── Data log ── */
+                .datalog-entry {
+                    padding: 9px;
+                }
+                .datalog-header {
+                    font-size: 0.82rem;
+                }
+                .datalog-body {
+                    font-size: 0.7rem;
+                    line-height: 1.7;
+                }
+
+                /* ── Win screen ── */
+                .win-sub {
+                    font-size: 0.65rem;
+                    letter-spacing: 0.1em;
+                    text-align: center;
+                    padding: 0 16px;
+                }
+                .win-stats {
+                    gap: 16px;
+                }
+                .wsv {
+                    font-size: 1.6rem;
+                }
+                .wsl {
+                    font-size: 0.58rem;
+                }
+
+                /* ── D-pad & interact button ── */
                 #dpad {
                     display: block;
+                    bottom: 86px;
                 }
                 #mobile-interact {
                     display: flex;
+                    bottom: 86px;
                 }
             }
 
             @media (max-width: 380px) {
                 :root {
-                    --char-max-width: 40px;
+                    --char-max-width: 36px;
                 }
                 .pc {
-                    width: 32px;
-                    height: 42px;
-                    font-size: 1.3rem;
+                    width: 30px;
+                    height: 40px;
+                    font-size: 1.15rem;
                 }
                 .kpad {
                     gap: 3px;
                 }
                 .kb {
-                    padding: 9px 1px;
-                    font-size: 1rem;
+                    padding: 8px 1px;
+                    font-size: 0.9rem;
+                    min-height: 34px;
                 }
                 #dpad-ring {
-                    width: 100px;
-                    height: 100px;
+                    width: 96px;
+                    height: 96px;
                 }
                 .dp-btn {
-                    width: 32px;
-                    height: 32px;
-                    font-size: 0.95rem;
+                    width: 30px;
+                    height: 30px;
+                    font-size: 0.85rem;
                 }
                 #mobile-interact {
-                    width: 56px;
-                    height: 56px;
+                    width: 54px;
+                    height: 54px;
+                }
+                .hcard {
+                    min-width: 170px;
+                    max-width: 170px;
+                }
+                #reactor-grid {
+                    gap: 5px;
+                }
+                .reactor-btn {
+                    height: 42px;
+                    font-size: 0.8rem;
                 }
             }
 
             @media (min-width: 601px) and (max-width: 900px) {
-                /* Tablet tweaks */
                 #intro {
                     padding: 20px;
                 }
@@ -2191,7 +2377,9 @@
                         <div class="sb-dot"></div>
                         STAGE 1 OF 3 — ALPHA CLEARANCE — 5-CHAR CODE
                     </div>
-                    <div class="hgrid" id="hgrid-alpha"></div>
+                    <div class="hgrid-wrap">
+                        <div class="hgrid" id="hgrid-alpha"></div>
+                    </div>
                     <div class="tlog" id="tlog-alpha">
                         <div class="tr">
                             <span class="tp">SYS&gt;</span
@@ -2234,7 +2422,9 @@
                         <div class="sb-dot"></div>
                         STAGE 2 OF 3 — BETA CLEARANCE — 6-CHAR CODE
                     </div>
-                    <div class="hgrid" id="hgrid-beta"></div>
+                    <div class="hgrid-wrap">
+                        <div class="hgrid" id="hgrid-beta"></div>
+                    </div>
                     <div class="tlog" id="tlog-beta">
                         <div class="tr">
                             <span class="tp">SYS&gt;</span
@@ -2277,7 +2467,9 @@
                         <div class="sb-dot"></div>
                         STAGE 3 OF 3 — GAMMA CLEARANCE — 7-CHAR CODE
                     </div>
-                    <div class="hgrid" id="hgrid-gamma"></div>
+                    <div class="hgrid-wrap">
+                        <div class="hgrid" id="hgrid-gamma"></div>
+                    </div>
                     <div class="tlog" id="tlog-gamma">
                         <div class="tr">
                             <span class="tp">SYS&gt;</span
