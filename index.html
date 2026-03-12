@@ -458,13 +458,11 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                display: grid;
             }
-            canvas {
+            #gc {
                 display: block;
-                width: fit-content;
+                width: 100%;
                 height: 100%;
-                margin: auto;
             }
 
             /* MINIMAP */
@@ -1420,9 +1418,6 @@
                 .hud-sp {
                     min-width: 0;
                     flex: 1;
-                }
-                #canvas-wrap {
-                    top: 38px;
                 }
 
                 /* ── Minimap ── */
@@ -3381,13 +3376,15 @@
                 camY = 0,
                 animT = 0;
             function resize() {
-                const hudH = document.getElementById("hud").offsetHeight;
-                document.getElementById("canvas-wrap").style.top = hudH + "px";
-                W = gc.width = gc.clientWidth;
-                H = gc.height = gc.clientHeight;
+                const hud = document.getElementById("hud");
+                const hudH = hud.offsetHeight;
+                const wrap = document.getElementById("canvas-wrap");
+                wrap.style.top = hudH + "px";
+                W = gc.width = wrap.clientWidth || window.innerWidth;
+                H = gc.height = wrap.clientHeight || window.innerHeight - hudH;
                 const mm = document.getElementById("minimap");
-                mc2.width = mm.clientWidth;
-                mc2.height = mm.clientHeight;
+                mc2.width = mm.clientWidth || 210;
+                mc2.height = mm.clientHeight || 140;
             }
             window.addEventListener("resize", resize);
 
