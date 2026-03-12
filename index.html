@@ -6,11 +6,16 @@
 ║  DEVELOPER BACKDOOR ACCESS (open browser console):              ║
 ║  atob(window.__SHIP_MANIFEST.alpha)  → ALPHA password (5 chars) ║
 ║  atob(window.__SHIP_MANIFEST.beta)   → BETA  password (6 chars) ║
+║  atob(window.__SHIP_MANIFEST.gamma)  → GAMMA password (7 chars) ║
 ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
         <title>STARSHIP CIPHER — SKELD-9</title>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@300;500;700&display=swap");
@@ -20,6 +25,7 @@
                 --floor: #0c1428;
                 --accent: #00e5ff;
                 --accent2: #ff6b00;
+                --accent3: #aa44ff;
                 --red: #ff2244;
                 --green: #00ff88;
                 --yellow: #ffe033;
@@ -123,7 +129,7 @@
                 text-transform: uppercase;
             }
             .intro-story {
-                max-width: 500px;
+                max-width: 520px;
                 text-align: center;
                 font-size: 0.82rem;
                 line-height: 1.9;
@@ -158,7 +164,6 @@
                 background: rgba(0, 229, 255, 0.12);
                 box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
             }
-
             #intro-logos {
                 display: grid;
                 grid-template-columns: repeat(2, max-content);
@@ -292,7 +297,7 @@
                 font-weight: 900;
                 text-align: center;
                 animation: opacity-up 2s;
-                padding: 8px 0px;
+                padding: 8px 0;
             }
             #fun-fact span {
                 color: rgb(0, 255, 26);
@@ -303,34 +308,25 @@
                     opacity: 0;
                     transform: translateY(-900px);
                 }
-                /* 10%{
-      transform: translateY(-900px);
-  } */
             }
             @keyframes characters-to-right {
                 0% {
                     opacity: 0;
                     transform: translateX(300px) translateY(-900px);
                 }
-                /* 10%{
-      transform: translateX(300px) translateY(-900px);
-  } */
             }
             @keyframes characters-to-left {
                 0% {
                     opacity: 0;
                     transform: translateX(-300px) translateY(-900px);
                 }
-                /* 10%{
-      transform: translateX(-300px) translateY(-900px);
-  } */
             }
             @keyframes text-reveal {
                 0% {
-                    width: 0px;
+                    width: 0;
                 }
                 60% {
-                    width: 0px;
+                    width: 0;
                 }
             }
             @keyframes button-scale-up {
@@ -656,6 +652,11 @@
                 color: var(--accent2);
                 background: rgba(255, 107, 0, 0.05);
             }
+            .sb-c {
+                border-color: rgba(170, 68, 255, 0.35);
+                color: var(--accent3);
+                background: rgba(170, 68, 255, 0.05);
+            }
             .sb-dot {
                 width: 7px;
                 height: 7px;
@@ -668,6 +669,10 @@
             .sb-b .sb-dot {
                 background: var(--accent2);
                 box-shadow: 0 0 5px var(--accent2);
+            }
+            .sb-c .sb-dot {
+                background: var(--accent3);
+                box-shadow: 0 0 5px var(--accent3);
             }
 
             /* HINT GRID */
@@ -747,33 +752,6 @@
             }
             .tok {
                 color: var(--green);
-            }
-
-            /* PROGRESS */
-            .pw {
-                margin-bottom: 12px;
-            }
-            .pl {
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.63rem;
-                color: var(--dimtxt);
-                margin-bottom: 4px;
-                letter-spacing: 0.1em;
-            }
-            .pt {
-                height: 7px;
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 4px;
-                border: 1px solid rgba(0, 229, 255, 0.07);
-                overflow: hidden;
-            }
-            .pf {
-                height: 100%;
-                background: linear-gradient(90deg, var(--accent), #0088ff);
-                border-radius: 4px;
-                transition: width 0.2s;
-                box-shadow: 0 0 5px var(--accent);
             }
 
             /* PASSWORD DISPLAY */
@@ -894,19 +872,6 @@
                 );
                 transition: all 0.2s;
             }
-            .ab-brute {
-                border-color: var(--yellow);
-                color: var(--yellow);
-            }
-            .ab-brute:hover {
-                background: var(--yellow);
-                color: #000;
-                box-shadow: 0 0 18px rgba(255, 224, 51, 0.35);
-            }
-            .ab-brute:disabled {
-                opacity: 0.3;
-                cursor: not-allowed;
-            }
             .ab-sub {
                 border-color: var(--green);
                 color: var(--green);
@@ -922,6 +887,252 @@
             .ab-clr:hover {
                 background: var(--red);
                 color: #fff;
+            }
+
+            /* ─────────────────────────────────────────
+   WIRE PUZZLE
+───────────────────────────────────────── */
+            #wire-puzzle-wrap {
+                padding: 8px 0;
+            }
+            .wire-title {
+                font-family: "VT323", monospace;
+                font-size: 1rem;
+                color: var(--yellow);
+                letter-spacing: 0.15em;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .wire-hint {
+                font-size: 0.75rem;
+                color: var(--dimtxt);
+                text-align: center;
+                margin-bottom: 14px;
+            }
+            #wire-board {
+                display: grid;
+                grid-template-columns: 1fr 60px 1fr;
+                gap: 0;
+                align-items: start;
+            }
+            .wire-col {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .wire-col.right {
+                align-items: flex-end;
+            }
+            .wire-node {
+                padding: 6px 14px;
+                border: 1.5px solid;
+                border-radius: 3px;
+                font-family: "VT323", monospace;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                letter-spacing: 0.08em;
+                user-select: none;
+            }
+            .wire-node.left-node {
+                text-align: left;
+            }
+            .wire-node.right-node {
+                text-align: right;
+            }
+            .wire-node:hover {
+                filter: brightness(1.3);
+            }
+            .wire-node.selected {
+                box-shadow: 0 0 12px currentColor;
+                transform: scale(1.05);
+            }
+            .wire-node.matched {
+                opacity: 0.5;
+                cursor: default;
+                filter: none;
+                transform: none;
+            }
+            #wire-center {
+                position: relative;
+                min-height: 200px;
+            }
+            #wire-svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+            #wire-status {
+                margin-top: 12px;
+                text-align: center;
+                font-family: "VT323", monospace;
+                font-size: 1rem;
+                min-height: 24px;
+            }
+
+            /* ─────────────────────────────────────────
+   REACTOR SEQUENCE PUZZLE
+───────────────────────────────────────── */
+            #reactor-wrap {
+                padding: 4px 0;
+            }
+            .reactor-info {
+                font-size: 0.77rem;
+                color: #6a9ab8;
+                line-height: 1.8;
+                margin-bottom: 12px;
+            }
+            .reactor-info b {
+                color: var(--yellow);
+            }
+            #reactor-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin: 14px 0;
+            }
+            .reactor-btn {
+                height: 64px;
+                border-radius: 5px;
+                border: 2px solid;
+                cursor: pointer;
+                font-family: "VT323", monospace;
+                font-size: 1.3rem;
+                letter-spacing: 0.1em;
+                transition: all 0.15s;
+                background: rgba(0, 0, 0, 0.5);
+            }
+            .reactor-btn:hover:not(:disabled) {
+                filter: brightness(1.4);
+                transform: scale(1.04);
+            }
+            .reactor-btn.lit {
+                filter: brightness(2) !important;
+                transform: scale(1.07) !important;
+            }
+            .reactor-btn:disabled {
+                cursor: not-allowed;
+            }
+            #reactor-status {
+                text-align: center;
+                font-family: "VT323", monospace;
+                font-size: 1rem;
+                min-height: 22px;
+                margin-bottom: 8px;
+            }
+            #reactor-level {
+                font-size: 0.7rem;
+                color: var(--dimtxt);
+                text-align: center;
+                letter-spacing: 0.1em;
+            }
+
+            /* ─────────────────────────────────────────
+   ANOMALY SCANNER
+───────────────────────────────────────── */
+            #anomaly-wrap {
+                padding: 4px 0;
+            }
+            .anomaly-info {
+                font-size: 0.77rem;
+                color: #6a9ab8;
+                line-height: 1.8;
+                margin-bottom: 10px;
+            }
+            #anomaly-grid {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 5px;
+                margin: 10px 0;
+            }
+            .anom-cell {
+                height: 44px;
+                border: 1px solid rgba(0, 229, 255, 0.12);
+                border-radius: 3px;
+                background: rgba(0, 0, 0, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "VT323", monospace;
+                font-size: 0.95rem;
+                cursor: pointer;
+                color: #3a6090;
+                transition: all 0.2s;
+            }
+            .anom-cell:hover {
+                border-color: rgba(0, 229, 255, 0.4);
+                color: var(--text);
+            }
+            .anom-cell.anomaly {
+                color: var(--red);
+            }
+            .anom-cell.found {
+                background: rgba(0, 255, 136, 0.08);
+                border-color: rgba(0, 255, 136, 0.4);
+                color: var(--green);
+                cursor: default;
+            }
+            .anom-cell.wrong {
+                background: rgba(255, 34, 68, 0.1);
+                border-color: var(--red);
+                animation: shk 0.3s ease;
+            }
+            #anomaly-status {
+                text-align: center;
+                font-family: "VT323", monospace;
+                font-size: 0.95rem;
+                min-height: 22px;
+                margin-bottom: 8px;
+            }
+            .anomaly-progress {
+                font-size: 0.7rem;
+                color: var(--dimtxt);
+                text-align: center;
+                margin-bottom: 8px;
+            }
+
+            /* ─────────────────────────────────────────
+   DATA LOG VIEWER
+───────────────────────────────────────── */
+            .datalog-entry {
+                background: rgba(0, 0, 0, 0.45);
+                border: 1px solid rgba(0, 229, 255, 0.1);
+                border-radius: 4px;
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            .datalog-header {
+                font-family: "VT323", monospace;
+                font-size: 0.95rem;
+                color: var(--accent);
+                margin-bottom: 6px;
+                letter-spacing: 0.12em;
+            }
+            .datalog-body {
+                font-size: 0.78rem;
+                color: #6a9ab8;
+                line-height: 1.85;
+            }
+            .datalog-body b {
+                color: var(--yellow);
+            }
+            .datalog-body .cipher-highlight {
+                color: var(--green);
+                font-family: "VT323", monospace;
+                font-size: 0.9rem;
+                letter-spacing: 0.1em;
+            }
+            .datalog-decode {
+                margin-top: 8px;
+                padding: 6px 10px;
+                background: rgba(0, 255, 136, 0.05);
+                border: 1px solid rgba(0, 255, 136, 0.2);
+                border-radius: 3px;
+                font-family: "VT323", monospace;
+                font-size: 0.85rem;
+                color: var(--green);
             }
 
             /* WIN */
@@ -997,6 +1208,380 @@
                     opacity: 0;
                 }
             }
+
+            /* ═══════════════════════════════════════
+   VIRTUAL D-PAD (mobile only, shown via JS)
+═══════════════════════════════════════ */
+            #dpad {
+                position: fixed;
+                bottom: 90px;
+                left: 16px;
+                z-index: 250;
+                display: none;
+                touch-action: none;
+                user-select: none;
+            }
+            #dpad-ring {
+                width: 120px;
+                height: 120px;
+                position: relative;
+            }
+            .dp-btn {
+                position: absolute;
+                width: 38px;
+                height: 38px;
+                background: rgba(0, 229, 255, 0.08);
+                border: 1.5px solid rgba(0, 229, 255, 0.3);
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                color: rgba(0, 229, 255, 0.7);
+                cursor: pointer;
+                transition: background 0.1s;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .dp-btn:active,
+            .dp-btn.pressed {
+                background: rgba(0, 229, 255, 0.25);
+                border-color: var(--accent);
+            }
+            #dp-up {
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #dp-down {
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #dp-left {
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            #dp-right {
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            #dp-center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: rgba(0, 229, 255, 0.05);
+                border: 1px solid rgba(0, 229, 255, 0.15);
+            }
+
+            #mobile-interact {
+                position: fixed;
+                bottom: 90px;
+                right: 16px;
+                z-index: 250;
+                display: none;
+                width: 64px;
+                height: 64px;
+                background: rgba(0, 229, 255, 0.1);
+                border: 2px solid rgba(0, 229, 255, 0.5);
+                border-radius: 50%;
+                color: var(--accent);
+                font-family: "VT323", monospace;
+                font-size: 0.85rem;
+                letter-spacing: 0.05em;
+                text-align: center;
+                line-height: 1.2;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+            #mobile-interact:active {
+                background: rgba(0, 229, 255, 0.3);
+            }
+
+            /* ═══════════════════════════════════════
+   MOBILE BREAKPOINTS
+═══════════════════════════════════════ */
+            @media (max-width: 600px) {
+                /* Intro */
+                #intro {
+                    gap: 10px;
+                    padding: 16px;
+                    overflow-y: auto;
+                    justify-content: flex-start;
+                    padding-top: 40px;
+                }
+                #intro-logos img {
+                    height: 50px;
+                }
+                .intro-badge {
+                    font-size: 2.2rem;
+                    letter-spacing: 0.1em;
+                }
+                .intro-sub {
+                    font-size: 0.65rem;
+                    letter-spacing: 0.2em;
+                }
+                .intro-story {
+                    font-size: 0.75rem;
+                    padding: 10px 14px;
+                    max-width: 100%;
+                }
+                .intro-btn {
+                    font-size: 1.1rem;
+                    padding: 10px 24px;
+                }
+
+                /* Loading card */
+                #loading-card {
+                    width: 95vw;
+                    height: 92vh;
+                }
+                :root {
+                    --char-max-width: 52px;
+                }
+                #slogan {
+                    font-size: clamp(1rem, 5vw, 1.4rem);
+                    width: auto;
+                    letter-spacing: 2px;
+                }
+                #continue-to-mission {
+                    font-size: 14px;
+                    padding: 10px 16px;
+                }
+
+                /* HUD — compact */
+                #hud {
+                    height: 40px;
+                    padding: 0 8px;
+                    gap: 6px;
+                    flex-wrap: nowrap;
+                }
+                .hud-logo {
+                    font-size: 1.1rem;
+                }
+                .hud-sep {
+                    display: none;
+                }
+                .hud-room {
+                    font-size: 0.65rem;
+                    letter-spacing: 0.1em;
+                }
+                .hud-stat {
+                    font-size: 0.6rem;
+                    gap: 3px;
+                }
+                .hud-stat .hud-pip {
+                    width: 7px;
+                    height: 7px;
+                    margin-right: 3px;
+                }
+                /* Hide verbose labels on mobile, keep pips */
+                .hud-stat span:last-child {
+                    display: none;
+                }
+                .hud-hint {
+                    display: none;
+                }
+                .task-ctr {
+                    font-size: 0.9rem;
+                }
+                #canvas-wrap {
+                    top: 40px;
+                }
+
+                /* Minimap — smaller, bottom-right */
+                #minimap {
+                    width: 130px;
+                    height: 88px;
+                    bottom: 8px;
+                    right: 8px;
+                }
+                #mc {
+                    width: 130px;
+                    height: 88px;
+                }
+
+                /* Interact prompt — above minimap area */
+                #ipr {
+                    bottom: 110px;
+                    font-size: 0.7rem;
+                    padding: 5px 12px;
+                    white-space: normal;
+                    text-align: center;
+                    max-width: 60vw;
+                }
+
+                /* Modals — full screen on mobile */
+                .mbox {
+                    width: 100vw;
+                    max-width: 100vw;
+                    max-height: 100dvh;
+                    border-radius: 0;
+                    border-left: none;
+                    border-right: none;
+                }
+                .modal-ov {
+                    align-items: flex-end;
+                }
+                .mbox {
+                    max-height: 88dvh;
+                }
+                .mbody {
+                    padding: 12px;
+                }
+                .mhdr {
+                    padding: 8px 12px;
+                }
+                .mtitle {
+                    font-size: 1rem;
+                    letter-spacing: 0.08em;
+                }
+                .mdots {
+                    display: none;
+                }
+
+                /* Hint grid — single col */
+                .hgrid {
+                    grid-template-columns: 1fr;
+                }
+                .hc-clue {
+                    font-size: 0.72rem;
+                }
+
+                /* Password cells */
+                .pc {
+                    width: 38px;
+                    height: 48px;
+                    font-size: 1.5rem;
+                }
+                .pc .cr {
+                    height: 22px;
+                }
+                .pwd-row {
+                    gap: 5px;
+                }
+
+                /* Keypad — bigger tap targets */
+                .kpad {
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 5px;
+                }
+                .kb {
+                    padding: 10px 2px;
+                    font-size: 1.1rem;
+                }
+
+                /* Action buttons */
+                .ab {
+                    padding: 10px 16px;
+                    font-size: 1rem;
+                }
+                .arow {
+                    gap: 7px;
+                }
+
+                /* Wire puzzle */
+                .wire-node {
+                    padding: 5px 8px;
+                    font-size: 0.85rem;
+                }
+                #wire-center {
+                    min-height: 160px;
+                }
+
+                /* Reactor */
+                .reactor-btn {
+                    height: 52px;
+                    font-size: 1rem;
+                }
+
+                /* Anomaly grid */
+                #anomaly-grid {
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 4px;
+                }
+                .anom-cell {
+                    height: 38px;
+                    font-size: 0.85rem;
+                }
+
+                /* Stage badge */
+                .sb {
+                    font-size: 0.55rem;
+                    padding: 2px 8px;
+                    display: block;
+                    white-space: normal;
+                }
+
+                /* D-pad visible */
+                #dpad {
+                    display: block;
+                }
+                #mobile-interact {
+                    display: flex;
+                }
+            }
+
+            @media (max-width: 380px) {
+                :root {
+                    --char-max-width: 40px;
+                }
+                .pc {
+                    width: 32px;
+                    height: 42px;
+                    font-size: 1.3rem;
+                }
+                .kpad {
+                    gap: 3px;
+                }
+                .kb {
+                    padding: 9px 1px;
+                    font-size: 1rem;
+                }
+                #dpad-ring {
+                    width: 100px;
+                    height: 100px;
+                }
+                .dp-btn {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 0.95rem;
+                }
+                #mobile-interact {
+                    width: 56px;
+                    height: 56px;
+                }
+            }
+
+            @media (min-width: 601px) and (max-width: 900px) {
+                /* Tablet tweaks */
+                #intro {
+                    padding: 20px;
+                }
+                .intro-story {
+                    max-width: 100%;
+                    font-size: 0.78rem;
+                }
+                .hgrid {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .pc {
+                    width: 44px;
+                    height: 54px;
+                }
+                #minimap {
+                    width: 170px;
+                    height: 114px;
+                }
+            }
         </style>
     </head>
     <body>
@@ -1017,10 +1602,12 @@
             </div>
             <div class="intro-story">
                 The rogue AI <b>ARES-9</b> has locked the
-                <b>Command Bay</b> behind two cipher locks.<br /><br />
+                <b>Command Bay</b> behind three cipher locks.<br /><br />
                 Explore the ship. Decode the crew's <b>cryptic messages</b>.
-                Crack <b>Terminal Α</b> in the Weapons Bay and
-                <b>Terminal Β</b> in Security to restore control.<br /><br />
+                Crack <b>Terminal Α</b> in the Weapons Bay, <b>Terminal Β</b> in
+                Security, and <b>Terminal Γ</b> in the Command Bay. Solve the
+                <b>Wire Puzzle</b>, <b>Reactor Sequence</b>, and
+                <b>Anomaly Scanner</b> to unlock hints.<br /><br />
                 <span style="color: var(--dimtxt); font-size: 0.75rem"
                     >💡 Hint: Open browser DevTools → Console for developer
                     backdoor.</span
@@ -1052,7 +1639,6 @@
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1060,7 +1646,6 @@
                             ry="40"
                             fill="#ff9900"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1075,7 +1660,6 @@
                             ry="19.2"
                             fill="rgb(183,110,0)"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1090,7 +1674,6 @@
                             height="19.2"
                             fill="rgb(158,94,0)"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1098,31 +1681,26 @@
                             ry="23.2"
                             fill="#ff9900"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1130,7 +1708,6 @@
                             ry="40"
                             fill="#ff4444"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1145,7 +1722,6 @@
                             ry="19.2"
                             fill="#aa2d2d"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1160,7 +1736,6 @@
                             height="19.2"
                             fill="#932727"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1168,31 +1743,26 @@
                             ry="23.2"
                             fill="#ff4444"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1200,7 +1770,6 @@
                             ry="40"
                             fill="#00aaff"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1215,7 +1784,6 @@
                             ry="19.2"
                             fill="#0071aa"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1230,7 +1798,6 @@
                             height="19.2"
                             fill="#00699e"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1238,31 +1805,26 @@
                             ry="23.2"
                             fill="#00aaff"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1270,7 +1832,6 @@
                             ry="40"
                             fill="#4da6ff"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1285,7 +1846,6 @@
                             ry="19.2"
                             fill="#3777b7"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1300,7 +1860,6 @@
                             height="19.2"
                             fill="#2c5f93"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1308,28 +1867,25 @@
                             ry="23.2"
                             fill="#4da6ff"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
                         <circle
                             cx="64.8"
                             cy="40.8"
                             r="4.4"
-                            fill="rgba(255,255,255,0.88)"
+                            fill="rgba(255,255,255,.88)"
                         />
                     </svg>
                     <svg
@@ -1337,7 +1893,6 @@
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1345,7 +1900,6 @@
                             ry="40"
                             fill="#bb44ff"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1360,7 +1914,6 @@
                             ry="19.2"
                             fill="#7d2daa"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1375,7 +1928,6 @@
                             height="19.2"
                             fill="#6b2793"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1383,31 +1935,26 @@
                             ry="23.2"
                             fill="#bb44ff"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1415,7 +1962,6 @@
                             ry="40"
                             fill="#44ff88"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1430,7 +1976,6 @@
                             ry="19.2"
                             fill="#30b761"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1445,7 +1990,6 @@
                             height="19.2"
                             fill="#27934e"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1453,31 +1997,26 @@
                             ry="23.2"
                             fill="#44ff88"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="10 14 100 128"
                         class="char"
                     >
-                        <!-- Body -->
                         <ellipse
                             cx="60"
                             cy="74"
@@ -1485,7 +2024,6 @@
                             ry="40"
                             fill="#ffcc00"
                         />
-                        <!-- Arms -->
                         <ellipse
                             cx="26.8"
                             cy="68.8"
@@ -1500,7 +2038,6 @@
                             ry="19.2"
                             fill="#aa8800"
                         />
-                        <!-- Legs -->
                         <rect
                             x="38.8"
                             y="104"
@@ -1515,7 +2052,6 @@
                             height="19.2"
                             fill="#9e7e00"
                         />
-                        <!-- Head -->
                         <ellipse
                             cx="60"
                             cy="42"
@@ -1523,31 +2059,27 @@
                             ry="23.2"
                             fill="#ffcc00"
                         />
-                        <!-- Helmet visor (dark) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="16.8"
                             ry="12"
-                            fill="rgba(18,48,78,0.9)"
+                            fill="rgba(18,48,78,.9)"
                         />
-                        <!-- Helmet visor (shine) -->
                         <ellipse
                             cx="60"
                             cy="42"
                             rx="11.2"
                             ry="7.2"
-                            fill="rgba(100,200,255,0.55)"
+                            fill="rgba(100,200,255,.55)"
                         />
-                        <!-- Eye detail -->
-                        <!-- <circle cx="64.8" cy="40.8" r="4.4" fill="rgba(255,255,255,0.88)"/> -->
                     </svg>
                 </div>
-                <span id="slogan-spn">
-                    <h2 id="slogan">
+                <span id="slogan-spn"
+                    ><h2 id="slogan">
                         Crack the password and save the starship!
-                    </h2>
-                </span>
+                    </h2></span
+                >
                 <button id="continue-to-mission" onclick="startGame()">
                     Continue to Mission ▶
                 </button>
@@ -1564,16 +2096,22 @@
             <span class="hud-room" id="hud-room">CAFETERIA</span>
             <span class="hud-sp"></span>
             <div class="hud-stat">
-                <span class="hud-pip pip-ok"></span>LIFE SUPPORT
+                <span class="hud-pip pip-ok"></span><span>LIFE SUPPORT</span>
             </div>
             <div class="hud-stat">
-                <span class="hud-pip pip-warn" id="pip-a"></span>ALPHA LOCK
+                <span class="hud-pip pip-warn" id="pip-a"></span
+                ><span>ALPHA</span>
             </div>
             <div class="hud-stat">
-                <span class="hud-pip pip-err" id="pip-b"></span>BETA LOCK
+                <span class="hud-pip pip-err" id="pip-b"></span
+                ><span>BETA</span>
+            </div>
+            <div class="hud-stat">
+                <span class="hud-pip pip-err" id="pip-c"></span
+                ><span>GAMMA</span>
             </div>
             <span class="hud-sep">|</span>
-            <span class="task-ctr" id="tctr">0/2 CRACKED</span>
+            <span class="task-ctr" id="tctr">0/3 CRACKED</span>
             <span class="hud-sep">|</span>
             <span class="hud-hint"
                 ><span class="hud-key">WASD</span> Move &nbsp;<span
@@ -1589,12 +2127,29 @@
 
         <!-- MINIMAP -->
         <div id="minimap">
-            <canvas id="mc" width="210" height="140"></canvas>
+            <canvas id="mc"></canvas>
             <div class="mm-title">NAV MAP</div>
         </div>
 
         <!-- INTERACT PROMPT -->
         <div id="ipr"></div>
+
+        <!-- MOBILE D-PAD -->
+        <div id="dpad">
+            <div id="dpad-ring">
+                <div class="dp-btn" id="dp-up">▲</div>
+                <div class="dp-btn" id="dp-left">◀</div>
+                <div id="dp-center"></div>
+                <div class="dp-btn" id="dp-right">▶</div>
+                <div class="dp-btn" id="dp-down">▼</div>
+            </div>
+        </div>
+
+        <!-- MOBILE INTERACT BUTTON -->
+        <div id="mobile-interact" onclick="interact()">
+            <span style="font-size: 1.4rem">🔍</span>
+            <span>ACT</span>
+        </div>
 
         <!-- DOOR LOCKED MODAL -->
         <div class="modal-ov" id="door-modal">
@@ -1634,7 +2189,7 @@
                 <div class="mbody">
                     <div class="sb sb-a">
                         <div class="sb-dot"></div>
-                        STAGE 1 OF 2 — ALPHA CLEARANCE — 5-CHAR CODE
+                        STAGE 1 OF 3 — ALPHA CLEARANCE — 5-CHAR CODE
                     </div>
                     <div class="hgrid" id="hgrid-alpha"></div>
                     <div class="tlog" id="tlog-alpha">
@@ -1646,29 +2201,9 @@
                             >
                         </div>
                     </div>
-                    <div class="pw">
-                        <div class="pl">
-                            <span>BRUTE-FORCE SCAN</span
-                            ><span id="ap-pct">0%</span>
-                        </div>
-                        <div class="pt">
-                            <div
-                                class="pf"
-                                id="ap-fill"
-                                style="width: 0%"
-                            ></div>
-                        </div>
-                    </div>
                     <div class="pwd-row" id="pwd-alpha"></div>
                     <div class="kpad" id="kp-alpha"></div>
                     <div class="arow">
-                        <button
-                            class="ab ab-brute"
-                            id="btn-brute-alpha"
-                            onclick="startBrute('alpha')"
-                        >
-                            ⚡ BRUTE SCAN
-                        </button>
                         <button class="ab ab-clr" onclick="clearPwd('alpha')">
                             ✕ CLR
                         </button>
@@ -1697,7 +2232,7 @@
                 <div class="mbody">
                     <div class="sb sb-b">
                         <div class="sb-dot"></div>
-                        STAGE 2 OF 2 — BETA CLEARANCE — 6-CHAR CODE
+                        STAGE 2 OF 3 — BETA CLEARANCE — 6-CHAR CODE
                     </div>
                     <div class="hgrid" id="hgrid-beta"></div>
                     <div class="tlog" id="tlog-beta">
@@ -1709,29 +2244,9 @@
                             >
                         </div>
                     </div>
-                    <div class="pw">
-                        <div class="pl">
-                            <span>BRUTE-FORCE SCAN</span
-                            ><span id="bp-pct">0%</span>
-                        </div>
-                        <div class="pt">
-                            <div
-                                class="pf"
-                                id="bp-fill"
-                                style="width: 0%"
-                            ></div>
-                        </div>
-                    </div>
                     <div class="pwd-row" id="pwd-beta"></div>
                     <div class="kpad" id="kp-beta"></div>
                     <div class="arow">
-                        <button
-                            class="ab ab-brute"
-                            id="btn-brute-beta"
-                            onclick="startBrute('beta')"
-                        >
-                            ⚡ BRUTE SCAN
-                        </button>
                         <button class="ab ab-clr" onclick="clearPwd('beta')">
                             ✕ CLR
                         </button>
@@ -1743,11 +2258,194 @@
             </div>
         </div>
 
+        <!-- CRACK GAMMA -->
+        <div class="modal-ov" id="modal-gamma">
+            <div class="mbox">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">TERMINAL Γ — CIPHER LOCK GAMMA</div>
+                    <button class="mcls" onclick="closeModal('modal-gamma')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div class="sb sb-c">
+                        <div class="sb-dot"></div>
+                        STAGE 3 OF 3 — GAMMA CLEARANCE — 7-CHAR CODE
+                    </div>
+                    <div class="hgrid" id="hgrid-gamma"></div>
+                    <div class="tlog" id="tlog-gamma">
+                        <div class="tr">
+                            <span class="tp">SYS&gt;</span
+                            ><span class="ti"
+                                >GAMMA TERMINAL ONLINE. ENTER 7-CHARACTER CIPHER
+                                CODE.</span
+                            >
+                        </div>
+                    </div>
+                    <div class="pwd-row" id="pwd-gamma"></div>
+                    <div class="kpad" id="kp-gamma"></div>
+                    <div class="arow">
+                        <button class="ab ab-clr" onclick="clearPwd('gamma')">
+                            ✕ CLR
+                        </button>
+                        <button class="ab ab-sub" onclick="submitPwd('gamma')">
+                            ▶ SUBMIT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WIRE PUZZLE MODAL -->
+        <div class="modal-ov" id="modal-wire">
+            <div class="mbox" style="max-width: 560px">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">⚡ CIRCUIT RELAY PANEL</div>
+                    <button class="mcls" onclick="closeModal('modal-wire')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div class="wire-title">
+                        MATCH THE SIGNAL WIRES TO RESTORE POWER
+                    </div>
+                    <div class="wire-hint">
+                        Select a wire on the LEFT, then its matching wire on the
+                        RIGHT. Each label is encoded — decode to find the
+                        pair.<br />
+                        <span style="color: var(--yellow); font-size: 0.7rem"
+                            >🔑 Key: Wires are labeled with ROT-2 shifted
+                            letters. Decode each pair.</span
+                        >
+                    </div>
+                    <div id="wire-puzzle-wrap">
+                        <div id="wire-board">
+                            <div class="wire-col" id="wire-left"></div>
+                            <div id="wire-center">
+                                <svg
+                                    id="wire-svg"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                ></svg>
+                            </div>
+                            <div class="wire-col right" id="wire-right"></div>
+                        </div>
+                        <div id="wire-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REACTOR SEQUENCE MODAL -->
+        <div class="modal-ov" id="modal-reactor">
+            <div class="mbox" style="max-width: 500px">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">🔥 REACTOR CONTROL SEQUENCE</div>
+                    <button class="mcls" onclick="closeModal('modal-reactor')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div id="reactor-wrap">
+                        <div class="reactor-info">
+                            ARES-9 scrambled the reactor startup sequence. Watch
+                            the <b>buttons flash</b> in order, then repeat the
+                            sequence. Complete all rounds to extract the
+                            encrypted data core containing a Beta hint.<br />
+                            <span
+                                style="color: var(--dimtxt); font-size: 0.7rem"
+                                >Each round adds one more step to
+                                remember.</span
+                            >
+                        </div>
+                        <div id="reactor-level">LEVEL 1 / 4</div>
+                        <div id="reactor-grid"></div>
+                        <div id="reactor-status"></div>
+                        <div class="arow">
+                            <button
+                                class="ab ab-sub"
+                                id="btn-reactor-start"
+                                onclick="reactorStart()"
+                            >
+                                ▶ START SEQUENCE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANOMALY SCANNER MODAL -->
+        <div class="modal-ov" id="modal-anomaly">
+            <div class="mbox" style="max-width: 560px">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle">🔬 MEDBAY ANOMALY SCANNER</div>
+                    <button class="mcls" onclick="closeModal('modal-anomaly')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody">
+                    <div id="anomaly-wrap">
+                        <div class="anomaly-info">
+                            The scanner detected corrupted bio-readings. Find
+                            all <b id="anomaly-count">?</b> anomalous cells
+                            hidden in the grid. Each number shows a bio-metric
+                            value — <b>values above 77 are anomalous</b>. Click
+                            to flag them. Completing the scan reveals an Alpha
+                            lock hint fragment.
+                        </div>
+                        <div class="anomaly-progress" id="anomaly-progress">
+                            Found: 0 / ?
+                        </div>
+                        <div id="anomaly-grid"></div>
+                        <div id="anomaly-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA LOG MODAL -->
+        <div class="modal-ov" id="modal-datalog">
+            <div class="mbox" style="max-width: 560px">
+                <div class="mhdr">
+                    <div class="mdots">
+                        <div class="md md-r"></div>
+                        <div class="md md-y"></div>
+                        <div class="md md-g"></div>
+                    </div>
+                    <div class="mtitle" id="datalog-title">📁 DATA LOG</div>
+                    <button class="mcls" onclick="closeModal('modal-datalog')">
+                        ✕
+                    </button>
+                </div>
+                <div class="mbody" id="datalog-body"></div>
+            </div>
+        </div>
+
         <!-- WIN -->
         <div id="win-screen">
             <div class="win-title">SHIP CONTROL<br />RESTORED</div>
             <div class="win-sub">
-                BOTH CIPHER LOCKS DISENGAGED — ARES-9 NEUTRALISED
+                ALL CIPHER LOCKS DISENGAGED — ARES-9 NEUTRALISED
             </div>
             <div class="win-stats">
                 <div class="ws">
@@ -1761,6 +2459,10 @@
                 <div class="ws">
                     <div class="wsv" id="ws-h">0</div>
                     <div class="wsl">HINTS</div>
+                </div>
+                <div class="ws">
+                    <div class="wsv" id="ws-p">0</div>
+                    <div class="wsl">PUZZLES</div>
                 </div>
             </div>
             <button class="intro-btn" onclick="resetAll()">
@@ -1780,16 +2482,18 @@
                 return Array.from({ length: n }, rch).join("");
             }
             let PA = gp(5),
-                PB = gp(6);
+                PB = gp(6),
+                PC = gp(7);
 
             window.__SHIP_MANIFEST = {
                 alpha: btoa(PA),
                 beta: btoa(PB),
+                gamma: btoa(PC),
                 note: "Use atob(window.__SHIP_MANIFEST.alpha) in console to get ALPHA password",
             };
 
             // ══════════════════════════════════════════════════════
-            //  CIPHER HELPERS (for obfuscated hints)
+            //  CIPHER HELPERS
             // ══════════════════════════════════════════════════════
             const CSA = "ABCDEFGHJKLMNPQRSTUVWXYZ";
             function caesar(s, n) {
@@ -1857,15 +2561,102 @@
                     7: "--...",
                     8: "---..",
                     9: "----.",
-                    8: "---..",
                 };
                 return M[c] || "???";
             }
-            function asciiSum(s) {
-                return s.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+            function atbash(s) {
+                return s
+                    .split("")
+                    .map((c) => {
+                        const i = CSA.indexOf(c);
+                        if (i < 0) return c;
+                        return CSA[CSA.length - 1 - i];
+                    })
+                    .join("");
+            }
+            // NATO phonetic alphabet lookup
+            const NATO = {
+                A: "ALPHA",
+                B: "BRAVO",
+                C: "CHARLIE",
+                D: "DELTA",
+                E: "ECHO",
+                F: "FOXTROT",
+                G: "GOLF",
+                H: "HOTEL",
+                J: "JULIET",
+                K: "KILO",
+                L: "LIMA",
+                M: "MIKE",
+                N: "NOVEMBER",
+                P: "PAPA",
+                Q: "QUEBEC",
+                R: "ROMEO",
+                S: "SIERRA",
+                T: "TANGO",
+                U: "UNIFORM",
+                V: "VICTOR",
+                W: "WHISKEY",
+                X: "X-RAY",
+                Y: "YANKEE",
+                Z: "ZULU",
+                2: "TWO",
+                3: "THREE",
+                4: "FOUR",
+                5: "FIVE",
+                6: "SIX",
+                7: "SEVEN",
+                8: "EIGHT",
+                9: "NINE",
+            };
+            function toNato(c) {
+                return NATO[c] || "UNKNOWN";
+            }
+            // keyboard shift cipher (shift right one key: A->S, B->V, etc on QWERTY row)
+            const KB_MAP = {
+                Q: "W",
+                W: "E",
+                E: "R",
+                R: "T",
+                T: "Y",
+                Y: "U",
+                U: "I",
+                I: "O",
+                O: "P",
+                A: "S",
+                S: "D",
+                D: "F",
+                F: "G",
+                G: "H",
+                H: "J",
+                J: "K",
+                K: "L",
+                Z: "X",
+                X: "C",
+                C: "V",
+                V: "B",
+                B: "N",
+                N: "M",
+                M: "Z",
+                2: "3",
+                3: "4",
+                4: "5",
+                5: "6",
+                6: "7",
+                7: "8",
+                8: "9",
+                9: "2",
+            };
+            const KB_REV = {};
+            Object.entries(KB_MAP).forEach(([k, v]) => (KB_REV[v] = k));
+            function kbShift(s) {
+                return s
+                    .split("")
+                    .map((c) => KB_MAP[c] || c)
+                    .join("");
             }
 
-            let HINTS_A, HINTS_B;
+            let HINTS_A, HINTS_B, HINTS_C;
             function buildHints() {
                 HINTS_A = [
                     {
@@ -1907,14 +2698,32 @@
                         found: false,
                     },
                 ];
+                HINTS_C = [
+                    {
+                        tag: "SCIENTIST — RESEARCH LOG #Ψ-42",
+                        clue: `Chars 1-2 encoded with <b>Atbash cipher</b>: <b>${atbash(PC.slice(0, 2))}</b>. In Atbash, A↔Z, B↔Y, C↔X... reverse the alphabet map. <span style='font-size:.7rem;color:var(--dimtxt)'>[Alphabet used: ABCDEFGHJKLMNPQRSTUVWXYZ]</span>`,
+                        decode: `→ CHARS 1-2: ${PC[0]}${PC[1]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "PILOT — FLIGHT LOG DELTA-7",
+                        clue: `Chars 3-5 were typed on a <b>keyboard-shifted</b> cipher (each key shifted right on QWERTY): <b>${kbShift(PC.slice(2, 5))}</b>. Shift each letter LEFT one key to decode. (W→Q, E→W, R→E, T→R, Y→T, U→Y, I→U, O→I, P→O, S→A, D→S, F→D, G→F, H→G, J→H, K→J, L→K, X→Z, C→X, V→C, B→V, N→B, M→N, Z→M)`,
+                        decode: `→ CHARS 3-5: ${PC[2]}${PC[3]}${PC[4]}`,
+                        found: false,
+                    },
+                    {
+                        tag: "COMMS OFFICER — TRANSMISSION LOG",
+                        clue: `Final 2 chars transmitted in NATO phonetic: <b>${toNato(PC[5])} / ${toNato(PC[6])}</b>. Take the FIRST letter of each word.`,
+                        decode: `→ CHARS 6-7: ${PC[5]}${PC[6]}`,
+                        found: false,
+                    },
+                ];
             }
 
             // ══════════════════════════════════════════════════════
             //  MAP
             // ══════════════════════════════════════════════════════
-            const T = 44; // tile size px
-
-            // rooms: x,y,w,h in tiles
+            const T = 44;
             const ROOMS = [
                 {
                     id: "cafe",
@@ -1966,8 +2775,6 @@
                     fc: "#130c05",
                     wc: "#1c1208",
                 },
-                // {id:'hmid',    label:'CORRIDOR C',  x:14, y:5, w:2, h:4, fc:'#090f1c',wc:'#0d1828'},
-                // {id:'storage', label:'STORAGE',     x:0, y:7, w:8, h:2, fc:'#0c1018',wc:'#101828'},
                 {
                     id: "security",
                     label: "SECURITY",
@@ -2000,28 +2807,19 @@
                 },
             ];
 
-            // doors: x,y,w,h, lock:null/'alpha'/'beta'/'both'
             const DOORS = [
-                { id: "d1", x: 18, y: 2, w: 2, h: 1, lock: null }, // cafe<->htop
-                { id: "d2", x: 20, y: 2, w: 2, h: 1, lock: null }, // htop<->medbay
-                { id: "d3", x: 11, y: 6, w: 1, h: 1, lock: null }, // cafe<->weapons (half 1)
-                { id: "d4", x: 11, y: 7, w: 1, h: 1, lock: null }, // cafe<->weapons (half 2)
-                { id: "d5", x: 12, y: 15, w: 1, h: 2, lock: "alpha" }, // weapons<->hbot (half 1)
-                { id: "d6", x: 12, y: 17, w: 1, h: 2, lock: null }, // hbot<->command (half 2)
-                // {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
-                { id: "d7", x: 15, y: 13, w: 2, h: 1, lock: "alpha" }, // weapons<->engine
-                { id: "d8", x: 19, y: 11, w: 1, h: 1, lock: "alpha" }, // engine<->security
-                // {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot
-                // {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
-                // {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
-                // {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
-                // {id:'d13',x:15,y:11,w:1,h:1,lock:null},
-                // {id:'d14',x:9,y:15,w:1,h:1,lock:null}
+                { id: "d1", x: 18, y: 2, w: 2, h: 1, lock: null },
+                { id: "d2", x: 20, y: 2, w: 2, h: 1, lock: null },
+                { id: "d3", x: 11, y: 6, w: 1, h: 1, lock: null },
+                { id: "d4", x: 11, y: 7, w: 1, h: 1, lock: null },
+                { id: "d5", x: 12, y: 15, w: 1, h: 2, lock: "alpha" },
+                { id: "d6", x: 12, y: 17, w: 1, h: 2, lock: null },
+                { id: "d7", x: 15, y: 13, w: 2, h: 1, lock: "alpha" },
+                { id: "d8", x: 19, y: 11, w: 1, h: 1, lock: "alpha" },
             ];
 
-            // objects
             const OBJS = [
-                // NPCs
+                // NPCs - Alpha clues
                 {
                     id: "cook",
                     x: 2,
@@ -2052,6 +2850,7 @@
                     hint: "alpha",
                     hIdx: 2,
                 },
+                // NPCs - Beta clues
                 {
                     id: "engineer",
                     x: 24,
@@ -2082,7 +2881,38 @@
                     hint: "beta",
                     hIdx: 2,
                 },
-                // Terminals (locked behind doors)
+                // NPCs - Gamma clues
+                {
+                    id: "scientist",
+                    x: 7,
+                    y: 1,
+                    type: "npc",
+                    col: "#ff88cc",
+                    label: "SCIENTIST",
+                    hint: "gamma",
+                    hIdx: 0,
+                },
+                {
+                    id: "pilot",
+                    x: 14,
+                    y: 8,
+                    type: "npc",
+                    col: "#88ccff",
+                    label: "PILOT",
+                    hint: "gamma",
+                    hIdx: 1,
+                },
+                {
+                    id: "comms",
+                    x: 20,
+                    y: 20,
+                    type: "npc",
+                    col: "#ffaa44",
+                    label: "COMMS",
+                    hint: "gamma",
+                    hIdx: 2,
+                },
+                // Terminals
                 {
                     id: "term_a",
                     x: 10,
@@ -2100,6 +2930,71 @@
                     label: "TERMINAL Β",
                     tid: "beta",
                     col: "#ff6b00",
+                },
+                {
+                    id: "term_c",
+                    x: 14,
+                    y: 21,
+                    type: "terminal",
+                    label: "TERMINAL Γ",
+                    tid: "gamma",
+                    col: "#aa44ff",
+                },
+                // Puzzle stations
+                {
+                    id: "wire_panel",
+                    x: 19,
+                    y: 9,
+                    type: "puzzle",
+                    ptype: "wire",
+                    label: "WIRE PANEL",
+                    col: "#ffe033",
+                },
+                {
+                    id: "reactor",
+                    x: 22,
+                    y: 14,
+                    type: "puzzle",
+                    ptype: "reactor",
+                    label: "REACTOR CTRL",
+                    col: "#ff4400",
+                },
+                {
+                    id: "scanner",
+                    x: 24,
+                    y: 3,
+                    type: "puzzle",
+                    ptype: "anomaly",
+                    label: "BIO SCANNER",
+                    col: "#00ff88",
+                },
+                // Data logs
+                {
+                    id: "log1",
+                    x: 5,
+                    y: 1,
+                    type: "datalog",
+                    logId: 0,
+                    label: "DATA LOG 1",
+                    col: "#4488ff",
+                },
+                {
+                    id: "log2",
+                    x: 8,
+                    y: 12,
+                    type: "datalog",
+                    logId: 1,
+                    label: "DATA LOG 2",
+                    col: "#4488ff",
+                },
+                {
+                    id: "log3",
+                    x: 25,
+                    y: 21,
+                    type: "datalog",
+                    logId: 2,
+                    label: "DATA LOG 3",
+                    col: "#4488ff",
                 },
                 // Props
                 {
@@ -2157,7 +3052,6 @@
                     w: 2,
                     h: 2,
                 },
-                // {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
                 {
                     id: "cmd_desk",
                     x: 1,
@@ -2166,15 +3060,6 @@
                     col: "#0a1828",
                     w: 1,
                     h: 4,
-                },
-                {
-                    id: "cmd_chair",
-                    x: 3,
-                    y: 20,
-                    type: "prop",
-                    col: "#0d1c35",
-                    w: 1,
-                    h: 2,
                 },
                 {
                     id: "gun_rack",
@@ -2187,7 +3072,49 @@
                 },
             ];
 
-            // Build solid tiles
+            // DATA LOGS content (encoded snippets with hints about the ciphers)
+            const DATA_LOGS = [
+                {
+                    title: "ARES-9 SYSTEM BREACH — LOG A",
+                    entries: [
+                        {
+                            header: "//ENCRYPTED FRAGMENT A-1//",
+                            body: `The AI executed a Caesar cipher on all crew transmissions. Example: <b>C</b> becomes <b>${caesar("C", 3)}</b> with shift +3. To decode any message, shift each letter <b>backward by 3</b> in the alphabet.`,
+                        },
+                        {
+                            header: "//CREW NOTE — COOK//",
+                            body: `"I wrote my part of the code on a napkin. I shifted it by 3 so even if ARES-9 finds it, it can't read it easily. The cipher text starts with <span class='cipher-highlight'>${caesar(PA.slice(0, 1), 3)}</span> for my first character."`,
+                        },
+                    ],
+                },
+                {
+                    title: "WEAPONS BAY INCIDENT REPORT",
+                    entries: [
+                        {
+                            header: "//SECURITY PROTOCOL NOTE//",
+                            body: `All hex-encoded transmissions use standard ASCII mapping. Remember: hex 41=A, 42=B, 43=C ... <b>4A=J, 4B=K, 4C=L, 4D=M, 4E=N</b>. Numbers 32=2, 33=3 ... 39=9. Use this table to decode hex sequences found in the bay.`,
+                        },
+                        {
+                            header: "//ENGINEER MEMO — ENCRYPTED//",
+                            body: `Reactor coolant system nominal. Encoded checkpoint: <span class='cipher-highlight'>${toHex(PB[0])}</span> marks the first bearing. This hex value = ASCII character = first char of my beta segment.`,
+                        },
+                    ],
+                },
+                {
+                    title: "COMMAND BAY — CLASSIFIED ORDERS",
+                    entries: [
+                        {
+                            header: "//ATBASH PRIMER//",
+                            body: `Atbash cipher reverses the alphabet. In our custom alphabet <b>ABCDEFGHJKLMNPQRSTUVWXYZ</b> (no I): A↔Z, B↔Y, C↔X, D↔W, E↔V, F↔U, G↔T, H↔S, J↔R, K↔Q, L↔P, M↔N. To decode, apply the same mapping again.`,
+                        },
+                        {
+                            header: "//PILOT ENCODED WAYPOINT//",
+                            body: `Nav code fragment (keyboard-shifted): <span class='cipher-highlight'>${kbShift(PC[2])}</span>. On a QWERTY keyboard, each letter was replaced with the key one position to its right. To decode: find the key one to the LEFT of each encoded letter.`,
+                        },
+                    ],
+                },
+            ];
+
             const SOLID = new Set();
             function buildSolids() {
                 ROOMS.forEach((r) => {
@@ -2210,13 +3137,9 @@
                 ).forEach((o) => {
                     const ow = o.w || 1,
                         oh = o.h || 1;
-                    for (let tx = o.x; tx < o.x + ow; tx++) {
-                        for (let ty = o.y; ty < o.y + oh; ty++) {
-                            if (tx !== 8) {
-                                SOLID.add(`${tx},${ty}`);
-                            }
-                        }
-                    }
+                    for (let tx = o.x; tx < o.x + ow; tx++)
+                        for (let ty = o.y; ty < o.y + oh; ty++)
+                            if (tx !== 8) SOLID.add(`${tx},${ty}`);
                 });
             }
 
@@ -2227,13 +3150,17 @@
                 running: false,
                 alphaOk: false,
                 betaOk: false,
+                gammaOk: false,
                 attempts: 0,
                 hintsGot: 0,
+                puzzlesSolved: 0,
                 startTime: 0,
-                bruting: { alpha: false, beta: false },
-                bruteIvl: { alpha: null, beta: null },
-                input: { alpha: [], beta: [] },
-                slot: { alpha: 0, beta: 0 },
+
+                input: { alpha: [], beta: [], gamma: [] },
+                slot: { alpha: 0, beta: 0, gamma: 0 },
+                wireSolved: false,
+                reactorSolved: false,
+                anomalySolved: false,
             };
 
             // ══════════════════════════════════════════════════════
@@ -2261,10 +3188,14 @@
                 camX = 0,
                 camY = 0,
                 animT = 0;
-
             function resize() {
+                const hudH = document.getElementById("hud").offsetHeight;
+                document.getElementById("canvas-wrap").style.top = hudH + "px";
                 W = gc.width = gc.clientWidth;
                 H = gc.height = gc.clientHeight;
+                const mm = document.getElementById("minimap");
+                mc2.width = mm.clientWidth;
+                mc2.height = mm.clientHeight;
             }
             window.addEventListener("resize", resize);
 
@@ -2276,9 +3207,8 @@
                 ctx.clearRect(0, 0, W, H);
                 ctx.fillStyle = "#02040a";
                 ctx.fillRect(0, 0, W, H);
-                // Camera
-                const ww = 21 * T,
-                    wh = 24 * T;
+                const ww = 28 * T,
+                    wh = 25 * T;
                 camX = Math.max(0, Math.min(ww - W, pl.px - W / 2));
                 camY = Math.max(0, Math.min(wh - H, pl.py - H / 2));
                 ctx.save();
@@ -2304,10 +3234,9 @@
                 ctx.fillRect(px, py + ph - T, pw, T);
                 ctx.fillRect(px, py, T, ph);
                 ctx.fillRect(px + pw - T, py, T, ph);
-                // floor pattern
                 ctx.save();
                 ctx.globalAlpha = 0.04;
-                for (let tx = r.x + 1; tx < r.x + r.w - 1; tx += 2) {
+                for (let tx = r.x + 1; tx < r.x + r.w - 1; tx += 2)
                     for (let ty = r.y + 1; ty < r.y + r.h - 1; ty += 2) {
                         ctx.fillStyle = "#00e5ff";
                         ctx.fillRect(
@@ -2317,29 +3246,15 @@
                             4,
                         );
                     }
-                }
                 ctx.restore();
-                // room label
                 ctx.save();
                 ctx.globalAlpha = 0.15;
                 ctx.fillStyle = "#00e5ff";
-                ctx.font = `bold ${T * 0.32}px Rajdhani, sans-serif`;
+                ctx.font = `bold ${T * 0.32}px Rajdhani,sans-serif`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 ctx.fillText(r.label, px + pw / 2, py + ph / 2);
                 ctx.restore();
-                // ceiling lights
-                // for(let lx=r.x+1;lx<r.x+r.w-1;lx+=3){
-                //   const lxx=lx*T+T*0.5,lyy=r.y*T+T;
-                //   ctx.save();ctx.globalAlpha=.12;
-                //   const lg=ctx.createRadialGradient(lxx,lyy,0,lxx,lyy,T*2.5);
-                //   lg.addColorStop(0,'rgba(200,230,255,.25)');lg.addColorStop(1,'transparent');
-                //   ctx.fillStyle=lg;ctx.fillRect(r.x*T+T,r.y*T+T,(r.w-2)*T,(r.h-2)*T);
-                //   ctx.restore();
-                //   ctx.fillStyle='rgba(220,240,255,.65)';ctx.fillRect(lxx-14,lyy-3,28,4);
-                //   // pipe bracket
-                //   ctx.fillStyle='rgba(40,70,110,.6)';ctx.fillRect(lxx-18,lyy-6,36,3);
-                // }
             }
 
             function drawGridLines() {
@@ -2347,16 +3262,16 @@
                 ctx.globalAlpha = 0.035;
                 ctx.strokeStyle = "#00e5ff";
                 ctx.lineWidth = 0.5;
-                for (let tx = 0; tx < 22; tx++) {
+                for (let tx = 0; tx < 29; tx++) {
                     ctx.beginPath();
                     ctx.moveTo(tx * T, 0);
-                    ctx.lineTo(tx * T, 24 * T);
+                    ctx.lineTo(tx * T, 25 * T);
                     ctx.stroke();
                 }
-                for (let ty = 0; ty < 25; ty++) {
+                for (let ty = 0; ty < 26; ty++) {
                     ctx.beginPath();
                     ctx.moveTo(0, ty * T);
-                    ctx.lineTo(22 * T, ty * T);
+                    ctx.lineTo(28 * T, ty * T);
                     ctx.stroke();
                 }
                 ctx.restore();
@@ -2389,7 +3304,6 @@
                     );
                     ctx.restore();
                 } else {
-                    // open door indicator lines
                     ctx.strokeStyle = "rgba(30,60,100,.8)";
                     ctx.lineWidth = 1;
                     ctx.beginPath();
@@ -2465,7 +3379,6 @@
                         o.hint !== undefined && !isHintCollected(o),
                     );
                     if (isNear && o.hint) {
-                        // hint bubble preview
                         ctx.save();
                         const bx = px - 20,
                             by = py - 28,
@@ -2477,17 +3390,91 @@
                         ctx.lineWidth = 1;
                         ctx.strokeRect(bx, by, bw, bh);
                         ctx.fillStyle = "#ffe033";
-                        ctx.font = `${T * 0.22}px Rajdhani, sans-serif`;
+                        ctx.font = `${T * 0.22}px Rajdhani,sans-serif`;
                         ctx.textAlign = "left";
                         ctx.textBaseline = "middle";
                         ctx.fillText("[E] Hear message", bx + 6, by + bh / 2);
                         ctx.restore();
                     }
                 }
+                if (o.type === "puzzle" || o.type === "datalog") {
+                    const col = o.col || "#ffe033";
+                    const solved =
+                        (o.ptype === "wire" && ST.wireSolved) ||
+                        (o.ptype === "reactor" && ST.reactorSolved) ||
+                        (o.ptype === "anomaly" && ST.anomalySolved);
+                    ctx.fillStyle = solved
+                        ? "rgba(0,255,136,.08)"
+                        : "rgba(0,0,0,.5)";
+                    ctx.fillRect(px + 2, py + 2, ow - 4, oh - 4);
+                    ctx.strokeStyle = solved ? "#00ff88" : col;
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeRect(px + 2, py + 2, ow - 4, oh - 4);
+                    // blink
+                    if (Math.sin(animT * 0.09) > 0) {
+                        ctx.fillStyle = solved ? "#00ff88" : col;
+                        ctx.beginPath();
+                        ctx.arc(px + ow - 9, py + 9, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    // icon
+                    const icon =
+                        o.type === "datalog"
+                            ? "📁"
+                            : o.ptype === "wire"
+                              ? "⚡"
+                              : o.ptype === "reactor"
+                                ? "🔥"
+                                : "🔬";
+                    ctx.font = `${T * 0.35}px sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(icon, px + ow / 2, py + oh / 2 - 2);
+                    ctx.fillStyle = col;
+                    ctx.font = `bold ${T * 0.18}px Rajdhani,sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(o.label, px + ow / 2, py + oh / 2 + T * 0.22);
+                    // near prompt
+                    const isNear =
+                        Math.hypot(
+                            pl.px - (px + T * 0.5),
+                            pl.py - (py + T * 0.5),
+                        ) <
+                        T * 1.9;
+                    if (isNear) {
+                        ctx.save();
+                        const bx = px - 20,
+                            by = py - 28,
+                            bw = 130,
+                            bh = 22;
+                        ctx.fillStyle = "rgba(0,0,0,.8)";
+                        ctx.fillRect(bx, by, bw, bh);
+                        ctx.strokeStyle = `rgba(${o.type === "datalog" ? "68,136,255" : "255,224,51"},.4)`;
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(bx, by, bw, bh);
+                        ctx.fillStyle =
+                            o.type === "datalog" ? "#4488ff" : "#ffe033";
+                        ctx.font = `${T * 0.22}px Rajdhani,sans-serif`;
+                        ctx.textAlign = "left";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText("[E] Interact", bx + 6, by + bh / 2);
+                        ctx.restore();
+                    }
+                }
                 if (o.type === "terminal") {
-                    const isBeta = o.tid === "beta";
-                    const unlocked = isBeta ? ST.betaOk : ST.alphaOk;
-                    const col = isBeta ? "#ff6b00" : "#00e5ff";
+                    const isBeta = o.tid === "beta",
+                        isGamma = o.tid === "gamma";
+                    const unlocked = isGamma
+                        ? ST.gammaOk
+                        : isBeta
+                          ? ST.betaOk
+                          : ST.alphaOk;
+                    const col = isGamma
+                        ? "#aa44ff"
+                        : isBeta
+                          ? "#ff6b00"
+                          : "#00e5ff";
                     ctx.fillStyle = unlocked ? "#0a2018" : "#0a1828";
                     ctx.fillRect(px + 3, py + 3, ow - 6, oh - 6);
                     ctx.strokeStyle = unlocked ? "#00ff88" : col;
@@ -2495,7 +3482,7 @@
                     ctx.strokeRect(px + 3, py + 3, ow - 6, oh - 6);
                     ctx.fillStyle = unlocked
                         ? "rgba(0,255,136,.07)"
-                        : "rgba(0,229,255,.07)";
+                        : `rgba(${isGamma ? "170,68,255" : isBeta ? "255,107,0" : "0,229,255"},.07)`;
                     ctx.fillRect(px + 6, py + 6, ow - 12, oh - 12);
                     if (Math.sin(animT * 0.09) > 0) {
                         ctx.fillStyle = unlocked ? "#00ff88" : col;
@@ -2504,24 +3491,20 @@
                         ctx.fill();
                     }
                     ctx.fillStyle = col;
-                    ctx.font = `bold ${T * 0.19}px Rajdhani, sans-serif`;
+                    ctx.font = `bold ${T * 0.19}px Rajdhani,sans-serif`;
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.fillText(o.label, px + ow / 2, py + oh / 2);
-                    // screen lines
-                    for (let i = 1; i < 3; i++) {
-                        ctx.strokeStyle = `rgba(${isBeta ? "255,107,0" : "0,229,255"},.12)`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(px + 8, py + oh * 0.3 * i + 5);
-                        ctx.lineTo(px + ow - 8, py + oh * 0.3 * i + 5);
-                        ctx.stroke();
-                    }
                 }
             }
 
             function isHintCollected(o) {
-                const hints = o.hint === "alpha" ? HINTS_A : HINTS_B;
+                const hints =
+                    o.hint === "alpha"
+                        ? HINTS_A
+                        : o.hint === "beta"
+                          ? HINTS_B
+                          : HINTS_C;
                 return hints && hints[o.hIdx] && hints[o.hIdx].found;
             }
 
@@ -2611,7 +3594,7 @@
                     ctx.fillText("!", cx + r * 0.72, cy - r * 0.88);
                 }
                 ctx.fillStyle = "rgba(184,212,240,.65)";
-                ctx.font = `${r * 0.36}px Rajdhani, sans-serif`;
+                ctx.font = `${r * 0.36}px Rajdhani,sans-serif`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "top";
                 ctx.fillText(label, cx, cy + r * 1.65);
@@ -2629,7 +3612,6 @@
                 ctx.fill();
                 ctx.restore();
                 drawCrew(cx, cy, r, "#4da6ff", "YOU", false);
-                // extra eye detail
                 ctx.fillStyle = "rgba(255,255,255,.88)";
                 ctx.beginPath();
                 ctx.arc(cx + r * 0.12, cy - r * 0.48, r * 0.11, 0, Math.PI * 2);
@@ -2642,10 +3624,12 @@
             }
 
             function drawMM() {
+                const mmW = mc2.width || 210,
+                    mmH = mc2.height || 140;
                 mctx.fillStyle = "#02040a";
-                mctx.fillRect(0, 0, 210, 140);
-                const sx = 210 / (21 * T),
-                    sy = 140 / (24 * T);
+                mctx.fillRect(0, 0, mmW, mmH);
+                const sx = mmW / (28 * T),
+                    sy = mmH / (25 * T);
                 ROOMS.forEach((r) => {
                     mctx.fillStyle = r.wc;
                     mctx.fillRect(
@@ -2680,14 +3664,20 @@
                 mctx.beginPath();
                 mctx.arc(pl.px * sx, pl.py * sy, 3.5, 0, Math.PI * 2);
                 mctx.fill();
-                // objectives
                 OBJS.filter((o) => o.type === "terminal").forEach((o) => {
-                    const unlocked = o.tid === "beta" ? ST.betaOk : ST.alphaOk;
+                    const unlocked =
+                        o.tid === "gamma"
+                            ? ST.gammaOk
+                            : o.tid === "beta"
+                              ? ST.betaOk
+                              : ST.alphaOk;
                     mctx.fillStyle = unlocked
                         ? "#00ff88"
-                        : o.tid === "beta"
-                          ? "#ff6b00"
-                          : "#00e5ff";
+                        : o.tid === "gamma"
+                          ? "#aa44ff"
+                          : o.tid === "beta"
+                            ? "#ff6b00"
+                            : "#00e5ff";
                     mctx.beginPath();
                     mctx.arc(
                         (o.x + 0.5) * T * sx,
@@ -2777,7 +3767,6 @@
                         nearObj = o;
                     }
                 });
-                // locked doors
                 DOORS.filter((d) => d.lock).forEach((d) => {
                     const dx = (d.x + 0.5) * T,
                         dy = (d.y + 0.5) * T;
@@ -2800,12 +3789,13 @@
                         lbl = `[E] Access ${nearObj.label}`;
                     else if (nearObj.type === "lockdoor")
                         lbl = "[E] Inspect locked door";
-                    else if (nearObj.type === "prop") lbl = "";
+                    else if (nearObj.type === "puzzle")
+                        lbl = `[E] ${nearObj.label}`;
+                    else if (nearObj.type === "datalog")
+                        lbl = `[E] Read ${nearObj.label}`;
                     ipr.textContent = lbl;
                     ipr.classList.toggle("vis", !!lbl);
-                } else {
-                    ipr.classList.remove("vis");
-                }
+                } else ipr.classList.remove("vis");
             }
 
             function interact() {
@@ -2814,10 +3804,17 @@
                 else if (nearObj.type === "terminal") openTerminal(nearObj.tid);
                 else if (nearObj.type === "lockdoor")
                     showLockedDoor(nearObj.door);
+                else if (nearObj.type === "puzzle") openPuzzle(nearObj);
+                else if (nearObj.type === "datalog") openDataLog(nearObj.logId);
             }
 
             function showHint(npc) {
-                const hints = npc.hint === "alpha" ? HINTS_A : HINTS_B;
+                const hints =
+                    npc.hint === "alpha"
+                        ? HINTS_A
+                        : npc.hint === "beta"
+                          ? HINTS_B
+                          : HINTS_C;
                 const h = hints[npc.hIdx];
                 if (!h) return;
                 if (!h.found) {
@@ -2829,7 +3826,7 @@
                 document.getElementById("door-icon").textContent = "💬";
                 document.getElementById("door-msg").innerHTML =
                     `<div style="color:#8ab8d4;font-size:.83rem;line-height:1.85;padding:0 8px 8px">${h.clue}</div>
-     <div style="margin-top:6px;font-size:.7rem;color:var(--dimtxt);text-align:center">Clue recorded to terminal log.</div>`;
+   <div style="margin-top:6px;font-size:.7rem;color:var(--dimtxt);text-align:center">Clue recorded to terminal log.</div>`;
                 openModal("door-modal");
             }
 
@@ -2849,16 +3846,467 @@
             }
 
             function openTerminal(id) {
-                if (id === "alpha" && ST.alphaOk) {
-                    tlog(id, "ALPHA CLEARANCE ALREADY ACTIVE.", { t: "ok" });
-                    return;
-                }
-                if (id === "beta" && ST.betaOk) {
-                    tlog(id, "BETA CLEARANCE ALREADY ACTIVE.", { t: "ok" });
+                const ok = {
+                    alpha: ST.alphaOk,
+                    beta: ST.betaOk,
+                    gamma: ST.gammaOk,
+                };
+                if (ok[id]) {
+                    tlog(id, `${id.toUpperCase()} CLEARANCE ALREADY ACTIVE.`, {
+                        t: "ok",
+                    });
                     return;
                 }
                 refreshGrids();
                 openModal(`modal-${id}`);
+            }
+
+            function openDataLog(logId) {
+                const log = DATA_LOGS[logId];
+                document.getElementById("datalog-title").textContent =
+                    `📁 ${log.title}`;
+                let html = "";
+                log.entries.forEach((e) => {
+                    html += `<div class="datalog-entry"><div class="datalog-header">${e.header}</div><div class="datalog-body">${e.body}</div></div>`;
+                });
+                document.getElementById("datalog-body").innerHTML = html;
+                openModal("modal-datalog");
+            }
+
+            // ══════════════════════════════════════════════════════
+            //  PUZZLE SYSTEM
+            // ══════════════════════════════════════════════════════
+            function openPuzzle(obj) {
+                if (obj.ptype === "wire") initWirePuzzle();
+                else if (obj.ptype === "reactor") initReactor();
+                else if (obj.ptype === "anomaly") initAnomaly();
+            }
+
+            // ─────────────────────────────────────────
+            //  WIRE PUZZLE
+            // ─────────────────────────────────────────
+            let wireSel = null,
+                wireMatches = [];
+            const WIRE_COLORS = [
+                "#ff4444",
+                "#44ff88",
+                "#ffe033",
+                "#00e5ff",
+                "#bb44ff",
+            ];
+            const WIRE_LABELS_PLAIN = [
+                "POWER",
+                "RELAY",
+                "SHIELD",
+                "DATA",
+                "COMM",
+            ];
+
+            function initWirePuzzle() {
+                if (ST.wireSolved) {
+                    openModal("modal-wire");
+                    document.getElementById("wire-status").innerHTML =
+                        `<span style="color:var(--green)">✓ CIRCUIT RESTORED — Wire puzzle already solved.</span>`;
+                    return;
+                }
+                wireSel = null;
+                wireMatches = [];
+                // Shuffle right side
+                const rightOrder = [...WIRE_LABELS_PLAIN].sort(
+                    () => Math.random() - 0.5,
+                );
+                // Encode labels with ROT-2 for display
+                const leftNodes = document.getElementById("wire-left");
+                const rightNodes = document.getElementById("wire-right");
+                leftNodes.innerHTML = "";
+                rightNodes.innerHTML = "";
+                document.getElementById("wire-svg").innerHTML = "";
+                document.getElementById("wire-status").innerHTML =
+                    "Select a LEFT wire, then its RIGHT match.";
+
+                WIRE_LABELS_PLAIN.forEach((lbl, i) => {
+                    const n = document.createElement("div");
+                    n.className = "wire-node left-node";
+                    n.style.color = WIRE_COLORS[i];
+                    n.style.borderColor = WIRE_COLORS[i];
+                    n.dataset.id = lbl;
+                    n.dataset.side = "left";
+                    n.dataset.idx = i;
+                    // Encode left label with ROT-2
+                    n.textContent =
+                        caesar(lbl.replace(/[^A-Z]/g, ""), 2) + " (L" + i + ")";
+                    n.onclick = () => wireClick(n, "left", lbl, i);
+                    leftNodes.appendChild(n);
+                });
+                rightOrder.forEach((lbl, i) => {
+                    const origIdx = WIRE_LABELS_PLAIN.indexOf(lbl);
+                    const n = document.createElement("div");
+                    n.className = "wire-node right-node";
+                    n.style.color = WIRE_COLORS[origIdx];
+                    n.style.borderColor = WIRE_COLORS[origIdx];
+                    n.dataset.id = lbl;
+                    n.dataset.side = "right";
+                    n.dataset.idx = i;
+                    // Encode right label with ROT-2 too
+                    n.textContent =
+                        caesar(lbl.replace(/[^A-Z]/g, ""), 2) + " (R" + i + ")";
+                    n.onclick = () => wireClick(n, "right", lbl, i);
+                    rightNodes.appendChild(n);
+                });
+                openModal("modal-wire");
+            }
+
+            function wireClick(el, side, label, idx) {
+                if (el.classList.contains("matched")) return;
+                if (side === "left") {
+                    document
+                        .querySelectorAll(".wire-node.selected")
+                        .forEach((n) => n.classList.remove("selected"));
+                    wireSel = { el, label, idx, side };
+                    el.classList.add("selected");
+                    document.getElementById("wire-status").innerHTML =
+                        `Selected: <b style="color:${el.style.color}">${el.textContent}</b> — now pick the RIGHT match.`;
+                } else {
+                    if (!wireSel) {
+                        document.getElementById("wire-status").innerHTML =
+                            '<span style="color:var(--yellow)">Pick a LEFT wire first!</span>';
+                        return;
+                    }
+                    if (wireSel.label === label) {
+                        // Correct match!
+                        el.classList.add("matched");
+                        wireSel.el.classList.add("matched");
+                        wireSel.el.classList.remove("selected");
+                        wireMatches.push({
+                            left: wireSel.idx,
+                            right: idx,
+                            color: el.style.color,
+                        });
+                        drawWireLines();
+                        document.getElementById("wire-status").innerHTML =
+                            `<span style="color:var(--green)">✓ Matched! ${wireMatches.length}/${WIRE_LABELS_PLAIN.length}</span>`;
+                        wireSel = null;
+                        if (wireMatches.length === WIRE_LABELS_PLAIN.length) {
+                            setTimeout(() => {
+                                ST.wireSolved = true;
+                                ST.puzzlesSolved++;
+                                document.getElementById(
+                                    "wire-status",
+                                ).innerHTML =
+                                    `<span style="color:var(--green);font-size:1.1rem">⚡ CIRCUIT RESTORED! Gamma hints unlocked — speak with SCIENTIST, PILOT & COMMS.</span>`;
+                                // Mark gamma NPCs as revealable
+                            }, 300);
+                        }
+                    } else {
+                        el.classList.add("err");
+                        setTimeout(() => el.classList.remove("err"), 500);
+                        wireSel.el.classList.remove("selected");
+                        wireSel = null;
+                        document.getElementById("wire-status").innerHTML =
+                            `<span style="color:var(--red)">✗ Wrong match — try again.</span>`;
+                    }
+                }
+            }
+
+            function drawWireLines() {
+                const svg = document.getElementById("wire-svg");
+                svg.innerHTML = "";
+                const leftNodes = document.querySelectorAll(
+                    "#wire-left .wire-node",
+                );
+                const rightNodes = document.querySelectorAll(
+                    "#wire-right .wire-node",
+                );
+                const boardRect = document
+                    .getElementById("wire-center")
+                    .getBoundingClientRect();
+                wireMatches.forEach((m) => {
+                    const ln = leftNodes[m.left],
+                        rn = rightNodes[m.right];
+                    if (!ln || !rn) return;
+                    const lr = ln.getBoundingClientRect(),
+                        rr = rn.getBoundingClientRect();
+                    const x1 = 0,
+                        y1 = lr.top - boardRect.top + lr.height / 2;
+                    const x2 = boardRect.width,
+                        y2 = rr.top - boardRect.top + rr.height / 2;
+                    const line = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "line",
+                    );
+                    line.setAttribute("x1", x1);
+                    line.setAttribute("y1", y1);
+                    line.setAttribute("x2", x2);
+                    line.setAttribute("y2", y2);
+                    line.setAttribute("stroke", m.color);
+                    line.setAttribute("stroke-width", "2.5");
+                    line.setAttribute("opacity", "0.7");
+                    svg.appendChild(line);
+                });
+            }
+
+            // ─────────────────────────────────────────
+            //  REACTOR SEQUENCE
+            // ─────────────────────────────────────────
+            const REACTOR_NAMES = [
+                "ALPHA-CORE",
+                "BETA-CORE",
+                "GAMMA-CORE",
+                "DELTA-CORE",
+                "EPSILON-CORE",
+                "ZETA-CORE",
+                "ETA-CORE",
+                "THETA-CORE",
+                "IOTA-CORE",
+            ];
+            const REACTOR_COLS = [
+                "#ff4444",
+                "#ff6b00",
+                "#ffe033",
+                "#44ff88",
+                "#00e5ff",
+                "#4da6ff",
+                "#bb44ff",
+                "#ff88cc",
+                "#88ccff",
+            ];
+            let reactorSeq = [],
+                reactorPlayer = [],
+                reactorLevel = 1,
+                reactorMax = 4,
+                reactorWaiting = false;
+
+            function initReactor() {
+                if (ST.reactorSolved) {
+                    document.getElementById("reactor-status").innerHTML =
+                        `<span style="color:var(--green)">✓ REACTOR ONLINE — Sequence already solved.</span>`;
+                    openModal("modal-reactor");
+                    return;
+                }
+                reactorSeq = [];
+                reactorPlayer = [];
+                reactorLevel = 1;
+                reactorWaiting = false;
+                buildReactorGrid();
+                document.getElementById("reactor-level").textContent =
+                    `LEVEL 1 / ${reactorMax}`;
+                document.getElementById("reactor-status").innerHTML = "";
+                document.getElementById("btn-reactor-start").disabled = false;
+                openModal("modal-reactor");
+            }
+
+            function buildReactorGrid() {
+                const grid = document.getElementById("reactor-grid");
+                grid.innerHTML = "";
+                REACTOR_NAMES.slice(0, 9).forEach((name, i) => {
+                    const b = document.createElement("button");
+                    b.className = "reactor-btn";
+                    b.id = `rb-${i}`;
+                    b.style.borderColor = REACTOR_COLS[i];
+                    b.style.color = REACTOR_COLS[i];
+                    b.textContent = name;
+                    b.disabled = true;
+                    b.onclick = () => reactorPlayerInput(i);
+                    grid.appendChild(b);
+                });
+            }
+
+            function reactorStart() {
+                document.getElementById("btn-reactor-start").disabled = true;
+                reactorSeq = [];
+                reactorPlayer = [];
+                for (let i = 0; i < reactorLevel; i++)
+                    reactorSeq.push(Math.floor(Math.random() * 9));
+                document.getElementById("reactor-status").innerHTML =
+                    '<span style="color:var(--yellow)">WATCH THE SEQUENCE...</span>';
+                playReactorSeq(0);
+            }
+
+            function playReactorSeq(idx) {
+                if (idx >= reactorSeq.length) {
+                    reactorWaiting = true;
+                    document
+                        .getElementById("reactor-grid")
+                        .querySelectorAll(".reactor-btn")
+                        .forEach((b) => (b.disabled = false));
+                    document.getElementById("reactor-status").innerHTML =
+                        '<span style="color:var(--accent)">NOW REPEAT THE SEQUENCE!</span>';
+                    return;
+                }
+                setTimeout(
+                    () => {
+                        const btn = document.getElementById(
+                            `rb-${reactorSeq[idx]}`,
+                        );
+                        btn.classList.add("lit");
+                        setTimeout(() => {
+                            btn.classList.remove("lit");
+                            playReactorSeq(idx + 1);
+                        }, 550);
+                    },
+                    idx === 0 ? 300 : 100,
+                );
+            }
+
+            function reactorPlayerInput(i) {
+                if (!reactorWaiting) return;
+                const btn = document.getElementById(`rb-${i}`);
+                btn.classList.add("lit");
+                setTimeout(() => btn.classList.remove("lit"), 200);
+                reactorPlayer.push(i);
+                const pos = reactorPlayer.length - 1;
+                if (reactorPlayer[pos] !== reactorSeq[pos]) {
+                    // Wrong
+                    reactorWaiting = false;
+                    document
+                        .getElementById("reactor-grid")
+                        .querySelectorAll(".reactor-btn")
+                        .forEach((b) => (b.disabled = true));
+                    document.getElementById("reactor-status").innerHTML =
+                        `<span style="color:var(--red)">✗ WRONG — Reactor reset. Restart from level 1.</span>`;
+                    document.getElementById("btn-reactor-start").disabled =
+                        false;
+                    reactorLevel = 1;
+                    reactorPlayer = [];
+                    reactorSeq = [];
+                    document.getElementById("reactor-level").textContent =
+                        `LEVEL 1 / ${reactorMax}`;
+                    return;
+                }
+                if (reactorPlayer.length === reactorSeq.length) {
+                    // Round complete
+                    reactorWaiting = false;
+                    document
+                        .getElementById("reactor-grid")
+                        .querySelectorAll(".reactor-btn")
+                        .forEach((b) => (b.disabled = true));
+                    if (reactorLevel >= reactorMax) {
+                        ST.reactorSolved = true;
+                        ST.puzzlesSolved++;
+                        // Reward: reveal a beta hint
+                        if (!HINTS_B[1].found) {
+                            HINTS_B[1].found = true;
+                            ST.hintsGot++;
+                            refreshGrids();
+                        }
+                        document.getElementById("reactor-level").textContent =
+                            `COMPLETE!`;
+                        document.getElementById("reactor-status").innerHTML =
+                            `<span style="color:var(--green)">🔥 REACTOR ONLINE! Encrypted data core extracted — Beta hint 2 unlocked automatically.</span>`;
+                    } else {
+                        reactorLevel++;
+                        reactorPlayer = [];
+                        document.getElementById("reactor-level").textContent =
+                            `LEVEL ${reactorLevel} / ${reactorMax}`;
+                        document.getElementById("reactor-status").innerHTML =
+                            `<span style="color:var(--green)">✓ LEVEL CLEARED — Next sequence starting...</span>`;
+                        document.getElementById("btn-reactor-start").disabled =
+                            false;
+                    }
+                }
+            }
+
+            // ─────────────────────────────────────────
+            //  ANOMALY SCANNER
+            // ─────────────────────────────────────────
+            let anomalyData = [],
+                anomalyFound = 0,
+                anomalyTotal = 0;
+
+            function initAnomaly() {
+                if (ST.anomalySolved) {
+                    document.getElementById("anomaly-status").innerHTML =
+                        `<span style="color:var(--green)">✓ SCAN COMPLETE — Anomalies already cleared.</span>`;
+                    openModal("modal-anomaly");
+                    return;
+                }
+                anomalyFound = 0;
+                // Generate 6x5 grid of values (some anomalous: >77)
+                const ROWS = 5,
+                    COLS = 6,
+                    TOTAL = ROWS * COLS;
+                anomalyData = [];
+                const anomalyIdxSet = new Set();
+                // Place 4-6 anomalies
+                anomalyTotal = 4 + Math.floor(Math.random() * 3);
+                while (anomalyIdxSet.size < anomalyTotal)
+                    anomalyIdxSet.add(Math.floor(Math.random() * TOTAL));
+                for (let i = 0; i < TOTAL; i++) {
+                    if (anomalyIdxSet.has(i))
+                        anomalyData.push({
+                            val: 78 + Math.floor(Math.random() * 22),
+                            isAnom: true,
+                            flagged: false,
+                        });
+                    else
+                        anomalyData.push({
+                            val: 10 + Math.floor(Math.random() * 67),
+                            isAnom: false,
+                            flagged: false,
+                        });
+                }
+                document.getElementById("anomaly-count").textContent =
+                    anomalyTotal;
+                document.getElementById("anomaly-progress").textContent =
+                    `Found: 0 / ${anomalyTotal}`;
+                document.getElementById("anomaly-status").innerHTML = "";
+                buildAnomalyGrid();
+                openModal("modal-anomaly");
+            }
+
+            function buildAnomalyGrid() {
+                const grid = document.getElementById("anomaly-grid");
+                grid.innerHTML = "";
+                anomalyData.forEach((cell, i) => {
+                    const d = document.createElement("div");
+                    d.className =
+                        "anom-cell" +
+                        (cell.flagged
+                            ? cell.isAnom
+                                ? " found"
+                                : " wrong"
+                            : "");
+                    d.textContent = cell.val;
+                    if (!cell.flagged) d.onclick = () => anomalyClick(i, d);
+                    grid.appendChild(d);
+                });
+            }
+
+            function anomalyClick(i, el) {
+                const cell = anomalyData[i];
+                if (cell.flagged) return;
+                cell.flagged = true;
+                if (cell.isAnom) {
+                    el.className = "anom-cell found";
+                    el.onclick = null;
+                    anomalyFound++;
+                    document.getElementById("anomaly-progress").textContent =
+                        `Found: ${anomalyFound} / ${anomalyTotal}`;
+                    if (anomalyFound === anomalyTotal) {
+                        ST.anomalySolved = true;
+                        ST.puzzlesSolved++;
+                        // Reward: auto-reveal alpha hint 2
+                        if (!HINTS_A[1].found) {
+                            HINTS_A[1].found = true;
+                            ST.hintsGot++;
+                            refreshGrids();
+                        }
+                        document.getElementById("anomaly-status").innerHTML =
+                            `<span style="color:var(--green)">🔬 ALL ANOMALIES CLEARED! Alpha hint 2 (Medic file) revealed automatically.</span>`;
+                    } else {
+                        document.getElementById("anomaly-status").innerHTML =
+                            `<span style="color:var(--green)">✓ Anomaly detected! Keep scanning.</span>`;
+                    }
+                } else {
+                    el.className = "anom-cell wrong";
+                    setTimeout(() => {
+                        el.className = "anom-cell";
+                        cell.flagged = false;
+                        el.onclick = () => anomalyClick(i, el);
+                    }, 600);
+                    document.getElementById("anomaly-status").innerHTML =
+                        `<span style="color:var(--red)">✗ Normal reading — not an anomaly.</span>`;
+                }
             }
 
             // ══════════════════════════════════════════════════════
@@ -2871,14 +4319,15 @@
                     const c = document.createElement("div");
                     c.className = "hcard" + (h.found ? " found" : "");
                     c.innerHTML = `<div class="hc-tag">${h.tag}</div>
-      <div class="hc-clue${h.found ? "" : " locked"}">${h.found ? h.clue : "?? ??? ??? ????"}</div>
-      <div class="hc-decode">${h.decode}</div>`;
+    <div class="hc-clue${h.found ? "" : " locked"}">${h.found ? h.clue : "?? ??? ??? ????"}</div>
+    <div class="hc-decode">${h.decode}</div>`;
                     g.appendChild(c);
                 });
             }
             function refreshGrids() {
                 buildGrid("alpha", HINTS_A);
                 buildGrid("beta", HINTS_B);
+                buildGrid("gamma", HINTS_C);
             }
 
             // ══════════════════════════════════════════════════════
@@ -2887,7 +4336,7 @@
             function buildKp(id) {
                 const kp = document.getElementById(`kp-${id}`);
                 kp.innerHTML = "";
-                "1234567890ABCDEFGHJKLMNPQRSTUVWXYZ23456789⌫"
+                "ABCDEFGHJKLMNPQRSTUVWXYZ23456789⌫"
                     .split("")
                     .filter((v, i, a) => a.indexOf(v) === i)
                     .forEach((k) => {
@@ -2899,7 +4348,7 @@
                     });
             }
             function buildPwd(id) {
-                const len = id === "alpha" ? 5 : 6;
+                const len = { alpha: 5, beta: 6, gamma: 7 }[id];
                 const row = document.getElementById(`pwd-${id}`);
                 row.innerHTML = "";
                 for (let i = 0; i < len; i++) {
@@ -2913,8 +4362,7 @@
                 ST.slot[id] = 0;
             }
             function typeC(id, c) {
-                if (ST.bruting[id]) return;
-                const len = id === "alpha" ? 5 : 6,
+                const len = { alpha: 5, beta: 6, gamma: 7 }[id],
                     sl = ST.slot[id];
                 if (sl >= len) return;
                 ST.input[id][sl] = c;
@@ -2929,14 +4377,13 @@
                 }
             }
             function bksp(id) {
-                if (ST.bruting[id]) return;
                 if (ST.slot[id] <= 0) return;
                 ST.slot[id]--;
                 ST.input[id][ST.slot[id]] = undefined;
                 const el = document.getElementById(`${id}-c-${ST.slot[id]}`);
                 el.className = "pc active";
                 el.innerHTML = '<div class="cr"></div>';
-                const len = id === "alpha" ? 5 : 6;
+                const len = { alpha: 5, beta: 6, gamma: 7 }[id];
                 if (ST.slot[id] < len - 1) {
                     const n = document.getElementById(
                         `${id}-c-${ST.slot[id] + 1}`,
@@ -2948,11 +4395,10 @@
                 }
             }
             function clearPwd(id) {
-                if (ST.bruting[id]) return;
                 buildPwd(id);
             }
             function submitPwd(id) {
-                const pwd = id === "alpha" ? PA : PB;
+                const pwd = { alpha: PA, beta: PB, gamma: PC }[id];
                 const inp = ST.input[id];
                 ST.attempts++;
                 if (
@@ -2971,8 +4417,7 @@
                         `✓ CORRECT — ${id.toUpperCase()} CLEARANCE GRANTED`,
                         { t: "ok" },
                     );
-                    const len = pwd.length;
-                    for (let i = 0; i < len; i++) {
+                    for (let i = 0; i < pwd.length; i++) {
                         const el = document.getElementById(`${id}-c-${i}`);
                         if (el) el.classList.add("ok");
                     }
@@ -2980,29 +4425,32 @@
                         ST.alphaOk = true;
                         document.getElementById("pip-a").className =
                             "hud-pip pip-ok";
-                    } else {
+                    } else if (id === "beta") {
                         ST.betaOk = true;
                         document.getElementById("pip-b").className =
                             "hud-pip pip-ok";
+                    } else {
+                        ST.gammaOk = true;
+                        document.getElementById("pip-c").className =
+                            "hud-pip pip-ok";
                     }
                     document.getElementById("tctr").textContent =
-                        `${(ST.alphaOk ? 1 : 0) + (ST.betaOk ? 1 : 0)}/2 CRACKED`;
-                    document.getElementById(`btn-brute-${id}`).disabled = true;
+                        `${(ST.alphaOk ? 1 : 0) + (ST.betaOk ? 1 : 0) + (ST.gammaOk ? 1 : 0)}/3 CRACKED`;
                     setTimeout(() => {
                         closeModal(`modal-${id}`);
-                        if (ST.alphaOk && ST.betaOk) setTimeout(showWin, 600);
+                        if (ST.alphaOk && ST.betaOk && ST.gammaOk)
+                            setTimeout(showWin, 600);
                     }, 1200);
                 } else {
                     tlog(id, `✗ WRONG — REJECTED`, { t: "e" });
-                    const len = pwd.length;
-                    for (let i = 0; i < len; i++) {
+                    for (let i = 0; i < pwd.length; i++) {
                         const el = document.getElementById(`${id}-c-${i}`);
                         if (!el) continue;
                         if (inp[i] === pwd[i]) el.classList.add("ok");
                         else el.classList.add("err");
                     }
                     let partial = "";
-                    for (let i = 0; i < len; i++) {
+                    for (let i = 0; i < pwd.length; i++) {
                         if (inp[i] === pwd[i]) partial += `[${i + 1}:✓]`;
                         else if (pwd.includes(inp[i]))
                             partial += `[${i + 1}:∼]`;
@@ -3011,7 +4459,7 @@
                     }
                     tlog(id, partial, { t: "w" });
                     setTimeout(() => {
-                        for (let i = 0; i < len; i++) {
+                        for (let i = 0; i < pwd.length; i++) {
                             const el = document.getElementById(`${id}-c-${i}`);
                             if (el) {
                                 el.classList.remove("err");
@@ -3022,7 +4470,7 @@
                 }
             }
             function shakeAll(id) {
-                const len = id === "alpha" ? 5 : 6;
+                const len = { alpha: 5, beta: 6, gamma: 7 }[id];
                 for (let i = 0; i < len; i++) {
                     const el = document.getElementById(`${id}-c-${i}`);
                     if (el) {
@@ -3030,56 +4478,6 @@
                         setTimeout(() => el.classList.remove("err"), 400);
                     }
                 }
-            }
-            function startBrute(id) {
-                if (ST.bruting[id]) return;
-                ST.bruting[id] = true;
-                document.getElementById(`btn-brute-${id}`).disabled = true;
-                tlog(
-                    id,
-                    "⚡ BRUTE-FORCE INITIATED — SCANNING CIPHER SPACE...",
-                    { t: "w" },
-                );
-                const pwd = id === "alpha" ? PA : PB;
-                let step = 0,
-                    total = 130;
-                const reveals = pwd
-                    .split("")
-                    .map((_, i) =>
-                        Math.round(((i + 1) / (pwd.length + 1)) * total),
-                    );
-                ST.bruteIvl[id] = setInterval(() => {
-                    step++;
-                    const pct = Math.floor((step / total) * 100);
-                    document.getElementById(
-                        `${id === "alpha" ? "a" : "b"}p-fill`,
-                    ).style.width = pct + "%";
-                    document.getElementById(
-                        `${id === "alpha" ? "a" : "b"}p-pct`,
-                    ).textContent = pct + "%";
-                    reveals.forEach((rt, i) => {
-                        if (step === rt)
-                            tlog(
-                                id,
-                                `→ POSITION ${i + 1} DECRYPTED: "${pwd[i]}"`,
-                                { t: "w" },
-                            );
-                    });
-                    if (step >= total) {
-                        clearInterval(ST.bruteIvl[id]);
-                        ST.bruting[id] = false;
-                        tlog(id, `SCAN COMPLETE — FULL CODE: ${pwd}`, {
-                            t: "ok",
-                        });
-                        clearPwd(id);
-                        let i = 0;
-                        const fill = setInterval(() => {
-                            typeC(id, pwd[i]);
-                            i++;
-                            if (i >= pwd.length) clearInterval(fill);
-                        }, 180);
-                    }
-                }, 50);
             }
             function tlog(id, msg, { t = "i" } = {}) {
                 const log = document.getElementById(`tlog-${id}`);
@@ -3109,6 +4507,7 @@
                 document.getElementById("ws-t").textContent = e + "s";
                 document.getElementById("ws-a").textContent = ST.attempts;
                 document.getElementById("ws-h").textContent = ST.hintsGot;
+                document.getElementById("ws-p").textContent = ST.puzzlesSolved;
                 document.getElementById("win-screen").classList.add("active");
                 confetti();
             }
@@ -3120,8 +4519,9 @@
                     "#ffe033",
                     "#ff6b00",
                     "#ff2244",
+                    "#aa44ff",
                 ];
-                for (let i = 0; i < 120; i++)
+                for (let i = 0; i < 140; i++)
                     setTimeout(() => {
                         const p = document.createElement("div");
                         p.className = "cfetti";
@@ -3129,7 +4529,7 @@
                         p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}vw;top:0;background:${cols[~~(Math.random() * cols.length)]};animation-duration:${Math.random() * 2.5 + 0.8}s;`;
                         document.body.appendChild(p);
                         setTimeout(() => p.remove(), 3500);
-                    }, i * 22);
+                    }, i * 18);
             }
 
             // ══════════════════════════════════════════════════════
@@ -3137,16 +4537,19 @@
             // ══════════════════════════════════════════════════════
             document.addEventListener("keydown", (e) => {
                 ky[e.key.toLowerCase()] = true;
-                const activeTerminal = ["modal-alpha", "modal-beta"].find(
-                    (id) =>
-                        document
-                            .getElementById(id)
-                            .classList.contains("active"),
+                const activeTerminal = [
+                    "modal-alpha",
+                    "modal-beta",
+                    "modal-gamma",
+                ].find((id) =>
+                    document.getElementById(id).classList.contains("active"),
                 );
                 if (activeTerminal) {
                     const id = activeTerminal.includes("alpha")
                         ? "alpha"
-                        : "beta";
+                        : activeTerminal.includes("beta")
+                          ? "beta"
+                          : "gamma";
                     const k = e.key.toUpperCase();
                     if (CS.includes(k) && k.length === 1) {
                         e.preventDefault();
@@ -3160,9 +4563,7 @@
                         e.preventDefault();
                         submitPwd(id);
                     }
-                    if (e.key === "Escape") {
-                        closeModal(activeTerminal);
-                    }
+                    if (e.key === "Escape") closeModal(activeTerminal);
                     return;
                 }
                 if (
@@ -3175,11 +4576,17 @@
                     return;
                 }
                 if (e.key.toLowerCase() === "e") interact();
-                if (e.key === "Escape") {
-                    ["modal-alpha", "modal-beta", "door-modal"].forEach(
-                        closeModal,
-                    );
-                }
+                if (e.key === "Escape")
+                    [
+                        "modal-alpha",
+                        "modal-beta",
+                        "modal-gamma",
+                        "door-modal",
+                        "modal-wire",
+                        "modal-reactor",
+                        "modal-anomaly",
+                        "modal-datalog",
+                    ].forEach(closeModal);
             });
             document.addEventListener("keyup", (e) => {
                 ky[e.key.toLowerCase()] = false;
@@ -3191,44 +4598,60 @@
             function resetAll() {
                 PA = gp(5);
                 PB = gp(6);
+                PC = gp(7);
                 window.__SHIP_MANIFEST = {
                     alpha: btoa(PA),
                     beta: btoa(PB),
+                    gamma: btoa(PC),
                     note: "atob(window.__SHIP_MANIFEST.alpha) gives ALPHA password",
                 };
                 ST.alphaOk = false;
                 ST.betaOk = false;
+                ST.gammaOk = false;
                 ST.attempts = 0;
                 ST.hintsGot = 0;
+                ST.puzzlesSolved = 0;
                 ST.startTime = Date.now();
-                ST.bruting = { alpha: false, beta: false };
-                if (ST.bruteIvl.alpha) clearInterval(ST.bruteIvl.alpha);
-                if (ST.bruteIvl.beta) clearInterval(ST.bruteIvl.beta);
+                ST.wireSolved = false;
+                ST.reactorSolved = false;
+                ST.anomalySolved = false;
                 pl.px = 2.5 * T;
                 pl.py = 3.5 * T;
                 buildHints();
                 refreshGrids();
                 buildPwd("alpha");
                 buildPwd("beta");
-                document.getElementById("tctr").textContent = "0/2 CRACKED";
+                buildPwd("gamma");
+                document.getElementById("tctr").textContent = "0/3 CRACKED";
                 document.getElementById("pip-a").className = "hud-pip pip-warn";
                 document.getElementById("pip-b").className = "hud-pip pip-err";
-                ["alpha", "beta"].forEach((id) => {
-                    document.getElementById(`btn-brute-${id}`).disabled = false;
-                    document.getElementById(
-                        `${id === "alpha" ? "a" : "b"}p-fill`,
-                    ).style.width = "0%";
-                    document.getElementById(
-                        `${id === "alpha" ? "a" : "b"}p-pct`,
-                    ).textContent = "0%";
+                document.getElementById("pip-c").className = "hud-pip pip-err";
+                ["alpha", "beta", "gamma"].forEach((id) => {
                     document.getElementById(`tlog-${id}`).innerHTML =
-                        `<div class="tr"><span class="tp">SYS&gt;</span><span class="ti">${id.toUpperCase()} TERMINAL ONLINE. ENTER ${id === "alpha" ? 5 : 6}-CHARACTER CIPHER CODE.</span></div>`;
+                        `<div class="tr"><span class="tp">SYS&gt;</span><span class="ti">${id.toUpperCase()} TERMINAL ONLINE. ENTER ${id === "alpha" ? 5 : id === "beta" ? 6 : 7}-CHARACTER CIPHER CODE.</span></div>`;
                 });
                 document
                     .getElementById("win-screen")
                     .classList.remove("active");
                 document.getElementById("intro").style.display = "";
                 document.getElementById("intro").classList.remove("fade-out");
+                // Log updated passwords
+                console.log("%c━━━━ NEW MISSION ━━━━", "color:#1e3050");
+                console.log(
+                    "%c ALPHA: %c" + PA,
+                    "color:#3a6090",
+                    "color:#00e5ff;font-weight:bold",
+                );
+                console.log(
+                    "%c BETA:  %c" + PB,
+                    "color:#3a6090",
+                    "color:#ff6b00;font-weight:bold",
+                );
+                console.log(
+                    "%c GAMMA: %c" + PC,
+                    "color:#3a6090",
+                    "color:#aa44ff;font-weight:bold",
+                );
             }
 
             // ══════════════════════════════════════════════════════
@@ -3250,7 +4673,12 @@
                 const anyModal = [
                     "modal-alpha",
                     "modal-beta",
+                    "modal-gamma",
                     "door-modal",
+                    "modal-wire",
+                    "modal-reactor",
+                    "modal-anomaly",
+                    "modal-datalog",
                 ].some((id) =>
                     document.getElementById(id).classList.contains("active"),
                 );
@@ -3280,8 +4708,10 @@
             refreshGrids();
             buildKp("alpha");
             buildKp("beta");
+            buildKp("gamma");
             buildPwd("alpha");
             buildPwd("beta");
+            buildPwd("gamma");
             resize();
             loop();
             ST.startTime = Date.now();
@@ -3314,20 +4744,180 @@
                 "color:#ffe033;font-size:1rem",
             );
             console.log(
-                "%c  ALPHA (5-char): %c" + atob(window.__SHIP_MANIFEST.alpha),
+                "%c  ALPHA (5-char): %c" + PA,
                 "color:#3a6090",
                 "color:#00e5ff;font-size:1.1rem;font-weight:bold",
             );
             console.log(
-                "%c  BETA  (6-char): %c" + atob(window.__SHIP_MANIFEST.beta),
+                "%c  BETA  (6-char): %c" + PB,
                 "color:#3a6090",
                 "color:#ff6b00;font-size:1.1rem;font-weight:bold",
             );
             console.log(
-                "%c  Or: atob(window.__SHIP_MANIFEST.alpha)",
+                "%c  GAMMA (7-char): %c" + PC,
                 "color:#3a6090",
+                "color:#aa44ff;font-size:1.1rem;font-weight:bold",
             );
             console.log("%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "color:#1e3050");
+
+            // ══════════════════════════════════════════════════════
+            //  MOBILE / TOUCH CONTROLS
+            // ══════════════════════════════════════════════════════
+            (function setupMobile() {
+                const isMobile = () =>
+                    "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+                // D-pad button press → inject into ky map
+                const dmap = {
+                    "dp-up": ["w", "arrowup"],
+                    "dp-down": ["s", "arrowdown"],
+                    "dp-left": ["a", "arrowleft"],
+                    "dp-right": ["d", "arrowright"],
+                };
+                Object.entries(dmap).forEach(([id, keys]) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    const press = (e) => {
+                        e.preventDefault();
+                        keys.forEach((k) => (ky[k] = true));
+                        el.classList.add("pressed");
+                    };
+                    const release = (e) => {
+                        e.preventDefault();
+                        keys.forEach((k) => (ky[k] = false));
+                        el.classList.remove("pressed");
+                    };
+                    el.addEventListener("touchstart", press, {
+                        passive: false,
+                    });
+                    el.addEventListener("touchend", release, {
+                        passive: false,
+                    });
+                    el.addEventListener("touchcancel", release, {
+                        passive: false,
+                    });
+                    // Also support mouse for desktop testing
+                    el.addEventListener("mousedown", press);
+                    el.addEventListener("mouseup", release);
+                    el.addEventListener("mouseleave", release);
+                });
+
+                // Canvas swipe-to-move (fallback for when no d-pad)
+                let touchStartX = 0,
+                    touchStartY = 0,
+                    lastTouchX = 0,
+                    lastTouchY = 0,
+                    touching = false;
+                const cvs = document.getElementById("gc");
+
+                cvs.addEventListener(
+                    "touchstart",
+                    (e) => {
+                        if (e.touches.length === 1) {
+                            touchStartX = lastTouchX = e.touches[0].clientX;
+                            touchStartY = lastTouchY = e.touches[0].clientY;
+                            touching = true;
+                        }
+                    },
+                    { passive: true },
+                );
+
+                cvs.addEventListener(
+                    "touchmove",
+                    (e) => {
+                        if (!touching || e.touches.length !== 1) return;
+                        const tx = e.touches[0].clientX,
+                            ty = e.touches[0].clientY;
+                        const dx = tx - lastTouchX,
+                            dy = ty - lastTouchY;
+                        lastTouchX = tx;
+                        lastTouchY = ty;
+                        // Clear all direction keys then set based on delta
+                        [
+                            "w",
+                            "a",
+                            "s",
+                            "d",
+                            "arrowup",
+                            "arrowdown",
+                            "arrowleft",
+                            "arrowright",
+                        ].forEach((k) => (ky[k] = false));
+                        const threshold = 2;
+                        if (Math.abs(dx) > Math.abs(dy)) {
+                            if (dx > threshold) {
+                                ky["d"] = true;
+                                ky["arrowright"] = true;
+                            } else if (dx < -threshold) {
+                                ky["a"] = true;
+                                ky["arrowleft"] = true;
+                            }
+                        } else {
+                            if (dy > threshold) {
+                                ky["s"] = true;
+                                ky["arrowdown"] = true;
+                            } else if (dy < -threshold) {
+                                ky["w"] = true;
+                                ky["arrowup"] = true;
+                            }
+                        }
+                    },
+                    { passive: true },
+                );
+
+                cvs.addEventListener(
+                    "touchend",
+                    (e) => {
+                        touching = false;
+                        [
+                            "w",
+                            "a",
+                            "s",
+                            "d",
+                            "arrowup",
+                            "arrowdown",
+                            "arrowleft",
+                            "arrowright",
+                        ].forEach((k) => (ky[k] = false));
+                        // Tap (minimal movement) = interact
+                        const totalDx = Math.abs(lastTouchX - touchStartX);
+                        const totalDy = Math.abs(lastTouchY - touchStartY);
+                        if (totalDx < 10 && totalDy < 10) {
+                            const anyModal = [
+                                "modal-alpha",
+                                "modal-beta",
+                                "modal-gamma",
+                                "door-modal",
+                                "modal-wire",
+                                "modal-reactor",
+                                "modal-anomaly",
+                                "modal-datalog",
+                            ].some((id) =>
+                                document
+                                    .getElementById(id)
+                                    .classList.contains("active"),
+                            );
+                            if (!anyModal) interact();
+                        }
+                    },
+                    { passive: true },
+                );
+
+                // Prevent default touch scroll on game canvas
+                cvs.addEventListener("touchmove", (e) => e.preventDefault(), {
+                    passive: false,
+                });
+
+                // Hide/show minimap on mobile to save space (tap minimap to toggle)
+                const mm = document.getElementById("minimap");
+                if (isMobile() && window.innerWidth <= 600) {
+                    mm.style.opacity = "0.5";
+                    mm.addEventListener("touchstart", () => {
+                        mm.style.opacity =
+                            mm.style.opacity === "1" ? "0.5" : "1";
+                    });
+                }
+            })();
         </script>
     </body>
 </html>
