@@ -450,6 +450,72 @@
                 font-size: 0.62rem;
                 color: var(--dimtxt);
             }
+            .hud-timer {
+                font-family: "VT323", monospace;
+                font-size: 1.25rem;
+                color: var(--green);
+                letter-spacing: 0.1em;
+                transition: color 0.5s;
+            }
+            .hud-timer.warn {
+                color: var(--yellow);
+            }
+            .hud-timer.crit {
+                color: var(--red);
+                animation: bpip 0.5s infinite;
+            }
+
+            /* TIMEOUT SCREEN */
+            #timeout-screen {
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 0, 0, 0.96);
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 18px;
+                z-index: 400;
+            }
+            #timeout-screen.active {
+                display: flex;
+            }
+            .timeout-title {
+                font-family: "VT323", monospace;
+                font-size: clamp(2.5rem, 7vw, 4.5rem);
+                color: var(--red);
+                letter-spacing: 0.15em;
+                text-align: center;
+                animation: tflash 1s ease-in-out infinite alternate;
+            }
+            @keyframes tflash {
+                from {
+                    text-shadow: 0 0 20px var(--red);
+                }
+                to {
+                    text-shadow:
+                        0 0 80px var(--red),
+                        0 0 140px rgba(255, 34, 68, 0.3);
+                }
+            }
+            .timeout-sub {
+                font-size: 0.82rem;
+                letter-spacing: 0.2em;
+                color: #6a3a3a;
+                text-align: center;
+            }
+            .timeout-stats {
+                display: flex;
+                gap: 24px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            @media (max-width: 600px) {
+                .hud-timer {
+                    font-size: 1rem;
+                }
+            }
 
             /* CANVAS */
             #canvas-wrap {
@@ -2294,6 +2360,8 @@
             <span class="hud-sep">|</span>
             <span class="task-ctr" id="tctr">0/3 CRACKED</span>
             <span class="hud-sep">|</span>
+            <span class="hud-timer" id="hud-timer">10:00</span>
+            <span class="hud-sep">|</span>
             <span class="hud-hint"
                 ><span class="hud-key">WASD</span> Move &nbsp;<span
                     class="hud-key"
@@ -2654,6 +2722,35 @@
             </div>
             <button class="intro-btn" onclick="resetAll()">
                 ↺ NEW MISSION
+            </button>
+        </div>
+
+        <!-- TIMEOUT SCREEN -->
+        <div id="timeout-screen">
+            <div class="timeout-title">MISSION<br />FAILED</div>
+            <div class="timeout-sub">
+                TIME EXPIRED — ARES-9 HAS TAKEN FULL CONTROL
+            </div>
+            <div class="timeout-stats">
+                <div class="ws">
+                    <div class="wsv" id="to-a">0</div>
+                    <div class="wsl">ATTEMPTS</div>
+                </div>
+                <div class="ws">
+                    <div class="wsv" id="to-h">0</div>
+                    <div class="wsl">HINTS FOUND</div>
+                </div>
+                <div class="ws">
+                    <div class="wsv" id="to-c">0/3</div>
+                    <div class="wsl">LOCKS CRACKED</div>
+                </div>
+            </div>
+            <button
+                class="intro-btn"
+                style="border-color: var(--red); color: var(--red)"
+                onclick="resetAll()"
+            >
+                ↺ TRY AGAIN
             </button>
         </div>
 
@@ -4689,8 +4786,9 @@
             }
 
             // ══════════════════════════════════════════════════════
-            //  WIN
+            //  WIN / TIMEOUT
             // ══════════════════════════════════════════════════════
+            const TIMER_DURATION = 600; // 10 minutes in seconds
             function showWin() {
                 const e = Math.floor((Date.now() - ST.startTime) / 1000);
                 document.getElementById("ws-t").textContent = e + "s";
@@ -4699,6 +4797,18 @@
                 document.getElementById("ws-p").textContent = ST.puzzlesSolved;
                 document.getElementById("win-screen").classList.add("active");
                 confetti();
+            }
+            function showTimeout() {
+                const cracked =
+                    (ST.alphaOk ? 1 : 0) +
+                    (ST.betaOk ? 1 : 0) +
+                    (ST.gammaOk ? 1 : 0);
+                document.getElementById("to-a").textContent = ST.attempts;
+                document.getElementById("to-h").textContent = ST.hintsGot;
+                document.getElementById("to-c").textContent = cracked + "/3";
+                document
+                    .getElementById("timeout-screen")
+                    .classList.add("active");
             }
             function confetti() {
                 const cols = [
@@ -4800,7 +4910,7 @@
                 ST.attempts = 0;
                 ST.hintsGot = 0;
                 ST.puzzlesSolved = 0;
-                ST.startTime = Date.now();
+                ST.startTime = 0;
                 ST.wireSolved = false;
                 ST.reactorSolved = false;
                 ST.anomalySolved = false;
@@ -4822,6 +4932,12 @@
                 document
                     .getElementById("win-screen")
                     .classList.remove("active");
+                document
+                    .getElementById("timeout-screen")
+                    .classList.remove("active");
+                timerEl.textContent = "10:00";
+                timerEl.className = "hud-timer";
+                ST.running = false;
                 document.getElementById("intro").style.display = "";
                 document.getElementById("intro").classList.remove("fade-out");
                 // Log updated passwords
@@ -4858,6 +4974,28 @@
                 );
                 return r ? r.label : "VOID";
             }
+            const timerEl = document.getElementById("hud-timer");
+            function updateTimer() {
+                if (!ST.running || (ST.alphaOk && ST.betaOk && ST.gammaOk))
+                    return;
+                const elapsed = Math.floor((Date.now() - ST.startTime) / 1000);
+                const remaining = Math.max(0, TIMER_DURATION - elapsed);
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                timerEl.textContent = m + ":" + (s < 10 ? "0" : "") + s;
+                timerEl.classList.toggle(
+                    "warn",
+                    remaining <= 120 && remaining > 30,
+                );
+                timerEl.classList.toggle("crit", remaining <= 30);
+                if (remaining === 0) {
+                    ST.running = false;
+                    document
+                        .querySelectorAll(".modal-ov.active")
+                        .forEach((mo) => mo.classList.remove("active"));
+                    showTimeout();
+                }
+            }
             function loop() {
                 const anyModal = [
                     "modal-alpha",
@@ -4874,10 +5012,10 @@
                 if (!anyModal) movePlayer();
                 checkNear();
                 document.getElementById("hud-room").textContent = getRoomName();
+                updateTimer();
                 render();
                 requestAnimationFrame(loop);
             }
-
             // ══════════════════════════════════════════════════════
             //  BOOTSTRAP
             // ══════════════════════════════════════════════════════
@@ -4903,7 +5041,6 @@
             buildPwd("gamma");
             resize();
             loop();
-            ST.startTime = Date.now();
 
             function showLoadingScreen() {
                 document.getElementById("loading-card").style.display = "grid";
@@ -4919,6 +5056,7 @@
                 };
                 setTimeout(() => {
                     document.getElementById("intro").style.display = "none";
+                    ST.startTime = Date.now();
                     ST.running = true;
                 }, 800);
             }
