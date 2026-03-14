@@ -1374,67 +1374,6 @@
                 background: rgba(0, 229, 255, 0.3);
             }
 
-            /* SCHOOL PROMPT */
-            #school-modal {
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.9);
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                z-index: 600;
-                backdrop-filter: blur(10px);
-            }
-            #school-modal.active {
-                display: flex;
-            }
-            .school-box {
-                background: var(--panel);
-                border: 1px solid var(--accent);
-                padding: 30px;
-                border-radius: 8px;
-                width: min(400px, 90vw);
-                text-align: center;
-                box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
-            }
-            .school-title {
-                font-family: "VT323", monospace;
-                font-size: 1.8rem;
-                color: var(--accent);
-                margin-bottom: 20px;
-                letter-spacing: 0.1em;
-            }
-            #school-input {
-                width: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                border: 1px solid var(--dimtxt);
-                padding: 12px;
-                color: var(--text);
-                font-family: "Rajdhani", sans-serif;
-                font-size: 1.1rem;
-                margin-bottom: 20px;
-                outline: none;
-                transition: border-color 0.2s;
-            }
-            #school-input:focus {
-                border-color: var(--accent);
-            }
-            .school-btn {
-                padding: 10px 25px;
-                background: transparent;
-                border: 1px solid var(--green);
-                color: var(--green);
-                font-family: "VT323", monospace;
-                font-size: 1.2rem;
-                cursor: pointer;
-                transition: all 0.2s;
-            }
-            .school-btn:hover {
-                background: var(--green);
-                color: #000;
-            }
-
             /* ═══════════════════════════════════════
    MOBILE BREAKPOINTS
 ═══════════════════════════════════════ */
@@ -1921,25 +1860,9 @@
                     backdoor.</span
                 >
             </div>
-            <button class="intro-btn" onclick="promptSchoolName()">
+            <button class="intro-btn" onclick="showLoadingScreen()">
                 ▶ BEGIN MISSION
             </button>
-        </div>
-
-        <!-- SCHOOL PROMPT -->
-        <div id="school-modal">
-            <div class="school-box">
-                <div class="school-title">ENTER SCHOOL NAME</div>
-                <input
-                    type="text"
-                    id="school-input"
-                    placeholder="Enter school name..."
-                    autocomplete="off"
-                />
-                <button class="school-btn" onclick="submitSchoolName()">
-                    CONFIRM
-                </button>
-            </div>
         </div>
 
         <!-- LOADING -->
@@ -3522,39 +3445,7 @@
                 wireSolved: false,
                 reactorSolved: false,
                 anomalySolved: false,
-                currentSchool: "",
             };
-
-            async function saveProgress() {
-                if (!ST.currentSchool) return;
-                
-                const progressData = {
-                    schoolName: ST.currentSchool,
-                    alphaOk: ST.alphaOk,
-                    betaOk: ST.betaOk,
-                    gammaOk: ST.gammaOk,
-                    attempts: ST.attempts,
-                    hintsGot: ST.hintsGot,
-                    puzzlesSolved: ST.puzzlesSolved,
-                    wireSolved: ST.wireSolved,
-                    reactorSolved: ST.reactorSolved,
-                    anomalySolved: ST.anomalySolved,
-                    timeElapsed: ST.running ? Math.floor((Date.now() - ST.startTime) / 1000) : 0,
-                    timestamp: new Date().toISOString()
-                };
-
-                try {
-                    await fetch('/save-progress', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(progressData)
-                    });
-                } catch (error) {
-                    console.error('Error saving progress:', error);
-                }
-            }
 
             // ══════════════════════════════════════════════════════
             //  PLAYER
@@ -4385,7 +4276,7 @@
                             setTimeout(() => {
                                 ST.wireSolved = true;
                                 ST.puzzlesSolved++;
-                                saveProgress();                                document.getElementById(
+                                document.getElementById(
                                     "wire-status",
                                 ).innerHTML =
                                     `<span style="color:var(--green);font-size:1.1rem">⚡ CIRCUIT RESTORED! Gamma hints unlocked — speak with SCIENTIST, PILOT & COMMS.</span>`;
@@ -4578,7 +4469,6 @@
                     if (reactorLevel >= reactorMax) {
                         ST.reactorSolved = true;
                         ST.puzzlesSolved++;
-                        saveProgress();
                         // Reward: reveal a beta hint
                         if (!HINTS_B[1].found) {
                             HINTS_B[1].found = true;
@@ -4681,7 +4571,6 @@
                     if (anomalyFound === anomalyTotal) {
                         ST.anomalySolved = true;
                         ST.puzzlesSolved++;
-                        saveProgress();
                         // Reward: auto-reveal alpha hint 2
                         if (!HINTS_A[1].found) {
                             HINTS_A[1].found = true;
@@ -4833,7 +4722,6 @@
                     }
                     document.getElementById("tctr").textContent =
                         `${(ST.alphaOk ? 1 : 0) + (ST.betaOk ? 1 : 0) + (ST.gammaOk ? 1 : 0)}/3 CRACKED`;
-                    saveProgress();
                     setTimeout(() => {
                         closeModal(`modal-${id}`);
                         if (ST.alphaOk && ST.betaOk && ST.gammaOk)
@@ -5153,86 +5041,6 @@
             buildPwd("gamma");
             resize();
             loop();
-
-            function promptSchoolName() {
-                document.getElementById("school-modal").classList.add("active");
-                document.getElementById("school-input").focus();
-
-                // Add Enter key listener
-                document.getElementById("school-input").onkeydown = (e) => {
-                    if (e.key === "Enter") submitSchoolName();
-                };
-            }
-
-            async function submitSchoolName() {
-                const schoolInput = document.getElementById("school-input");
-                const schoolName = schoolInput.value.trim();
-
-                if (!schoolName) {
-                    alert("Please enter a school name.");
-                    return;
-                }
-
-                try {
-                    const response = await fetch("/save-school", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ schoolName }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error("Failed to save school name");
-                    }
-
-                    // Proceed to loading screen
-                    ST.currentSchool = schoolName;
-                    await loadProgress(schoolName);
-                    document
-                        .getElementById("school-modal")
-                        .classList.remove("active");
-                    showLoadingScreen();
-                } catch (error) {
-                    console.error("Error saving school name:", error);
-                    // Even if saving fails, we might want to let the game proceed
-                    // or show an error. Given the requirement, we should try to save it.
-                    alert(
-                        "Error connecting to server. Please ensure the server is running.",
-                    );
-                }
-            }
-
-            async function loadProgress(schoolName) {
-                try {
-                    const response = await fetch(`/load-progress/${encodeURIComponent(schoolName)}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        // Apply state from server
-                        ST.alphaOk = data.alphaOk || false;
-                        ST.betaOk = data.betaOk || false;
-                        ST.gammaOk = data.gammaOk || false;
-                        ST.attempts = data.attempts || 0;
-                        ST.hintsGot = data.hintsGot || 0;
-                        ST.puzzlesSolved = data.puzzlesSolved || 0;
-                        ST.wireSolved = data.wireSolved || false;
-                        ST.reactorSolved = data.reactorSolved || false;
-                        ST.anomalySolved = data.anomalySolved || false;
-                        
-                        // Sync UI
-                        if (ST.alphaOk) document.getElementById("pip-a").className = "hud-pip pip-ok";
-                        if (ST.betaOk) document.getElementById("pip-b").className = "hud-pip pip-ok";
-                        if (ST.gammaOk) document.getElementById("pip-c").className = "hud-pip pip-ok";
-                        document.getElementById("tctr").textContent = 
-                            `${(ST.alphaOk ? 1 : 0) + (ST.betaOk ? 1 : 0) + (ST.gammaOk ? 1 : 0)}/3 CRACKED`;
-                        
-                        // We could also sync which hints were found if we saved those, 
-                        // but for now we focus on core progress.
-                    }
-                } catch (e) {
-                    console.error("Error loading progress:", e);
-                }
-            }
 
             function showLoadingScreen() {
                 document.getElementById("loading-card").style.display = "grid";
